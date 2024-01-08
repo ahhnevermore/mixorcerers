@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://0t8w2vfd3c4x"]
+
+[ext_resource type="Script" path="res://scenes/cursor.gd" id="1_2eycn"]
+[ext_resource type="Texture2D" uid="uid://dffxdkjw0bgot" path="res://assets/cursor.png" id="1_kg57u"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x5fl5"]
+radius = 16.0
+height = 32.0
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_2eycn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = ExtResource("1_kg57u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_x5fl5")
