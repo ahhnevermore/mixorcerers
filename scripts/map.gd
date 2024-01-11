@@ -36,22 +36,17 @@ func get_terrain(tile:Tile)->String:
 				terrain = terrain_instance['terrain']
 				break
 		return terrain
-	
+
 func gen_vision_grid(unit):
-	var vision_grid_tiles={}
 	var xy = local_to_map(unit.position)
 	var aug_vision = max(unit.vision + unit.vision_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
-	for tile in field_of_prop(xy,"vision_cost",aug_vision,[]):
-		vision_grid_tiles[tile]=true
-	return vision_grid_tiles 
-	
+	return Set.new(field_of_prop(xy,"vision_cost",aug_vision,[]))
+
 func gen_move_grid(unit):
-	var move_grid_tiles={}
 	var xy = local_to_map(unit.position)
 	var aug_move = max(unit.move + unit.move_modifier,1)
-	for tile in field_of_prop(xy,"move_cost",aug_move,[]):
-		move_grid_tiles[tile]=true
-	return move_grid_tiles
+	return Set.new(field_of_prop(xy,"move_cost",aug_move,[]))
+
 
 # on some turn a tile has changed
 	#case 1- same turn, player 1 can see it-take
@@ -79,8 +74,6 @@ func gen_map()->void:
 			if tile.xy[0] < xw and tile.xy[1] < yw:
 				gen_tile(tile)
 				gen_fog(tile)
-				
-
 
 func get_surrounding_values(xy:Vector2i,prop:String):
 	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
@@ -100,7 +93,7 @@ func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier):
 	return res	
 
 
-	
+
 func load_map(filename)->Dictionary:
 	if filename=='default':
 		return {
@@ -167,8 +160,8 @@ func load_map(filename)->Dictionary:
 		}
 	else:
 		return {}
-		
-		
+
+
 var terrains={
 	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
