@@ -1,7 +1,8 @@
 extends Node
 
-var day = true
-var turn = 0
+
+var replay = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Map.gen_map()

@@ -19,8 +19,9 @@ func _process(_delta):
 	pass
 
 func display_vision():
+	var visible_tiles={}
 	for ally in allies:
-		for tile in gen_vision_grid():
+		for tile in Map.gen_vision_grid(ally):
 			Map.erase_cell(2,tile)
 		
 

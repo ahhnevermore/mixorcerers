@@ -13,9 +13,9 @@ script = ExtResource("1_xh63o")
 layer_1/modulate = Color(0.372549, 0.372549, 0.372549, 1)
 layer_3/modulate = Color(0.0156863, 0.054902, 0.211765, 1)
 
-[node name="Player1" parent="." instance=ExtResource("3_v37nu")]
+[node name="Player" parent="." instance=ExtResource("3_v37nu")]
 script = ExtResource("4_bgv5q")
 
 [node name="Cursor" parent="." instance=ExtResource("5_agag1")]
 
-[connection signal="area_entered" from="Cursor" to="Player1" method="_on_cursor_area_entered"]
+[connection signal="area_entered" from="Cursor" to="Player" method="_on_cursor_area_entered"]

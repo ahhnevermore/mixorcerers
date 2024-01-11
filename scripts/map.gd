@@ -1,8 +1,12 @@
 extends TileMap
+
 var map_file	
 var map
 var xw
 var yw
+var day
+var turn
+var player
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -10,44 +14,60 @@ func _ready():
 	map= map_file["tiles"]
 	xw = map[0].size()
 	yw = map.size()
+	day = true
+	turn = 0
+	player = 'p1'
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
+func get_tile(xy:Vector2i)->Tile:
+	return map[xy[1]][xy[0]]
 
-class Tile:
-	var xy:Vector2i  
-	var terrain_list:Array
-	#[{terrain:beach, turn: 1, p1: true, p2: true}]
-	func _init(arg_xy,arg_terrain):
-		self.xy=arg_xy
-		self.terrain_list=arg_terrain
-
+func get_terrain(tile:Tile)->String:
+	if tile.cache:
+		return tile.cache
+	else:
+		var terrain
+		for terrain_instance in tile.terrain_list:
+			if turn < terrain_instance[player]:
+				continue
+			else:
+				terrain = terrain_instance['terrain']
+				break
+		return terrain
+	
 func gen_vision_grid(unit):
-	var visible_tiles={}
-	var xy = Map.local_to_map(unit.position)
-	var aug_vision = max(unit.vision + unit.vision_modifier+ Map.get_terrain(xy)["vision_bonus"],1)
-	for tile in Map.field_of_prop(xy,"vision_cost",aug_vision,[]):
-		visible_tiles[tile]=true 
-	return visible_tiles
+	var vision_grid_tiles={}
+	var xy = local_to_map(unit.position)
+	var aug_vision = max(unit.vision + unit.vision_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
+	for tile in field_of_prop(xy,"vision_cost",aug_vision,[]):
+		vision_grid_tiles[tile]=true
+	return vision_grid_tiles 
 	
 func gen_move_grid(unit):
 	var move_grid_tiles={}
-	var xy = Map.local_to_map(unit.position)
+	var xy = local_to_map(unit.position)
 	var aug_move = max(unit.move + unit.move_modifier,1)
-	for tile in Map.field_of_prop(xy,"move_cost",aug_move,[]):
+	for tile in field_of_prop(xy,"move_cost",aug_move,[]):
 		move_grid_tiles[tile]=true
 	return move_grid_tiles
-		
-func gen_tile(tile:Tile,day:bool,turn:int)->void:
+
+# on some turn a tile has changed
+	#case 1- same turn, player 1 can see it-take
+	#case 2- same turn, tile has changed but player cant see it-go further
+	#case 3- older turn(replays)->go further
+	#case 4- newer turn- take it if it is the most recent true for the player
+	#player can be p1,p2,all	
+func gen_tile(tile:Tile)->void:
 	var layer
 	if day:
 		layer=0
 	else:
 		layer=1
-	for terrain_instance in tile.terrain_list:
-		
-	set_cell(layer,tile.xy,terrains[tile.terrain]["sprite_id"],terrains[tile.terrain]["sprite_atlas"])
+	var terrain=get_terrain(tile)
+	set_cell(layer,tile.xy,terrains[terrain]["sprite_id"],terrains[terrain]["sprite_atlas"])
+	tile.cache=terrain
 	
 
 func gen_fog(tile):
@@ -57,81 +77,17 @@ func gen_map()->void:
 	for row in map:
 		for tile in row:
 			if tile.xy[0] < xw and tile.xy[1] < yw:
-				gen_tile(tile,get_parent().day,get_parent().turn)
+				gen_tile(tile)
 				gen_fog(tile)
 				
-func load_map(filename)->Dictionary:
-	if filename=='default':
-		return {
-			"tiles":
-		[[Tile.new(Vector2i(0,0),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,0),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,0),[{'terrain':'swamp','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,0),[{'terrain':'delta','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,0),[{'terrain':'swamp','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,0),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,0),[{'terrain':'river','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,1),[{'terrain':'cliff','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,1),[{'terrain':'jungle','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,1),[{'terrain':'mountain_lake','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,1),[{'terrain':'snowcap','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,1),[{'terrain':'river','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,1),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,1),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,2),[{'terrain':'jungle','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,2),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,2),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,2),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,2),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,2),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,2),[{'terrain':'river','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,3),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,3),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,3),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,3),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,3),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,3),[{'terrain':'jungle','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,3),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,4),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,4),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,4),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,4),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,4),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,4),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,4),[{'terrain':'river','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,5),[{'jungle':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,5),[{'terrain':'delta','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,5),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,5),[{'terrain':'delta','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,5),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,5),[{'terrain':'jungle','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,5),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}])],
-		
-		[Tile.new(Vector2i(0,6),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(1,6),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(2,6),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(3,6),[{'terrain':'ocean','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(4,6),[{'terrain':'sea','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(5,6),[{'terrain':'beach','turn': 0,'p1':true,'p2': true}]),
-		Tile.new(Vector2i(6,6),[{'terrain':'river','turn': 0,'p1':true,'p2': true}])]
-		
-		],
-		"player1_start_position":Vector2i(3,3),
-		"player2_start_position":Vector2i(-1,-1),
-		}
-	else:
-		return {}
+
 
 func get_surrounding_values(xy:Vector2i,prop:String):
-	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw).filter(func(xy):return xy[1]<yw)
+	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
+									   .filter(func(xy):return xy[1]<yw and xy[1]>=0)
 	var result=[]
 	for cell in list:
-		result.append([cell,get_terrain(cell)[prop]])
+		result.append([cell,terrains[get_terrain(get_tile(cell))][prop]])
 	return result
 
 func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier):
@@ -143,9 +99,76 @@ func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier):
 			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier))
 	return res	
 
-func get_terrain(xy:Vector2i):
-	return terrains[map[xy[1]][xy[0]].terrain]
 
+	
+func load_map(filename)->Dictionary:
+	if filename=='default':
+		return {
+			"tiles":
+		[[Tile.new(Vector2i(0,0),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,0),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,0),[{'terrain':'swamp','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,0),[{'terrain':'delta','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,0),[{'terrain':'swamp','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,0),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,0),[{'terrain':'river','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,1),[{'terrain':'cliff','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,1),[{'terrain':'jungle','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,1),[{'terrain':'mountain_lake','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,1),[{'terrain':'snowcap','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,1),[{'terrain':'river','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,1),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,1),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,2),[{'terrain':'jungle','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,2),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,2),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,2),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,2),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,2),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,2),[{'terrain':'river','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,3),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,3),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,3),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,3),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,3),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,3),[{'terrain':'jungle','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,3),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,4),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,4),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,4),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,4),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,4),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,4),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,4),[{'terrain':'river','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,5),[{'terrain':'jungle','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,5),[{'terrain':'delta','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,5),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,5),[{'terrain':'delta','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,5),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,5),[{'terrain':'jungle','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,5),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}])],
+		
+		[Tile.new(Vector2i(0,6),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(1,6),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(2,6),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(3,6),[{'terrain':'ocean','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(4,6),[{'terrain':'sea','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(5,6),[{'terrain':'beach','all': 0,'p1':0,'p2': 0}]),
+		Tile.new(Vector2i(6,6),[{'terrain':'river','all': 0,'p1':0,'p2': 0}])]
+		
+		],
+		"player1_start_position":Vector2i(3,3),
+		"player2_start_position":Vector2i(-1,-1),
+		}
+	else:
+		return {}
+		
+		
 var terrains={
 	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
