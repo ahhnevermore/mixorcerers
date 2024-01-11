@@ -10,9 +10,9 @@ func _init(list):
 func add(elem):
 	self.dict[elem]=true
 	
-func union(set1:Set,set2:Set):
+func union(set2:Set):
 	var res={}
-	for elem in set1.dict:
+	for elem in self.dict:
 		res[elem]=true
 	for elem in set2.dict:
 		res[elem]=true
