@@ -7,12 +7,11 @@ var move = 3
 var move_modifier =0
 var allies: Array
 # Called when the node enters the scene tree for the first time.
+
 func _ready():
 	Map=get_parent().get_node("Map")
 	position= Map.map_to_local(Map.map_file["player1_start_position"])
 	allies.push_back(self)
-	
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -32,16 +31,6 @@ func display_vision_grid():
 func display_move_grid():
 	for tile in Map.gen_move_grid(self):
 		Map.set_cell(3,tile,Map.terrains['ocean']["sprite_id"],Map.terrains['ocean']["sprite_atlas"])
-
-	
-
-
-		
-			
-	
-	
-
-	
 
 
 func _on_cursor_area_entered(area):

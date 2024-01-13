@@ -7,7 +7,7 @@ var replay = false
 func _ready():
 	$Map.gen_map()
 	$Player1.display_vision()
-	$Player1.display_move_grid()
+	#$Player1.display_move_grid()
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
