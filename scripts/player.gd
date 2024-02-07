@@ -18,11 +18,11 @@ func _process(_delta):
 	pass
 
 func display_vision():
-	var visible_tiles=Set.new([])
+	var visible_tiles=Grid.new([])
 	for ally in allies:
 		visible_tiles=visible_tiles.union(Map.gen_vision_grid(ally))
 	for tile in visible_tiles:
-		Map.erase_cell(2,tile)
+		Map.erase_cell(2,tile[0])
 
 func display_vision_grid():
 	for tile in Map.gen_vision_grid(self):
@@ -33,5 +33,8 @@ func display_move_grid():
 		Map.set_cell(3,tile,Map.terrains['ocean']["sprite_id"],Map.terrains['ocean']["sprite_atlas"])
 
 
-func _on_cursor_area_entered(area):
-	print("true")
+
+
+func _on_cursor_area_entered(_area):
+	print(true)
+#
