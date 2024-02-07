@@ -1,10 +1,10 @@
 extends Node2D
 
 var Map
-var vision = 4
-var vision_modifier=0
-var move = 3
-var move_modifier =0
+var vision_stat = 4
+var vision_stat_modifier=0
+var move_stat = 3
+var move_stat_modifier =0
 var allies: Array
 # Called when the node enters the scene tree for the first time.
 
@@ -32,7 +32,8 @@ func display_move_grid():
 	for tile in Map.gen_move_grid(self):
 		Map.set_cell(3,tile,Map.terrains['ocean']["sprite_id"],Map.terrains['ocean']["sprite_atlas"])
 
-
+func move():
+	display_move_grid()
 
 
 func _on_cursor_area_entered(_area):

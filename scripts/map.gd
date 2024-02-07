@@ -41,12 +41,12 @@ func get_terrain(tile:Tile)->String:
 
 func gen_vision_grid(unit):
 	var xy = local_to_map(unit.position)
-	var aug_vision = max(unit.vision + unit.vision_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
+	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
 	return Grid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0))
 
 func gen_move_grid(unit):
 	var xy = local_to_map(unit.position)
-	var aug_move = max(unit.move + unit.move_modifier,1)
+	var aug_move = max(unit.move_stat + unit.move_stat_modifier,1)
 	return Grid.new(field_of_prop(xy,"move_cost",aug_move,[],0))
 	
 func manhattan(a:Vector2i,b:Vector2i)->int:
