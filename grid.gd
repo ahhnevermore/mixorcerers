@@ -1,4 +1,6 @@
-class_name  Grid
+class_name  MapGrid
+
+#(x,y):[cost,parent]
 var dict={}
 var index
 func _init(list):
@@ -13,9 +15,9 @@ func add(elem):
 	else:
 		self.dict[elem[0]]=elem[1]
 
-func union(grid2:Grid)->Grid:
+func union(grid2:MapGrid)->MapGrid:
 	#SAme logic in both for loops, different than add, because the values are needed
-	var res=Grid.new([])
+	var res=MapGrid.new([])
 	for elem in self.dict:
 		if elem in res.dict:
 			if res.dict[elem][0] > self.dict[elem][0]:
