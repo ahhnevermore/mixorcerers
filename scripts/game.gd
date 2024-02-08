@@ -7,6 +7,7 @@ var replay = false
 func _ready():
 	$Map.gen_map()
 	$Player1.display_vision()
+	$Player1.move()
 	#$Player1.display_move_grid()
 	
 

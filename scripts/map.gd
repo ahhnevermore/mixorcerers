@@ -42,15 +42,19 @@ func get_terrain(tile:Tile)->String:
 func gen_vision_grid(unit):
 	var xy = local_to_map(unit.position)
 	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
-	return Grid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0))
+	return Grid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
 
-func gen_move_grid(unit):
+func gen_move_grid(unit)->Grid:
 	var xy = local_to_map(unit.position)
 	var aug_move = max(unit.move_stat + unit.move_stat_modifier,1)
-	return Grid.new(field_of_prop(xy,"move_cost",aug_move,[],0))
+	return Grid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
 	
 func manhattan(a:Vector2i,b:Vector2i)->int:
 	return abs(b.x-a.x)+ abs(b.y-a.y)
+
+func shortest_path(grid,start,end):
+	pass
+	
 		
 
 # on some turn a tile has changed
@@ -88,13 +92,13 @@ func get_surrounding_values(xy:Vector2i,prop:String):
 		result.append([cell,terrains[get_terrain(get_tile(cell))][prop]])
 	return result
 
-func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int):
-	var res = [[tile,acc]]
+func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int,parent):
+	var res = [[tile,[acc,parent]]]
 	var new_frontier =get_surrounding_cells(tile)
 	new_frontier.append(tile)
 	for neighbour in get_surrounding_values(tile,prop):	
 		if neighbour[0] not in old_frontier and prop_value - neighbour[1] > 0:
-			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1]))
+			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1],tile))
 	return res	
 
 

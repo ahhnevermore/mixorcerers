@@ -8,7 +8,7 @@ func _init(list):
 
 func add(elem):
 	if elem[0] in self.dict:
-		if self.dict[elem[0]]>elem[1]:
+		if self.dict[elem[0]][0]>elem[1][0]:
 			self.dict[elem[0]]=elem[1]
 	else:
 		self.dict[elem[0]]=elem[1]
@@ -18,13 +18,13 @@ func union(grid2:Grid)->Grid:
 	var res=Grid.new([])
 	for elem in self.dict:
 		if elem in res.dict:
-			if res.dict[elem] > self.dict[elem]:
+			if res.dict[elem][0] > self.dict[elem][0]:
 				res.dict[elem]=self.dict[elem]
 		else:
 			res.dict[elem]=self.dict[elem]
 	for elem in grid2.dict:
 		if elem in res.dict:
-			if res.dict[elem] > grid2.dict[elem]:
+			if res.dict[elem][0] > grid2.dict[elem][0]:
 				res.dict[elem]=grid2.dict[elem]
 		else:
 			res.dict[elem]=grid2.dict[elem]
