@@ -3,6 +3,7 @@ extends Area2D
 var Map
 var cursor_active=true
 signal cursor_tile
+var interact = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Map=get_parent().get_node("Map")
@@ -25,7 +26,9 @@ func _process(_delta):
 	var final=Map.local_to_map(position)+change
 	if final.x< Map.xw and final.y< Map.yw and final.x>=0 and final.y>=0:
 		position=Map.map_to_local(final)
-		cursor_tile.emit(Map.get_terrain(Map.get_tile(final)))
+		cursor_tile.emit([Map.get_tile(final),
+		Map.get_terrain(Map.get_tile(final)),
+		interact])
 	
 
 

@@ -58,8 +58,22 @@ func find_path(grid,end,path:Array)->Array:
 	if parent:
 		find_path(grid,parent,path)
 	return path
+
+func display_vision_grid(grid):
+	for tile in grid:
+		set_cell(3,tile[0],terrains['sea']["sprite_id"],terrains['sea']["sprite_atlas"])
 	
-	
+func display_move_grid(grid):
+	for tile in grid:
+		set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
+
+func display_path(path):
+	for xy in path:
+		set_cell(4,xy,17,Vector2i(0,0))
+
+func clear_path(path):
+	for xy in path:
+		erase_cell(4,xy)	
 		
 
 # on some turn a tile has changed

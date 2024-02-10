@@ -12,6 +12,6 @@ func _process(_delta):
 
 
 
-func _on_cursor_tile(terrain):
-	$Terrain.text = terrain
+func terrain_display(cursorval):
+	$Terrain.text = cursorval[1]
 	$Terrain.show()
