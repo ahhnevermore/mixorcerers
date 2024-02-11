@@ -31,8 +31,8 @@ layer_4/tile_data = PackedInt32Array()
 script = ExtResource("4_bgv5q")
 
 [node name="Cursor" parent="." instance=ExtResource("5_agag1")]
+position = Vector2(3, 0)
 
 [node name="HUD" parent="." instance=ExtResource("6_n8d4v")]
 
-[connection signal="area_entered" from="Cursor" to="Player1" method="_on_cursor_area_entered"]
-[connection signal="cursor_tile" from="Cursor" to="." method="_on_cursor_tile"]
+[connection signal="cursor_changed" from="Cursor" to="." method="_on_cursor_changed"]
