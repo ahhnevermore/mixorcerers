@@ -3,6 +3,8 @@ extends Node2D
 var Game
 var Map
 var Cursor
+var HUD
+var freeze_process = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	print("ready")
@@ -10,15 +12,18 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if Cursor.get_overlapping_areas():
-		print("proceed further")
-	else:
-		Game.mode.pop_back()
-		print(Game.mode)
-		queue_free()
+	if not freeze_process:
+		if Cursor.get_overlapping_areas():
+			freeze_process = true
+			HUD.menu_display(Cursor.get_overlapping_areas())
+		else:
+			Game.mode.pop_back()
+			print(Game.mode)
+			queue_free()
 
-func setup(game,map,cursor):
+func setup(game,map,cursor,hud):
 	Game = game
 	Map = map
 	Cursor = cursor
+	HUD = hud
 	

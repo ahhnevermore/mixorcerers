@@ -12,6 +12,7 @@ func _ready():
 	Map=get_parent().get_node("Map")
 	position= Map.map_to_local(Map.map_file["player1_start_position"])
 	allies.push_back(self)
+	print(name)
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

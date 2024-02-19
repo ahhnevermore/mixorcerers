@@ -1,6 +1,5 @@
 extends Node
 
-
 var replay = false
 var mode = []
 var select_scene:PackedScene
@@ -8,7 +7,7 @@ var select_scene:PackedScene
 func _ready():
 	select_scene = load("res://scenes/select_mode.tscn")
 	$Map.gen_map()
-	$Player1.display_vision()
+	$Player.display_vision()
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
 	
@@ -21,7 +20,7 @@ func _process(_delta):
 		print("clicked")
 		mode.append("select")
 		var select_mode = select_scene.instantiate()
-		select_mode.setup(self,$Map,$Cursor)
+		select_mode.setup(self,$Map,$Cursor,$HUD)
 		add_child(select_mode)
 
 
