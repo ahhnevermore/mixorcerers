@@ -11,9 +11,12 @@ func _ready():
 func _process(delta):
 	pass
 
-func setup(obj,mode_node):
-	self.text= obj.name
-	val = obj
+func setup(arg,mode_node):
+	if arg is Node:
+		self.text= arg.name
+	else:
+		self.text = arg
+	val = arg
 	message.connect(mode_node._on_button_message)
 
 func _on_pressed():
