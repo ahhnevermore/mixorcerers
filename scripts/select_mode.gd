@@ -5,6 +5,7 @@ var Map
 var Cursor
 var HUD
 var freeze_process = false
+var selected
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	print("ready")
@@ -15,7 +16,7 @@ func _process(_delta):
 	if not freeze_process:
 		if Cursor.get_overlapping_areas():
 			freeze_process = true
-			HUD.menu_display(Cursor.get_overlapping_areas())
+			HUD.select_display(Cursor.get_overlapping_areas(),self)
 		else:
 			Game.mode.pop_back()
 			print(Game.mode)
@@ -26,4 +27,7 @@ func setup(game,map,cursor,hud):
 	Map = map
 	Cursor = cursor
 	HUD = hud
-	
+
+func _on_button_message(val):
+	selected = val
+	print(selected)
