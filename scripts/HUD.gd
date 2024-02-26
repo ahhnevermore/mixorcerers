@@ -15,7 +15,7 @@ func terrain_display(terrain):
 	$Terrain.text = terrain
 	$Terrain.show()
 
-func select_display(list,mode_node):
+func command_display(list,mode_node):
 	for obj in list:
 		var button = UIButton_scene.instantiate()
 		button.setup(obj,mode_node)

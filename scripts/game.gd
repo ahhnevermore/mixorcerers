@@ -2,10 +2,20 @@ extends Node
 
 var replay = false
 var mode = []
-var select_scene:PackedScene
+var select_mode_scene:PackedScene
+var base_mode_scene:PackedScene
+var move_mode_scene:PackedScene
+var grid_mode_scene:PackedScene
+var cast_mode_scene:PackedScene
+var mix_mode_scene:PackedScene
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	select_scene = load("res://scenes/select_mode.tscn")
+	select_mode_scene = load("res://scenes/select_mode.tscn")
+	base_mode_scene = load("res://scenes/base_mode.tscn")
+	move_mode_scene = load("res://scenes/move_mode.tscn")
+	grid_mode_scene = load("res://scenes/grid_mode.tscn")
+	cast_mode_scene = load("res://scenes/cast_mode.tscn")
+	mix_mode_scene = load("res://scenes/mix_mode.tscn")
 	$Map.gen_map()
 	$Player.display_vision()
 	#$Player1.display_move_grid()
@@ -17,10 +27,9 @@ func _ready():
 func _process(_delta):
 	pass
 	if not mode and Input.is_action_just_pressed("select_confirm"):
-		print("clicked")
-		mode.append("select")
-		var select_mode = select_scene.instantiate()
+		var select_mode = select_mode_scene.instantiate()
 		select_mode.setup(self,$Map,$Cursor,$HUD)
+		mode.append(select_mode)		
 		add_child(select_mode)
 
 
