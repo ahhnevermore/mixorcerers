@@ -6,7 +6,7 @@ var vision_stat_modifier=0
 var move_stat = 3
 var move_stat_modifier =0
 var allies: Array
-var commands = ["move","show grids","cast","mix"]
+var commands = ["move","vision","cast","mix"]
 # Called when the node enters the scene tree for the first time.
 
 func _ready():

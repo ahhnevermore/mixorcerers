@@ -1,11 +1,5 @@
-extends Node2D
-
-var Game
-var Map
-var Cursor
-var HUD
-var freeze_process = false
-var entity
+extends Mode
+#EXPECTS PROPS to be just 1 unit
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -13,16 +7,26 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if not freeze_process and entity:
+	if not freeze_process and props[0]:
 		freeze_process= true
-		HUD.command_display(entity.commands,self)
+		hud.command_display(props[0].commands,self)
+	if Input.is_action_just_pressed("cancel_action") and game.mode[-1]==self:
+		self.windup()
+		
 
-func setup(game,map,cursor,hud,selected):
-	Game = game
-	Map = map
-	Cursor = cursor
-	HUD = hud
-	entity = selected
 
-func _on_button_message(val):
-	print(val)
+#add remaining features later for clarity
+func _on_button_message(val:String)->void:
+	for i in range(game.mode.size()-1,-1,-1):
+		if game.mode[i] == self:
+			break
+		else:
+			game.mode[i].windup()
+	match val:
+		"move":
+			var move_mode = game.move_mode_scene.instantiate()
+			move_mode.setup(game,map,cursor,hud,props)
+			
+
+			
+		

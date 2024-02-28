@@ -20,4 +20,5 @@ func setup(arg,mode_node):
 	message.connect(mode_node._on_button_message)
 
 func _on_pressed():
+	release_focus()
 	message.emit(val)

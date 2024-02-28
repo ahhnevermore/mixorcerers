@@ -1,12 +1,13 @@
+class_name Map
 extends TileMap
 
-var map_file	
-var map
-var xw
-var yw
-var day
-var turn
-var player
+var map_file:Dictionary	
+var map:Array
+var xw:int
+var yw:int
+var day:bool
+var turn:int
+var player:String
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -39,12 +40,12 @@ func get_terrain(tile:Tile)->String:
 				break
 		return terrain
 
-func gen_vision_grid(unit):
+func gen_vision_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)
 	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
 	return MapGrid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
 
-func gen_move_grid(unit)->MapGrid:
+func gen_move_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)
 	var aug_move = max(unit.move_stat + unit.move_stat_modifier,1)
 	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
@@ -52,26 +53,26 @@ func gen_move_grid(unit)->MapGrid:
 func manhattan(a:Vector2i,b:Vector2i)->int:
 	return abs(b.x-a.x)+ abs(b.y-a.y)
 
-func find_path(grid,end,path:Array)->Array:
+func find_path(grid:MapGrid,end:Vector2i,path:Array)->Array:
 	var parent=grid.dict[end][1]
 	path.push_front(end)
 	if parent:
 		find_path(grid,parent,path)
 	return path
 
-func display_vision_grid(grid):
+func display_vision_grid(grid:MapGrid)->void:
 	for tile in grid:
 		set_cell(3,tile[0],terrains['sea']["sprite_id"],terrains['sea']["sprite_atlas"])
 	
-func display_move_grid(grid):
+func display_move_grid(grid:MapGrid)->void:
 	for tile in grid:
 		set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
 
-func display_path(path):
+func display_path(path:Array)->void:
 	for xy in path:
 		set_cell(4,xy,17,Vector2i(0,0))
 
-func clear_path(path):
+func clear_path(path:Array)->void:
 	for xy in path:
 		erase_cell(4,xy)	
 		
@@ -93,7 +94,7 @@ func gen_tile(tile:Tile)->void:
 	tile.cache=terrain
 	
 
-func gen_fog(tile):
+func gen_fog(tile:Tile)->void:
 	set_cell(2,tile.xy,terrains["fog"]["sprite_id"],terrains["fog"]["sprite_atlas"])
 #generates a new full map
 func gen_map()->void:
@@ -103,7 +104,7 @@ func gen_map()->void:
 				gen_tile(tile)
 				gen_fog(tile)
 
-func get_surrounding_values(xy:Vector2i,prop:String):
+func get_surrounding_values(xy:Vector2i,prop:String)->Array:
 	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
 									   .filter(func(xy):return xy[1]<yw and xy[1]>=0)
 	var result=[]
@@ -122,7 +123,7 @@ func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int
 
 
 
-func load_map(filename)->Dictionary:
+func load_map(filename:String)->Dictionary:
 	if filename=='default':
 		return {
 			"tiles":
@@ -190,7 +191,7 @@ func load_map(filename)->Dictionary:
 		return {}
 
 
-var terrains={
+var terrains:={
 	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":0,

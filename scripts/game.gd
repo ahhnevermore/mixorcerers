@@ -1,7 +1,8 @@
+class_name Game
 extends Node
 
-var replay = false
-var mode = []
+var replay :bool = false
+var mode :Array =[]
 var select_mode_scene:PackedScene
 var base_mode_scene:PackedScene
 var move_mode_scene:PackedScene
@@ -12,8 +13,7 @@ var mix_mode_scene:PackedScene
 func _ready():
 	select_mode_scene = load("res://scenes/select_mode.tscn")
 	base_mode_scene = load("res://scenes/base_mode.tscn")
-	move_mode_scene = load("res://scenes/move_mode.tscn")
-	grid_mode_scene = load("res://scenes/grid_mode.tscn")
+	move_mode_scene=load("res://scenes/move_mode.tscn")
 	cast_mode_scene = load("res://scenes/cast_mode.tscn")
 	mix_mode_scene = load("res://scenes/mix_mode.tscn")
 	$Map.gen_map()
@@ -27,10 +27,9 @@ func _ready():
 func _process(_delta):
 	pass
 	if not mode and Input.is_action_just_pressed("select_confirm"):
+		$Cursor/RepeatDelay.stop()
 		var select_mode = select_mode_scene.instantiate()
-		select_mode.setup(self,$Map,$Cursor,$HUD)
-		mode.append(select_mode)		
-		add_child(select_mode)
+		select_mode.setup(self,$Map,$Cursor,$HUD,[])
 
 
 
@@ -40,6 +39,5 @@ func _process(_delta):
 #add spell prop to dict
 #All terrain modifications have to set the cache of the terrain to null
 
-
-func _on_cursor_changed():
+func _on_cursor_changed()->void:
 	$HUD.terrain_display($Map.get_terrain($Map.get_tile($Cursor.cursor_tile)))

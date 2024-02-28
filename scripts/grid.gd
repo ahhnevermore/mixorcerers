@@ -1,14 +1,14 @@
 class_name  MapGrid
 
 #(x,y):[cost,parent]
-var dict={}
-var index
-func _init(list):
+var dict:Dictionary={}
+var index:int
+func _init(list:Array)->void:
 	if list.size()>0:
 		for elem in list:
 			self.add(elem)
 
-func add(elem):
+func add(elem:Array)->void:
 	if elem[0] in self.dict:
 		if self.dict[elem[0]][0]>elem[1][0]:
 			self.dict[elem[0]]=elem[1]
@@ -32,14 +32,17 @@ func union(grid2:MapGrid)->MapGrid:
 			res.dict[elem]=grid2.dict[elem]
 	return res
 
-func _iter_init(_arg):
+func _iter_init(_arg)->bool:
 	index = 0
 	return index < dict.size()
 
-func _iter_next(_arg):
+func _iter_next(_arg)->bool:
 	index +=1
 	return index < dict.size()
 
-func _iter_get(_arg):
+func _iter_get(_arg)->Array:
 	var k=dict.keys()[index]
 	return [k,dict[k]]
+	
+func contains(elem):
+	return elem in dict
