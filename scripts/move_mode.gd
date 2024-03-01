@@ -32,6 +32,7 @@ func _on_cursor_changed():
 		map.display_path(path)
 
 func windup(clear_display:bool=false)->void:
+	map.clear_grid(move_grid)
 	map.clear_path(path)
 	super.windup(clear_display)
 	

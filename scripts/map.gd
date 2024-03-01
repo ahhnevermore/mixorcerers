@@ -75,7 +75,9 @@ func display_path(path:Array)->void:
 func clear_path(path:Array)->void:
 	for xy in path:
 		erase_cell(4,xy)	
-		
+func clear_grid(grid:MapGrid)->void:
+	for xy in grid:
+		erase_cell(3,xy[0])		
 
 # on some turn a tile has changed
 	#case 1- same turn, player 1 can see it-take
