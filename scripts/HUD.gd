@@ -26,4 +26,6 @@ func clear_command_display()->void:
 	for item in $Commands.get_children():
 		$Commands.remove_child(item)
 		item.queue_free()		
-		
+
+func stats_display(move:String):
+	$Stats.text= "Move "+move+"\n"+"Vision:"

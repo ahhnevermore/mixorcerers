@@ -53,12 +53,13 @@ func gen_move_grid(unit:Variant)->MapGrid:
 func manhattan(a:Vector2i,b:Vector2i)->int:
 	return abs(b.x-a.x)+ abs(b.y-a.y)
 
-func find_path(grid:MapGrid,end:Vector2i,path:Array)->Array:
+func find_path(grid:MapGrid,end:Vector2i,nodes:Array,acc:int)->Array:
 	var parent=grid.dict[end][1]
-	path.push_front(end)
+	nodes.push_front(end)
 	if parent:
-		find_path(grid,parent,path)
-	return path
+		find_path(grid,parent,nodes,acc)
+		return [nodes,acc+grid.dict[end][0]]
+	return [nodes,acc]
 
 func display_vision_grid(grid:MapGrid)->void:
 	for tile in grid:
@@ -69,11 +70,11 @@ func display_move_grid(grid:MapGrid)->void:
 		set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
 
 func display_path(path:Array)->void:
-	for xy in path:
+	for xy in path[0]:
 		set_cell(4,xy,17,Vector2i(0,0))
 
 func clear_path(path:Array)->void:
-	for xy in path:
+	for xy in path[0]:
 		erase_cell(4,xy)	
 func clear_grid(grid:MapGrid)->void:
 	for xy in grid:
@@ -119,7 +120,7 @@ func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int
 	var new_frontier =get_surrounding_cells(tile)
 	new_frontier.append(tile)
 	for neighbour in get_surrounding_values(tile,prop):	
-		if neighbour[0] not in old_frontier and prop_value - neighbour[1] > 0:
+		if neighbour[0] not in old_frontier and prop_value - neighbour[1] >= 0:
 			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1],tile))
 	return res	
 

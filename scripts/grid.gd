@@ -1,6 +1,7 @@
 class_name  MapGrid
 
 #(x,y):[cost,parent]
+#This data structure returns an array of key,value when iterated over
 var dict:Dictionary={}
 var index:int
 func _init(list:Array)->void:
@@ -44,5 +45,3 @@ func _iter_get(_arg)->Array:
 	var k=dict.keys()[index]
 	return [k,dict[k]]
 	
-func contains(elem):
-	return elem in dict

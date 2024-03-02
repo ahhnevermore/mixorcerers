@@ -21,7 +21,6 @@ func _ready():
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
 	
-	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -41,3 +40,4 @@ func _process(_delta):
 
 func _on_cursor_changed()->void:
 	$HUD.terrain_display($Map.get_terrain($Map.get_tile($Cursor.cursor_tile)))
+
