@@ -1,9 +1,9 @@
 extends Node2D
 
 var Map
-var vision_stat = 4
+var vision_stat = 3
 var vision_stat_modifier=0
-var move_stat = 3
+var move_stat = 2
 var move_stat_modifier =0
 var allies: Array
 var commands = ["move","vision","cast","mix"]

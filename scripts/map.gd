@@ -18,7 +18,8 @@ func _ready():
 	day = true
 	turn = 0
 	player = 'p1'
-	
+	for i in MapGrid.new(field_of_prop(Vector2i(2,2),"move_cost",0,[],0,false)):
+		print(i)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -47,7 +48,7 @@ func gen_vision_grid(unit:Variant)->MapGrid:
 
 func gen_move_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)
-	var aug_move = max(unit.move_stat + unit.move_stat_modifier,1)
+	var aug_move = unit.move_stat + unit.move_stat_modifier
 	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
 	
 func manhattan(a:Vector2i,b:Vector2i)->int:
@@ -78,7 +79,12 @@ func clear_path(path:Array)->void:
 		erase_cell(4,xy)	
 func clear_grid(grid:MapGrid)->void:
 	for xy in grid:
-		erase_cell(3,xy[0])		
+		erase_cell(3,xy[0])
+		
+func clear_fog(grid:MapGrid)->void:
+	for tile in grid:
+		erase_cell(2,tile[0])
+		
 
 # on some turn a tile has changed
 	#case 1- same turn, player 1 can see it-take
@@ -97,15 +103,15 @@ func gen_tile(tile:Tile)->void:
 	tile.cache=terrain
 	
 
-func gen_fog(tile:Tile)->void:
-	set_cell(2,tile.xy,terrains["fog"]["sprite_id"],terrains["fog"]["sprite_atlas"])
+func gen_fog(xy:Vector2i)->void:
+	set_cell(2,xy,terrains["fog"]["sprite_id"],terrains["fog"]["sprite_atlas"])
 #generates a new full map
 func gen_map()->void:
 	for row in map:
 		for tile in row:
 			if tile.xy[0] < xw and tile.xy[1] < yw:
 				gen_tile(tile)
-				gen_fog(tile)
+				gen_fog(tile.xy)
 
 func get_surrounding_values(xy:Vector2i,prop:String)->Array:
 	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
@@ -120,7 +126,7 @@ func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int
 	var new_frontier =get_surrounding_cells(tile)
 	new_frontier.append(tile)
 	for neighbour in get_surrounding_values(tile,prop):	
-		if neighbour[0] not in old_frontier and prop_value - neighbour[1] >= 0:
+		if neighbour[0] not in old_frontier and (prop_value - neighbour[1]) >= 0:
 			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1],tile))
 	return res	
 
