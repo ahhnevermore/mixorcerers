@@ -25,3 +25,7 @@ func _on_button_message(val)->void:
 	var selected_base_mode = game.base_mode_scene.instantiate()
 	selected_base_mode.setup(game,map,cursor,hud,[val])
 	self.windup()
+
+func windup()->void:
+	hud.clear_command_display()
+	super.windup()

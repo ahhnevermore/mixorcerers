@@ -17,9 +17,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	game.mode.append(self)
 	game.add_child(self)
 	
-func windup(clear_display:bool = true)->void:
-	if clear_display:
-		hud.clear_command_display()
+func windup()->void:
 	game.mode.erase(self)
 	self.queue_free()
 

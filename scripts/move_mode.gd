@@ -21,11 +21,14 @@ func _process(_delta):
 	if Input.is_action_just_pressed("select_confirm") and path:
 		for xy in vision_grid:
 			map.gen_fog(xy[0])
+		map.clear_grid(move_grid)
 		props[0].position = map.map_to_local(path[0][-1])
 		props[0].move_stat = initial_move - path[1]
 		initial_move= props[0].move_stat	
 		map.clear_path(path)
 		update_grid = true
+	if Input.is_action_just_pressed("cancel_action"):
+		self.windup()
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
@@ -48,10 +51,10 @@ func _on_cursor_changed():
 		hud.stats_display(str(initial_move))
 		path=[]
 
-func windup(clear_display:bool=false)->void:
+func windup()->void:
 	map.clear_grid(move_grid)
 	hud.stats_display(str(initial_move))
 	if path:
 		map.clear_path(path)
-	super.windup(clear_display)
+	super.windup()
 	

@@ -13,7 +13,7 @@ func _process(_delta):
 
 func setup(arg,mode_node):
 	if arg is Node:
-		self.text= arg.name
+		self.text= arg.alias
 	else:
 		self.text = arg
 	val = arg

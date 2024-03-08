@@ -33,11 +33,17 @@ func _process(_delta):
 
 
 #TODO
-#Path finding algorithm
+#Path finding algorithm and movement - Completed
 #Spells
 #add spell prop to dict
 #All terrain modifications have to set the cache of the terrain to null
 
 func _on_cursor_changed()->void:
 	$HUD.terrain_display($Map.get_terrain($Map.get_tile($Cursor.cursor_tile)))
-
+	
+var spells = {
+	"fireball":{'alias':"fireball",'cast_range':5,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[0],
+				'fire_dmg':10.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0,
+				'sprite':"res://icon.svg",'gen_unit':false,'gen_item':false,
+				'elevation_mod': 0,'moisture_mod':'-1','modifier':['vision']}
+}

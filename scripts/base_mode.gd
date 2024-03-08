@@ -10,6 +10,7 @@ func _process(_delta):
 	if not freeze_process and props[0]:
 		freeze_process= true
 		hud.command_display(props[0].commands,self)
+		hud.inventory_display_uninteractive(props[0].inventory)
 	if Input.is_action_just_pressed("cancel_action") and game.mode[-1]==self:
 		self.windup()
 		
@@ -26,7 +27,13 @@ func _on_button_message(val:String)->void:
 		"move":
 			var move_mode = game.move_mode_scene.instantiate()
 			move_mode.setup(game,map,cursor,hud,props)
-			
+		"cast":
+			var cast_mode = game.cast_mode_scene.instantiate()
+			cast_mode.setup(game,map,cursor,hud,props)			
 
-			
+func windup():
+		hud.clear_command_display()
+		hud.clear_stats_display()
+		hud.clear_inventory_display()
+		super.windup()
 		

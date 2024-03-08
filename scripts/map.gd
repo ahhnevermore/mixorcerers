@@ -18,8 +18,6 @@ func _ready():
 	day = true
 	turn = 0
 	player = 'p1'
-	for i in MapGrid.new(field_of_prop(Vector2i(2,2),"move_cost",0,[],0,false)):
-		print(i)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
