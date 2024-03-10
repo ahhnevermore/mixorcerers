@@ -8,9 +8,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if not freeze_process:
+	if update:
 		if cursor.get_overlapping_areas():
-			freeze_process = true
+			update = false
 			hud.command_display(cursor.get_overlapping_areas(),self)
 		else:
 			self.windup()

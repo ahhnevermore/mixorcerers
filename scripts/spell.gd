@@ -1,6 +1,7 @@
 class_name Spell
 extends Area2D
 
+var castable = true
 var alias:String
 var cast_range:int
 var cast_shape:cast_shapes

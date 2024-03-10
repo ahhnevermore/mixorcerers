@@ -7,8 +7,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if not freeze_process and props[0]:
-		freeze_process= true
+	if update and props[0]:
+		update= false
 		hud.command_display(props[0].commands,self)
 		hud.inventory_display_uninteractive(props[0].inventory)
 	if Input.is_action_just_pressed("cancel_action") and game.mode[-1]==self:

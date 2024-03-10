@@ -23,6 +23,98 @@ func _ready():
 func _process(_delta):
 	pass
 
+func manhattan(a:Vector2i,b:Vector2i)->int:
+	return abs(b.x-a.x)+ abs(b.y-a.y)
+
+#PATH
+func find_path(grid:MapGrid,end:Vector2i,nodes:Array,acc:int)->Array:
+	var parent=grid.dict[end][1]
+	nodes.push_front(end)
+	if parent:
+		find_path(grid,parent,nodes,acc)
+		return [nodes,acc+grid.dict[end][0]]
+	return [nodes,acc]
+
+func display_path(path:Array)->void:
+	for xy in path[0]:
+		set_cell(4,xy,17,Vector2i(0,0))
+
+func clear_path(path:Array)->void:
+	for xy in path[0]:
+		erase_cell(4,xy)	
+
+#GRID	
+func display_grid(grid:MapGrid,grid_type:String)->void:
+	match grid_type:
+		"move":
+			for tile in grid:
+				set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
+		"vision":
+			for tile in grid:
+				set_cell(3,tile[0],terrains['sea']["sprite_id"],terrains['sea']["sprite_atlas"])
+		"cast_range":
+			for tile in grid:
+				set_cell(3,tile[0],terrains['river']["sprite_id"],terrains['river']["sprite_atlas"])
+		"map":
+			for tile in grid:
+				gen_tile(get_tile(tile[0]))
+		"fog":
+			for tile in grid:
+				gen_fog(tile[0])
+
+func clear_grid(grid:MapGrid,grid_type:String)->void:
+	match grid_type:
+		"fog":
+			for tile in grid:
+				erase_cell(2,tile[0])
+		_:
+			for xy in grid:
+				erase_cell(3,xy[0])
+
+func gen_vision_grid(unit:Variant)->MapGrid:
+	var xy = local_to_map(unit.position)
+	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
+	return MapGrid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
+
+func gen_move_grid(unit:Variant)->MapGrid:
+	var xy = local_to_map(unit.position)
+	var aug_move = unit.move_stat + unit.move_stat_modifier
+	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
+
+func update_vision(arg_player:String,grid:MapGrid):
+	for xy in grid:
+		var tile = get_tile(xy[0])
+		tile.cache = ""
+		tile.terrain_list[0][arg_player]=turn
+
+func get_surrounding_values(xy:Vector2i,prop:String)->Array:
+	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
+									   .filter(func(xy):return xy[1]<yw and xy[1]>=0)
+	var result=[]
+	if prop in ["cast_cost","cast_range_cost"]:
+		for cell in list:
+			result.append([cell,1])
+	else:
+		for cell in list:
+			result.append([cell,terrains[get_terrain(get_tile(cell))][prop]])
+	return result
+
+func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int,parent)->Array:
+	var res = [[tile,[acc,parent]]]
+	var new_frontier =get_surrounding_cells(tile)
+	new_frontier.append(tile)
+	for neighbour in get_surrounding_values(tile,prop):	
+		if neighbour[0] not in old_frontier and (prop_value - neighbour[1]) >= 0:
+			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1],tile))
+	return res	
+		
+# on some turn a tile has changed
+	#case 1- same turn, player 1 can see it-take
+	#case 2- same turn, tile has changed but player cant see it-go further
+	#case 3- older turn(replays)->go further
+	#case 4- newer turn- take it if it is the most recent true for the player
+	#player can be p1,p2,all
+
 func get_tile(xy:Vector2i)->Tile:
 	return map[xy[1]][xy[0]]
 
@@ -38,58 +130,7 @@ func get_terrain(tile:Tile)->String:
 				terrain = terrain_instance['terrain']
 				break
 		return terrain
-
-func gen_vision_grid(unit:Variant)->MapGrid:
-	var xy = local_to_map(unit.position)
-	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
-	return MapGrid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
-
-func gen_move_grid(unit:Variant)->MapGrid:
-	var xy = local_to_map(unit.position)
-	var aug_move = unit.move_stat + unit.move_stat_modifier
-	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
 	
-func manhattan(a:Vector2i,b:Vector2i)->int:
-	return abs(b.x-a.x)+ abs(b.y-a.y)
-
-func find_path(grid:MapGrid,end:Vector2i,nodes:Array,acc:int)->Array:
-	var parent=grid.dict[end][1]
-	nodes.push_front(end)
-	if parent:
-		find_path(grid,parent,nodes,acc)
-		return [nodes,acc+grid.dict[end][0]]
-	return [nodes,acc]
-
-func display_vision_grid(grid:MapGrid)->void:
-	for tile in grid:
-		set_cell(3,tile[0],terrains['sea']["sprite_id"],terrains['sea']["sprite_atlas"])
-	
-func display_move_grid(grid:MapGrid)->void:
-	for tile in grid:
-		set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
-
-func display_path(path:Array)->void:
-	for xy in path[0]:
-		set_cell(4,xy,17,Vector2i(0,0))
-
-func clear_path(path:Array)->void:
-	for xy in path[0]:
-		erase_cell(4,xy)	
-func clear_grid(grid:MapGrid)->void:
-	for xy in grid:
-		erase_cell(3,xy[0])
-		
-func clear_fog(grid:MapGrid)->void:
-	for tile in grid:
-		erase_cell(2,tile[0])
-		
-
-# on some turn a tile has changed
-	#case 1- same turn, player 1 can see it-take
-	#case 2- same turn, tile has changed but player cant see it-go further
-	#case 3- older turn(replays)->go further
-	#case 4- newer turn- take it if it is the most recent true for the player
-	#player can be p1,p2,all	
 func gen_tile(tile:Tile)->void:
 	var layer
 	if day:
@@ -103,6 +144,8 @@ func gen_tile(tile:Tile)->void:
 
 func gen_fog(xy:Vector2i)->void:
 	set_cell(2,xy,terrains["fog"]["sprite_id"],terrains["fog"]["sprite_atlas"])
+
+
 #generates a new full map
 func gen_map()->void:
 	for row in map:
@@ -111,22 +154,6 @@ func gen_map()->void:
 				gen_tile(tile)
 				gen_fog(tile.xy)
 
-func get_surrounding_values(xy:Vector2i,prop:String)->Array:
-	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
-									   .filter(func(xy):return xy[1]<yw and xy[1]>=0)
-	var result=[]
-	for cell in list:
-		result.append([cell,terrains[get_terrain(get_tile(cell))][prop]])
-	return result
-
-func field_of_prop(tile:Vector2i,prop:String,prop_value:int,old_frontier,acc:int,parent)->Array:
-	var res = [[tile,[acc,parent]]]
-	var new_frontier =get_surrounding_cells(tile)
-	new_frontier.append(tile)
-	for neighbour in get_surrounding_values(tile,prop):	
-		if neighbour[0] not in old_frontier and (prop_value - neighbour[1]) >= 0:
-			res.append_array(field_of_prop(neighbour[0],prop,prop_value-neighbour[1],new_frontier,acc+neighbour[1],tile))
-	return res	
 
 
 

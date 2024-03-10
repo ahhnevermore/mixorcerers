@@ -41,10 +41,16 @@ func inventory_display(list:Array,mode_node:Mode)->void:
 	for i in range(list.size()):
 		if i < 6:
 			var slot = $Inventory.get_child(i)
-			var button = UIButton_scene.instantiate()
-			button.setup(list[i],mode_node)
-			slot.add_child(button)
-			
+			if list[i].castable:
+				
+				var button = UIButton_scene.instantiate()
+				button.setup(list[i],mode_node)
+				slot.add_child(button)
+			else:
+				var label = Label.new()
+				label.text=list[i].alias
+				slot.add_child(label)
+
 func clear_inventory_display()->void:
 	for slot in $Inventory.get_children():
 		for item in slot.get_children():

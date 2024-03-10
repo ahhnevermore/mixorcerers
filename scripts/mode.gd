@@ -5,7 +5,7 @@ var game :Game
 var map :Map 
 var cursor :Cursor
 var hud: HUD
-var freeze_process:bool = false
+var update = true
 var props:Array
 
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
