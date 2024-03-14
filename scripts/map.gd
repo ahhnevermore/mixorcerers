@@ -61,24 +61,30 @@ func display_grid(grid:MapGrid,grid_type:String)->void:
 		"fog":
 			for tile in grid:
 				gen_fog(tile[0])
+		"cast":
+			for tile in grid:
+				set_cell(4,tile[0],17,Vector2i(0,0))
 
 func clear_grid(grid:MapGrid,grid_type:String)->void:
 	match grid_type:
 		"fog":
 			for tile in grid:
 				erase_cell(2,tile[0])
+		"cast":
+			for tile in grid:
+				erase_cell(4,tile[0])
 		_:
 			for xy in grid:
 				erase_cell(3,xy[0])
 
 func gen_vision_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)
-	var aug_vision = max(unit.vision_stat + unit.vision_stat_modifier+ terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
+	var aug_vision = max(unit.modified_stats['vision'] + terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
 	return MapGrid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
 
 func gen_move_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)
-	var aug_move = unit.move_stat + unit.move_stat_modifier
+	var aug_move = unit.modified_stats['move']
 	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
 
 func update_vision(arg_player:String,grid:MapGrid):
@@ -224,7 +230,24 @@ func load_map(filename:String)->Dictionary:
 	else:
 		return {}
 
-
+var mod_to_terrain ={
+	[0,0]:"chasm",
+	[0,1]:"ravine",
+	[0,2]:"underground_lake",
+	[0,3]:"ocean",
+	[1,0]:"desert",
+	[1,1]:"beach",
+	[1,2]:"delta",
+	[1,3]:"sea",
+	[2,0]:"plateau",
+	[2,1]:"jungle",
+	[2,2]:"swamp",
+	[2,3]:"river",
+	[3,0]:"cliff",
+	[3,1]:"snowcap",
+	[3,2]:"mountain_lake",
+	[3,3]:"glacier"
+}	
 var terrains:={
 	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,

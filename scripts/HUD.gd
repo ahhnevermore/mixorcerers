@@ -10,8 +10,6 @@ func _ready():
 func _process(_delta):
 	pass
 
-
-
 func terrain_display(terrain:String)->void:
 	$Terrain.text = terrain
 	$Terrain.show()
@@ -26,9 +24,15 @@ func clear_command_display()->void:
 	for item in $Commands.get_children():
 		item.queue_free()		
 
-func stats_display(move:String):
-	$Stats.text= "Move "+move+"\n"+"Vision:"
-
+var internal_stats={}
+#stats is a 2D array with format [stat,value]
+func stats_display(stats_list:Array):
+	for stat in stats_list:
+		internal_stats[stat[0]] = stat[1]
+	$Stats.text=("  Move: " + str(internal_stats['move'])+"\n"
+				+"Vision: " + str(internal_stats['vision'])+"\n"
+				+"Health: " + str(internal_stats['health'])+"\n"
+	)
 func inventory_display_uninteractive(list:Array)->void:
 	for i in range(list.size()):
 		if i < 6:

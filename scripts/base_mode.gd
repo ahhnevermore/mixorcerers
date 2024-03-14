@@ -9,12 +9,17 @@ func _ready():
 func _process(_delta):
 	if update and props[0]:
 		update= false
+		hud.internal_stats = props[0].modified_stats.duplicate()
+		hud.stats_display([])
 		hud.command_display(props[0].commands,self)
 		hud.inventory_display_uninteractive(props[0].inventory)
 	if Input.is_action_just_pressed("cancel_action") and game.mode[-1]==self:
 		self.windup()
 		
-
+func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
+	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+	
+	
 
 #add remaining features later for clarity
 func _on_button_message(val:String)->void:
@@ -35,5 +40,6 @@ func windup():
 		hud.clear_command_display()
 		hud.clear_stats_display()
 		hud.clear_inventory_display()
+		hud.internal_stats={}
 		super.windup()
 		

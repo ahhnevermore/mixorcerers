@@ -22,20 +22,22 @@ func _process(_delta):
 		map.display_grid(vision_grid,'fog')
 		map.clear_grid(move_grid,'move')
 		props[0].position = map.map_to_local(path[0][-1])
-		props[0].move_stat = initial_move - path[1]
-		initial_move= props[0].move_stat	
+		props[0].modified_stats['move'] = initial_move - path[1]
+		initial_move= props[0].modified_stats['move']	
 		map.clear_path(path)
+		log_action()
 		update = true
 	if Input.is_action_just_pressed("cancel_action"):
 		self.windup()
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+	alias = "move"
 	move_grid= map.gen_move_grid(props[0])
 	map.display_grid(move_grid,'move')
 	vision_grid=map.gen_vision_grid(props[0])
 	update = false
-	initial_move=props[0].move_stat
+	initial_move=props[0].modified_stats['move']
 	_on_cursor_changed()
 	cursor.cursor_changed.connect(_on_cursor_changed)
 	
@@ -45,15 +47,17 @@ func _on_cursor_changed():
 	if cursor.cursor_tile in move_grid.dict:
 		path = map.find_path(move_grid,cursor.cursor_tile,[],0)
 		map.display_path(path)
-		hud.stats_display(str(props[0].move_stat -path[1]))
+		hud.stats_display([['move',props[0].modified_stats['move'] -path[1]]])
 	else:
-		hud.stats_display(str(initial_move))
+		hud.stats_display([['move',initial_move]])
 		path=[]
 
 func windup()->void:
 	map.clear_grid(move_grid,"move")
-	hud.stats_display(str(initial_move))
+	hud.stats_display([['move',initial_move]])
 	if path:
 		map.clear_path(path)
 	super.windup()
 	
+func log_action()->void:
+	game.turn_history.append([alias,props[0].position])
