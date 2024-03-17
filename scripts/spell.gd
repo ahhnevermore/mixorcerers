@@ -25,6 +25,9 @@ enum cast_shapes{
 	VECTOR
 }
 
+enum dmg_distribution{
+	
+}#different ways to distribute damage across the cast grid
 func _init(config:Dictionary,arg_modifier:Array,arg_grimoire:bool =false):
 	alias= config['alias']
 	cast_range = config['cast_range']

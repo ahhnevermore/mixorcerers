@@ -20,7 +20,12 @@ func _process(_delta):
 					map.display_grid(cast_range_grid,"cast_range")
 	if Input.is_action_just_pressed("select_confirm") and cast_grid:
 		cast(props[1],cast_grid)
+		props[0].inventory.erase(props[1])
 		log_action()
+		props.pop_back()
+		hud.clear_inventory_display()
+		hud.inventory_display(props[0].inventory,self)
+		
 	if Input.is_action_just_pressed("cancel_action"):
 		self.windup()
 			
@@ -47,21 +52,54 @@ func _on_cursor_changed():
 		
 func cast(spell:Spell,target:MapGrid):
 	var matches = []
+	var tiles=[]
 	for xy in target:
 		var tile = map.get_tile(xy[0])
+		tiles.append(tile)
 		for listener in game.listeners:
 			if map.map_to_local(tile.xy) == listener.position:
 				matches.append([listener,tile])
+
 	for match in matches:
 		var terrain_stats = map.terrains[map.get_terrain(match[1])]
 		var unit = match[0]
-		if not spell.modifier:
+		print(terrain_stats,unit,spell.modifier)
+		if not Spell.dmg_distribution in spell.modifier:	#damage distribution will have damage varying across the grid
+			#Calculate dmg
 			var damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
 						spell.water_dmg * (1+terrain_stats['water_affin']) +
 						spell.earth_dmg * (1+terrain_stats['earth_affin']) +
 						spell.air_dmg * (1+terrain_stats['air_affin'])
 			)
 			unit.modified_stats['health'] -= damage
+			hud.stats_display([['health',unit.modified_stats['health']]])
+	#modify terrain
+	if spell.elevation_mod != 0 or spell.moisture_mod != 0:
+		for tile in tiles:
+			var elevation
+			if map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod < 0:
+				elevation = 0
+			elif map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod >3:
+				elevation = 3
+			else:
+				elevation =  map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod
+			var moisture
+			if map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod < 0:
+				moisture=0
+			elif map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod>3:
+				moisture=3
+			else:
+				moisture=map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod
+				
+			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[[elevation,moisture]],'all':map.turn,'p1':map.turn,'p2':INF})
+			tile.cache =''
+			map.gen_tile(tile)
+			
+	
+	
+	map.clear_grid(cast_grid,'cast')
+	map.clear_grid(cast_range_grid,'cast_range')
+				
 	
 	
 func windup():

@@ -47,5 +47,5 @@ var spells = {
 	"fireball":{'alias':"fireball",'cast_range':2,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[1],
 				'fire_dmg':10.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0,
 				'sprite':"res://icon.svg",'gen_unit':false,'gen_item':false,
-				'elevation_mod': 0,'moisture_mod':'-1','modifier':['vision']}
+				'elevation_mod': 0,'moisture_mod':-1,'modifier':['vision']}
 }
