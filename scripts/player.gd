@@ -32,11 +32,13 @@ func gen_visible_tiles():
 		visible_tiles=visible_tiles.union(map.gen_vision_grid(ally))
 	
 func display_vision(grid):
+	#checks this grid for updating vision
 	if grid:
 		for tile in grid:
 			if tile[0] in visible_tiles.dict:
 				map.gen_tile(map.get_tile(tile[0]))
 	else:
+		#updates all the vision
 		for tile in visible_tiles:
 			map.gen_tile(map.get_tile(tile[0]))
 			map.erase_cell(2,tile[0])

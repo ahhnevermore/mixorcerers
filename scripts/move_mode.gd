@@ -13,15 +13,19 @@ func _ready():
 func _process(_delta):
 	if update:
 		move_grid= map.gen_move_grid(props[0])
-		vision_grid=map.gen_vision_grid(props[0])
-		map.update_vision(map.player,vision_grid)
-		map.clear_grid(vision_grid,"fog")
 		map.display_grid(move_grid,'move')
 		update = false
 	if Input.is_action_just_pressed("select_confirm") and path:
 		map.display_grid(vision_grid,'fog')
 		map.clear_grid(move_grid,'move')
 		props[0].position = map.map_to_local(path[0][-1])
+		
+		vision_grid=map.gen_vision_grid(props[0])
+		props[0].gen_visible_tiles()
+		map.update_vision(map.player,props[0].visible_tiles)
+		props[0].display_vision([])
+		
+		
 		props[0].modified_stats['move'] = initial_move - path[1]
 		initial_move= props[0].modified_stats['move']	
 		map.clear_path(path)

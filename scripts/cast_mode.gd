@@ -92,9 +92,9 @@ func cast(spell:Spell,target:MapGrid):
 			else:
 				moisture=map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod
 				
-			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[[elevation,moisture]],'all':map.turn,'p1':map.turn,'p2':INF})
-			tile.cache =''
-			map.gen_tile(tile)
+			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[[elevation,moisture]],'all':map.turn,'p1':INF,'p2':INF})
+			map.update_vision(map.player,props[0].visible_tiles)
+			props[0].display_vision([])
 			
 	
 	

@@ -91,7 +91,8 @@ func update_vision(arg_player:String,grid:MapGrid):
 	for xy in grid:
 		var tile = get_tile(xy[0])
 		tile.cache = ""
-		tile.terrain_list[0][arg_player]=turn
+		if tile.terrain_list[0][arg_player]> turn:
+			tile.terrain_list[0][arg_player]=turn
 
 func get_surrounding_values(xy:Vector2i,prop:String)->Array:
 	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
