@@ -20,6 +20,7 @@ func _process(_delta):
 					map.display_grid(cast_range_grid,"cast_range")
 	if Input.is_action_just_pressed("select_confirm") and cast_grid:
 		cast(props[1],cast_grid)
+		game._on_cursor_changed()
 		props[0].inventory.erase(props[1])
 		log_action()
 		props.pop_back()

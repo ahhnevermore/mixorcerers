@@ -2,104 +2,95 @@
 
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="1_rwrww"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="CanvasLayer"]
+script = ExtResource("1_rwrww")
+
+[node name="Div" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -148.0
-offset_bottom = 1.0
+offset_top = -150.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("1_rwrww")
 
-[node name="Terrain" type="Label" parent="."]
+[node name="Stats" type="Label" parent="Div"]
+offset_left = 50.0
+offset_right = 300.0
+offset_bottom = 150.0
+
+[node name="Inventory" type="Control" parent="Div"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 360.0
+offset_right = 720.0
+offset_bottom = 150.0
+
+[node name="Slot1" type="Control" parent="Div/Inventory"]
+anchors_preset = 0
+offset_right = 120.0
+offset_bottom = 75.0
+
+[node name="Slot2" type="Control" parent="Div/Inventory"]
 layout_mode = 1
-anchors_preset = 11
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_right = 60.0
+offset_bottom = 75.0
+grow_horizontal = 2
+
+[node name="Slot3" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -122.0
-offset_right = 3.0
+offset_left = -120.0
+offset_bottom = 75.0
 grow_horizontal = 0
-grow_vertical = 2
 
-[node name="Commands" type="GridContainer" parent="."]
+[node name="Slot4" type="Control" parent="Div/Inventory"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 0
+offset_top = 75.0
+offset_right = 120.0
+offset_bottom = 149.0
+
+[node name="Slot5" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 104.0
-offset_top = -74.5
-offset_right = 434.0
-offset_bottom = 74.5
+offset_left = -60.0
+offset_top = 75.0
+offset_right = 60.0
+offset_bottom = 149.0
 grow_horizontal = 2
-grow_vertical = 2
+
+[node name="Slot6" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 75.0
+offset_bottom = 149.0
+grow_horizontal = 0
+
+[node name="Commands" type="GridContainer" parent="Div"]
+layout_mode = 1
+offset_left = 780.0
+offset_right = 1002.0
+offset_bottom = 150.0
 columns = 6
 
-[node name="Stats" type="Label" parent="."]
-layout_mode = 0
-offset_left = 20.0
-offset_right = 320.0
-offset_bottom = 149.0
-
-[node name="Inventory" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 320.0
-offset_right = 680.0
-offset_bottom = 149.0
-
-[node name="Slot1" type="Control" parent="Inventory"]
-anchors_preset = 0
-offset_right = 120.0
-offset_bottom = 75.0
-
-[node name="Slot2" type="Control" parent="Inventory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -60.0
-offset_right = 60.0
-offset_bottom = 75.0
-grow_horizontal = 2
-
-[node name="Slot3" type="Control" parent="Inventory"]
+[node name="Terrain" type="Label" parent="Div"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -120.0
-offset_bottom = 75.0
-grow_horizontal = 0
-
-[node name="Slot4" type="Control" parent="Inventory"]
-layout_mode = 1
-anchors_preset = 0
-offset_top = 75.0
-offset_right = 120.0
-offset_bottom = 149.0
-
-[node name="Slot5" type="Control" parent="Inventory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -60.0
-offset_top = 75.0
-offset_right = 60.0
-offset_bottom = 149.0
-grow_horizontal = 2
-
-[node name="Slot6" type="Control" parent="Inventory"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -120.0
-offset_top = 75.0
-offset_bottom = 149.0
+offset_left = -100.0
+offset_bottom = 150.0
 grow_horizontal = 0

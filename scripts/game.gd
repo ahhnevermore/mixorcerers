@@ -19,7 +19,8 @@ func _ready():
 	cast_mode_scene = load("res://scenes/cast_mode.tscn")
 	mix_mode_scene = load("res://scenes/mix_mode.tscn")
 	$Map.gen_map()
-	$Player.display_vision()
+	$Player.gen_visible_tiles()
+	$Player.display_vision([])
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
 	

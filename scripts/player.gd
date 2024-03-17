@@ -12,6 +12,7 @@ var initial_stats = {'move':2,
 			'vision':3,
 			'health':100}
 var modified_stats = initial_stats.duplicate(true)
+var visible_tiles
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
@@ -25,12 +26,20 @@ func _ready():
 func _process(_delta):
 	pass
 
-func display_vision():
-	var visible_tiles=MapGrid.new([])
+func gen_visible_tiles():
+	visible_tiles=MapGrid.new([])
 	for ally in allies:
 		visible_tiles=visible_tiles.union(map.gen_vision_grid(ally))
-	for tile in visible_tiles:
-		map.erase_cell(2,tile[0])
+	
+func display_vision(grid):
+	if grid:
+		for tile in grid:
+			if tile[0] in visible_tiles.dict:
+				map.gen_tile(map.get_tile(tile[0]))
+	else:
+		for tile in visible_tiles:
+			map.gen_tile(map.get_tile(tile[0]))
+			map.erase_cell(2,tile[0])
 
 func _on_cursor_area_entered(_area):
 	print(true)
