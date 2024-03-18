@@ -18,7 +18,7 @@ func _ready():
 	day = true
 	turn = 0
 	player = 'p1'
-	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
