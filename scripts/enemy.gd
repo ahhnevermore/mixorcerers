@@ -1,11 +1,11 @@
 extends Unit
 
 
-var alias = "Player"
+var alias = "Enemy"
 var game:Game
 var map:Map
 var allies: Array
-var commands = ["move","vision grid","cast","mix"]
+var commands = ["move grid","vision grid"]
 var orbs = {"fire":10,"water":10,"earth":10,"air":10,"texture":0}
 var inventory
 var initial_stats = {'move':2,
@@ -18,7 +18,7 @@ var visible_tiles
 func _ready():
 	game=get_parent()
 	map=get_parent().get_node("Map")
-	position= map.map_to_local(map.map_file[map.player+"_start_position"])
+	position= map.map_to_local(map.map_file["player1_start_position"])
 	allies.push_back(self)
 	inventory =[Spell.new(game.spells["fireball"],[]),Spell.new(game.spells["fireball"],[])]
 	game.listeners.append(self)

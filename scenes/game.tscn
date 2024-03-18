@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjk0h66ajb3ly"]
+[gd_scene load_steps=8 format=3 uid="uid://bjk0h66ajb3ly"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_xh63o"]
 [ext_resource type="PackedScene" uid="uid://bfudhyvp3vw1j" path="res://scenes/map.tscn" id="2_qpj8k"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="4_bgv5q"]
 [ext_resource type="PackedScene" uid="uid://0t8w2vfd3c4x" path="res://scenes/cursor.tscn" id="5_agag1"]
 [ext_resource type="PackedScene" uid="uid://v4pkwn5kxsn4" path="res://scenes/HUD.tscn" id="6_n8d4v"]
+[ext_resource type="PackedScene" uid="uid://bdvr3eh2cbpad" path="res://scenes/enemy.tscn" id="7_a133x"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_xh63o")
@@ -34,5 +35,7 @@ script = ExtResource("4_bgv5q")
 position = Vector2(3, 0)
 
 [node name="HUD" parent="." instance=ExtResource("6_n8d4v")]
+
+[node name="Enemy" parent="." instance=ExtResource("7_a133x")]
 
 [connection signal="cursor_changed" from="Cursor" to="." method="_on_cursor_changed"]

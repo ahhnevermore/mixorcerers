@@ -36,9 +36,22 @@ func _process(_delta):
 
 
 #TODO
+
+#Spells - kind of
+
+
+#add sprites for spells
+#add sound effects for spells and tiles
+# mod sprites for terrain
+#add enemy
+#write turns to file
+
+#COMPLETED
 #Path finding algorithm and movement - Completed
-#Spells
-#add spell prop to dict
+#vision - done
+#add spell prop to dict-not sure what it means but done
+
+
 #All terrain modifications have to set the cache of the terrain to null
 
 func _on_cursor_changed()->void:

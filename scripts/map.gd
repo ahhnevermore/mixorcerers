@@ -225,8 +225,8 @@ func load_map(filename:String)->Dictionary:
 		Tile.new(Vector2i(6,6),[{'terrain':'river','all': 0,'p1':0,'p2': 0}])]
 		
 		],
-		"player1_start_position":Vector2i(3,3),
-		"player2_start_position":Vector2i(-1,-1),
+		"p1_start_position":Vector2i(3,3),
+		"p2_start_position":Vector2i(-1,-1),
 		}
 	else:
 		return {}

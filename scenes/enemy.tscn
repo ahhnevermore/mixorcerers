@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdvr3eh2cbpad"]
+
+[ext_resource type="Texture2D" uid="uid://djtghfmtuoyy1" path="res://assets/enemy_priest_t2.png" id="1_fb36m"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y57x6"]
+radius = 8.0
+height = 16.0
+
+[node name="Enemy" type="Area2D"]
+z_index = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_fb36m")
+offset = Vector2(-8, -20)
+
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_y57x6")

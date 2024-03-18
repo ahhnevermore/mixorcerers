@@ -10,7 +10,7 @@ signal cursor_changed
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	map=get_parent().get_node("Map")
-	cursor_tile= map.map_file["player1_start_position"]
+	cursor_tile= map.map_file[map.player+"_start_position"]
 	position= map.map_to_local(cursor_tile)
 	$RepeatDelay.start()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
