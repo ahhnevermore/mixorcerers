@@ -8,6 +8,7 @@ var yw:int
 var day:bool
 var turn:int
 var player:String
+var enemy:String
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -17,7 +18,12 @@ func _ready():
 	yw = map.size()
 	day = true
 	turn = 0
-	player = 'p1'
+	player = 'p1' #will be a method later synchronized
+	if player == 'p1':
+		enemy ='p2'
+	else:
+		enemy='p1'
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -226,7 +232,7 @@ func load_map(filename:String)->Dictionary:
 		
 		],
 		"p1_start_position":Vector2i(3,3),
-		"p2_start_position":Vector2i(-1,-1),
+		"p2_start_position":Vector2i(0,0),
 		}
 	else:
 		return {}
