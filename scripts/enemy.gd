@@ -1,6 +1,5 @@
 extends Unit
 
-
 var alias = "Enemy"
 var game:Game
 var map:Map
@@ -18,7 +17,9 @@ func _ready():
 	position= map.map_to_local(map.map_file[map.enemy +"_start_position"])
 	inventory =[Spell.new(game.spells["fireball"],[]),Spell.new(game.spells["fireball"],[])]
 	game.listeners.append(self)
+	$Sprite2D.hide()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(_delta):
 	pass
 
