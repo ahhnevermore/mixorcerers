@@ -39,10 +39,7 @@ func _process(_delta):
 
 
 #TODO
-
 #Spells - kind of
-
-
 #add sprites for spells
 #add sound effects for spells and tiles
 # mod sprites for terrain

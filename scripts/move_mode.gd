@@ -22,7 +22,7 @@ func _process(_delta):
 		
 		vision_grid=map.gen_vision_grid(props[0])
 		props[0].gen_visible_tiles()
-		map.update_vision(map.player,props[0].visible_tiles)
+		map.update_vision(props[0].visible_tiles)
 		props[0].display_vision([])
 		
 		
