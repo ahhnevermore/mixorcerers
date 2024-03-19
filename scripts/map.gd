@@ -232,7 +232,7 @@ func load_map(filename:String)->Dictionary:
 		
 		],
 		"p1_start_position":Vector2i(3,3),
-		"p2_start_position":Vector2i(0,0),
+		"p2_start_position":Vector2i(0,3),
 		}
 	else:
 		return {}
