@@ -43,8 +43,6 @@ func display_vision(grid):
 			map.gen_tile(map.get_tile(tile[0]))
 			map.erase_cell(2,tile[0])
 
-func _on_cursor_area_entered(_area):
-	print(true)
 
 
 
