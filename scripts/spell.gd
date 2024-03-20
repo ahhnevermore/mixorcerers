@@ -18,6 +18,7 @@ var elevation_mod
 var moisture_mod
 var modifier :Array #general purpose array that is primarily used for day night effect or texture surprise
 					#also has "provides vision traits
+var repeat_cost:Dictionary
 enum cast_shapes{
 	STRAIGHT_LINE,
 	CIRCLE,
@@ -45,3 +46,4 @@ func _init(config:Dictionary,arg_modifier:Array,arg_grimoire:bool =false):
 	grimoire = arg_grimoire
 	modifier.append_array(arg_modifier)
 	modifier.append_array(config['modifier'])
+	repeat_cost=config['repeat_cost']

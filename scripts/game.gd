@@ -43,14 +43,14 @@ func _process(_delta):
 #add sprites for spells
 #add sound effects for spells and tiles
 # mod sprites for terrain
-#add enemy
+#create a game moves data structure, then make the enemy perform its moves
 #write turns to file
 
 #COMPLETED
 #Path finding algorithm and movement - Completed
 #vision - done
 #add spell prop to dict-not sure what it means but done
-
+#add enemy
 
 #All terrain modifications have to set the cache of the terrain to null
 
@@ -61,5 +61,10 @@ var spells = {
 	"fireball":{'alias':"fireball",'cast_range':2,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[1],
 				'fire_dmg':10.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0,
 				'sprite':"res://icon.svg",'gen_unit':false,'gen_item':false,
-				'elevation_mod': 0,'moisture_mod':-1,'modifier':['vision']}
+				'elevation_mod': 0,'moisture_mod':-1,'modifier':['vision'],
+				'repeat_cost':{'fire':1,'water':0,'earth':0,'air':0}}
+}
+
+var recipes= {
+	{'fire':3,'water':0,'earth':0,'air':0 }: 'fireball'
 }
