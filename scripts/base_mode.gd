@@ -41,6 +41,10 @@ func _on_button_message(val:String)->void:
 		"vision grid":
 			var display_grid_mode = game.display_grid_mode_scene.instantiate()
 			display_grid_mode.setup(game,map,cursor,hud,[props[0],"vision"])
+		"mix":
+			var mix_mode = game.mix_mode_scene.instantiate()
+			mix_mode.setup(game,map,cursor,hud,props)
+			
 func windup():
 		hud.clear_command_display()
 		hud.clear_stats_display()

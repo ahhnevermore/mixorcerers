@@ -18,7 +18,7 @@ func _process(_delta):
 					cast_range_grid = MapGrid.new(map.field_of_prop(map.local_to_map(props[0].position),
 					"cast_range_cost",props[1].cast_range,[],0,false))
 					map.display_grid(cast_range_grid,"cast_range")
-	if Input.is_action_just_pressed("select_confirm") and cast_grid:
+	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[1],cast_grid)
 		game._on_cursor_changed()
 		props[0].inventory.erase(props[1])

@@ -12,7 +12,7 @@ var enemy:String
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	map_file = load_map("default")
+	map_file = load_map("user://map.json")
 	map= map_file["tiles"]
 	xw = map[0].size()
 	yw = map.size()
@@ -171,7 +171,31 @@ func gen_map()->void:
 
 
 func load_map(filename:String)->Dictionary:
-	if filename=='default':
+	if filename:
+		var tiles =[]
+		var file = FileAccess.open(filename,FileAccess.READ)
+		var content = file.get_as_text()
+		var json = JSON.new()
+		var error = json.parse(content)
+		if error == OK:
+			for row in json.data['tiles']:
+				var mid =[]
+				for item in row:
+					mid.append('')
+				tiles.append(mid)
+			for i in range(json.data['tiles'].size()):
+				for j in range(json.data['tiles'][0].size()):
+					tiles[i][j] = Tile.new(Vector2i(j,i),[{'terrain':json.data['tiles'][i][j],'all':0,'p':0}])
+			
+			return {
+				'tiles':tiles,
+				'p1_start_position':Vector2i(json.data['p1_start_position'][0],json.data['p1_start_position'][1]),
+				'p2_start_position':Vector2i(json.data['p2_start_position'][0],json.data['p2_start_position'][1])
+			}		
+		else:
+			print("Error")
+			return {}
+	else:
 		return {
 			"tiles":
 		[[Tile.new(Vector2i(0,0),[{'terrain':'sea','all': 0,'p':0}]),
@@ -234,8 +258,8 @@ func load_map(filename:String)->Dictionary:
 		"p1_start_position":Vector2i(3,3),
 		"p2_start_position":Vector2i(0,3),
 		}
-	else:
-		return {}
+		
+		
 
 var mod_to_terrain ={
 	[0,0]:"chasm",

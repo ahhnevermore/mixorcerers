@@ -39,6 +39,9 @@ func _process(_delta):
 
 
 #TODO
+#loading maps from filea
+#camera
+#mix mode
 #Spells - kind of
 #add sprites for spells
 #add sound effects for spells and tiles
