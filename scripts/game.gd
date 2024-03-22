@@ -39,7 +39,7 @@ func _process(_delta):
 
 
 #TODO
-#loading maps from filea
+
 #camera
 #mix mode
 #Spells - kind of
@@ -54,6 +54,9 @@ func _process(_delta):
 #vision - done
 #add spell prop to dict-not sure what it means but done
 #add enemy
+#loading maps from filea
+
+
 
 #All terrain modifications have to set the cache of the terrain to null
 

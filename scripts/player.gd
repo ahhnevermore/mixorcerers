@@ -8,8 +8,8 @@ var allies: Array
 var commands = ["move","vision grid","cast","mix"]
 var orbs = {"fire":10,"water":10,"earth":10,"air":10,"texture":0}
 var inventory
-var initial_stats = {'move':2,
-			'vision':3,
+var initial_stats = {'move':7,
+			'vision':8,
 			'health':100}
 var modified_stats = initial_stats.duplicate(true)
 var visible_tiles
