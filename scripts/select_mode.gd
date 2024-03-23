@@ -10,8 +10,11 @@ func _ready():
 func _process(_delta):
 	if update:
 		if cursor.get_overlapping_areas():
+			if cursor.get_overlapping_areas().size() == 1:
+				_on_button_message(cursor.get_overlapping_areas()[0])
+			else:
+				hud.command_display(cursor.get_overlapping_areas(),self)
 			update = false
-			hud.command_display(cursor.get_overlapping_areas(),self)
 		else:
 			self.windup()
 	

@@ -39,8 +39,7 @@ func _process(_delta):
 
 
 #TODO
-
-#camera
+#
 #mix mode
 #Spells - kind of
 #add sprites for spells
@@ -55,9 +54,11 @@ func _process(_delta):
 #add spell prop to dict-not sure what it means but done
 #add enemy
 #loading maps from filea
+#camera
 
 
-
+# all the user content in user://
+# after about 10 recursive depth, program has noticeable lag
 #All terrain modifications have to set the cache of the terrain to null
 
 func _on_cursor_changed()->void:

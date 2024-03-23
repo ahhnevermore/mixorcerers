@@ -16,7 +16,7 @@ func _ready():
 	map= map_file["tiles"]
 	xw = map[0].size()
 	yw = map.size()
-	day = false
+	day = true
 	turn = 0
 	player = 'p1' #will be a method later synchronized
 	if player == 'p1':
