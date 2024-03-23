@@ -26,7 +26,6 @@ func _ready():
 	$Player.display_vision([])
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
-	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):

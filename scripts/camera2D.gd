@@ -10,7 +10,7 @@ func _ready():
 	limit_left = -50
 	limit_top = -50
 	@warning_ignore("narrowing_conversion")
-	limit_bottom = map.map_to_local(Vector2i(map.xw,map.yw)).y +50
+	limit_bottom = map.map_to_local(Vector2i(map.xw,map.yw)).y +100
 	@warning_ignore("narrowing_conversion")
 	limit_right = map.map_to_local(Vector2i(map.xw,map.yw)).x +50
 # Called every frame. 'delta' is the elapsed time since the previous frame.

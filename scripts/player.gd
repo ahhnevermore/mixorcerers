@@ -44,12 +44,11 @@ func display_vision(grid):
 			map.erase_cell(2,tile[0])
 	for listener in game.listeners:
 		if listener not in allies:
-			var listener_sprite = listener.get_node('Sprite2D')
 			var listener_pos = map.local_to_map(listener.position)
 			if listener_pos in visible_tiles.dict:
-				listener_sprite.show()
+				listener.show()
 			else:
-				listener_sprite.hide()
+				listener.hide()
 
 
 

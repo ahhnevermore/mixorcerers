@@ -12,7 +12,7 @@ var enemy:String
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	map_file = load_map("user://map.json")
+	map_file = load_map("res://user_test_copies/map.json")
 	map= map_file["tiles"]
 	xw = map[0].size()
 	yw = map.size()

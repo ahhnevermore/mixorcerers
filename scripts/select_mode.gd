@@ -9,11 +9,16 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if update:
-		if cursor.get_overlapping_areas():
-			if cursor.get_overlapping_areas().size() == 1:
-				_on_button_message(cursor.get_overlapping_areas()[0])
+		var raw_areas_list = cursor.get_overlapping_areas()
+		var areas_list =[]
+		for area in raw_areas_list:
+			if area.is_visible():
+				areas_list.append(area)
+		if areas_list:
+			if areas_list.size() == 1:
+					_on_button_message(areas_list[0])
 			else:
-				hud.command_display(cursor.get_overlapping_areas(),self)
+				hud.command_display(areas_list,self)
 			update = false
 		else:
 			self.windup()
