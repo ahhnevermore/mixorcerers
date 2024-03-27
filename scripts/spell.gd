@@ -13,9 +13,8 @@ var air_dmg:float
 var sprite:Texture2D
 var gen_unit
 var gen_item
-var grimoire:bool
-var elevation_mod
-var moisture_mod
+var elevation_mod:int
+var moisture_mod :int
 var modifier :Array #general purpose array that is primarily used for day night effect or texture surprise
 					#also has "provides vision traits
 var repeat_cost:Dictionary
@@ -26,10 +25,10 @@ enum cast_shapes{
 	VECTOR
 }
 
-enum dmg_distribution{
+enum DMG_Distribution{
 	
 }#different ways to distribute damage across the cast grid
-func _init(config:Dictionary,arg_modifier:Array,arg_grimoire:bool =false):
+func _init(config:Dictionary,arg_modifier:Array):
 	alias= config['alias']
 	cast_range = config['cast_range']
 	cast_shape = config['cast_shape']
@@ -43,7 +42,6 @@ func _init(config:Dictionary,arg_modifier:Array,arg_grimoire:bool =false):
 	gen_item =config['gen_item']
 	elevation_mod = config['elevation_mod']
 	moisture_mod = config['moisture_mod']
-	grimoire = arg_grimoire
 	modifier.append_array(arg_modifier)
 	modifier.append_array(config['modifier'])
 	repeat_cost=config['repeat_cost']

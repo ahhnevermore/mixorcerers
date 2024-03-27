@@ -7,12 +7,12 @@ func _ready():
 	cursor = get_parent().get_node('Cursor')
 	map = get_parent().get_node('Map')
 	position=cursor.position
-	limit_left = -50
-	limit_top = -50
+	limit_left = -20
+	limit_top = -40
 	@warning_ignore("narrowing_conversion")
 	limit_bottom = map.map_to_local(Vector2i(map.xw,map.yw)).y +100
 	@warning_ignore("narrowing_conversion")
-	limit_right = map.map_to_local(Vector2i(map.xw,map.yw)).x +50
+	limit_right = map.map_to_local(Vector2i(map.xw,map.yw)).x +20
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass

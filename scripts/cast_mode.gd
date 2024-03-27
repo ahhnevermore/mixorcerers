@@ -18,6 +18,7 @@ func _process(_delta):
 					cast_range_grid = MapGrid.new(map.field_of_prop(map.local_to_map(props[0].position),
 					"cast_range_cost",props[1].cast_range,[],0,false))
 					map.display_grid(cast_range_grid,"cast_range")
+		_on_cursor_changed()
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[1],cast_grid)
 		game._on_cursor_changed()
@@ -65,7 +66,7 @@ func cast(spell:Spell,target:MapGrid):
 		var terrain_stats = map.terrains[map.get_terrain(match[1])]
 		var unit = match[0]
 		print(terrain_stats,unit,spell.modifier)
-		if not Spell.dmg_distribution in spell.modifier:	#damage distribution will have damage varying across the grid
+		if not Spell.DMG_Distribution in spell.modifier:	#damage distribution will have damage varying across the grid
 			#Calculate dmg
 			var damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
 						spell.water_dmg * (1+terrain_stats['water_affin']) +
@@ -116,7 +117,7 @@ func _on_button_message(val):
 	if props.size()>1:
 		props=[props[0]]
 	props.append(val)
-	update = true 
+	update = true
 
 func log_action()->void:
 	game.turn_history.append([alias,props[1].alias,cursor.cursor_tile])

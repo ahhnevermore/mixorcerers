@@ -39,13 +39,16 @@ func _process(_delta):
 
 #TODO
 #
-#mix mode
-#Spells - kind of
+#mix mode- additional cost
+#			replacing spells and refunding costs
+#precasting grimoires
+#Spells - various dmg distributions, various spells,various casts
 #add sprites for spells
 #add sound effects for spells and tiles
 # mod sprites for terrain
 #create a game moves data structure, then make the enemy perform its moves
 #write turns to file
+#turn transition
 
 #COMPLETED
 #Path finding algorithm and movement - Completed
