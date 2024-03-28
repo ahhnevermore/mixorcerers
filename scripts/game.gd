@@ -29,7 +29,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
 	if not mode and Input.is_action_just_pressed("select_confirm"):
 		$Cursor/RepeatDelay.stop()
 		var select_mode = select_mode_scene.instantiate()
@@ -38,7 +37,7 @@ func _process(_delta):
 
 
 #TODO
-#
+#modify cast spell to not apply damage but instead sublet it to the listeners
 #mix mode- additional cost
 #			replacing spells and refunding costs
 #precasting grimoires

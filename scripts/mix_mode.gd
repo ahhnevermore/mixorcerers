@@ -5,6 +5,8 @@ var internal_orbs
 var grimoire_type = 'None'
 var spell
 var stack:Array
+var unsafe_text:String
+var grimoire_value=false
 
 func _ready():
 	pass # Replace with function body.
@@ -34,12 +36,23 @@ func _process(_delta):
 
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+	
+	#orb bar
 	internal_orbs=props[0].orbs.duplicate()
-	$CanvasLayer/Grimoire_Dropdown.set_parent(self)
 	$CanvasLayer/Orbs/FireButton.setup("Fire",self)
 	$CanvasLayer/Orbs/WaterButton.setup("Water",self)
 	$CanvasLayer/Orbs/EarthButton.setup("Earth",self)
 	$CanvasLayer/Orbs/AirButton.setup("Air",self)
+	
+	# grimoire
+	for type in Grimoire.Grimoire_Type:
+		$CanvasLayer/Grimoire_Dropdown.add_item(type)
+	for terrain in map.mod_to_terrain.values():
+		$CanvasLayer/Grimoire_Val_Terrain.add_item(terrain)
+	default_grimoire_value(grimoire_type)
+	
+
+
 
 func stack_display(list):
 	for child in $CanvasLayer/Stack.get_children():
@@ -72,9 +85,6 @@ func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/EarthCount.text= str(orbs['earth']) 
 	$CanvasLayer/Orbs/AirCount.text= str(orbs['air']) 
 	
-func _on_grimoire_dropdown_selected(index):
-	grimoire_type = Grimoire.Grimoire_Type.keys()[index]
-	print(grimoire_type)
 
 func _on_button_message(val):
 	if stack.size() < 5:
@@ -99,3 +109,67 @@ func _on_button_message(val):
 		orbs_display(internal_orbs)
 		spell_display(stack)
 		
+func windup()->void:
+	for elem in stack:
+		match elem:
+				"Fire":
+					internal_orbs['fire']+=1
+				"Water":
+					internal_orbs['water']+=1
+				"Earth":
+					internal_orbs['earth']+=1
+				"Air":
+					internal_orbs['air']+=1
+	props[0].orbs = internal_orbs.duplicate()
+	super.windup()
+
+
+func _on_grimoire_dropdown_selected(index):
+	grimoire_type = Grimoire.Grimoire_Type.keys()[index]
+	print(grimoire_type)
+	default_grimoire_value(grimoire_type)
+	
+	
+func _on_grimoire_value_text_changed(new_text):
+	$CanvasLayer/Grimoire_Val/Grimoire_Val_Timer.start()
+	unsafe_text = new_text
+
+func _on_grimoire_value_timer_timeout():
+	_on_grimoire_value_text_submitted(unsafe_text)
+
+func _on_grimoire_value_text_submitted(new_text):
+	var input = int(unsafe_text)
+	match grimoire_type:
+		'None':
+			$CanvasLayer/Grimoire_Val.text =""
+			$CanvasLayer/Grimoire_Val.placeholder_text=""
+		'On_Dmg':
+			if input < 100 or input > 0:
+				grimoire_value = input
+				$CanvasLayer/Grimoire_Value.text =""
+				$CanvasLayer/Grimoire_Value.placeholder_text= unsafe_text + "%"
+		'On_Terrain_Changed':
+			if input > 0 :
+				pass
+
+func default_grimoire_value(type:String):
+	match type:
+		'None':
+			$CanvasLayer/Grimoire_Val.show()
+			$CanvasLayer/Grimoire_Val_Terrain.hide()
+			$CanvasLayer/Grimoire_Val.text =""
+			$CanvasLayer/Grimoire_Val.placeholder_text=""
+			grimoire_value=false
+		'On_DMG':
+			$CanvasLayer/Grimoire_Val.show()
+			$CanvasLayer/Grimoire_Val_Terrain.hide()
+			$CanvasLayer/Grimoire_Val.text =""
+			$CanvasLayer/Grimoire_Val.placeholder_text="100%"
+			grimoire_value = 1
+		'On_Terrain_Change':
+			$CanvasLayer/Grimoire_Val.hide()
+			$CanvasLayer/Grimoire_Val_Terrain.show()
+			grimoire_value = map.mod_to_terrain.values()[0]
+			
+		
+			
