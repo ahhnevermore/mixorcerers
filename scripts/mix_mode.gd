@@ -7,7 +7,7 @@ var spell
 var stack:Array
 var unsafe_text:String
 var grimoire_value=false
-
+#percentage for On_DMG
 func _ready():
 	pass # Replace with function body.
 
@@ -126,7 +126,6 @@ func windup()->void:
 
 func _on_grimoire_dropdown_selected(index):
 	grimoire_type = Grimoire.Grimoire_Type.keys()[index]
-	print(grimoire_type)
 	default_grimoire_value(grimoire_type)
 	
 	
@@ -138,20 +137,15 @@ func _on_grimoire_value_timer_timeout():
 	_on_grimoire_value_text_submitted(unsafe_text)
 
 func _on_grimoire_value_text_submitted(new_text):
-	var input = int(unsafe_text)
+	var input = int(new_text)
 	match grimoire_type:
 		'None':
-			$CanvasLayer/Grimoire_Val.text =""
-			$CanvasLayer/Grimoire_Val.placeholder_text=""
-		'On_Dmg':
-			if input < 100 or input > 0:
+			default_grimoire_value(grimoire_type)
+		'On_DMG':
+			if input < 100 and input > 0:
 				grimoire_value = input
-				$CanvasLayer/Grimoire_Value.text =""
-				$CanvasLayer/Grimoire_Value.placeholder_text= unsafe_text + "%"
-		'On_Terrain_Changed':
-			if input > 0 :
-				pass
-
+			else:
+				default_grimoire_value(grimoire_type)
 func default_grimoire_value(type:String):
 	match type:
 		'None':
@@ -165,11 +159,12 @@ func default_grimoire_value(type:String):
 			$CanvasLayer/Grimoire_Val_Terrain.hide()
 			$CanvasLayer/Grimoire_Val.text =""
 			$CanvasLayer/Grimoire_Val.placeholder_text="100%"
-			grimoire_value = 1
+			grimoire_value = 100
 		'On_Terrain_Change':
 			$CanvasLayer/Grimoire_Val.hide()
 			$CanvasLayer/Grimoire_Val_Terrain.show()
 			grimoire_value = map.mod_to_terrain.values()[0]
-			
-		
-			
+
+
+func _on_grimoire_val_terrain_item_selected(index):
+	grimoire_value = map.mod_to_terrain.values()[index]
