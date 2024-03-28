@@ -1,0 +1,174 @@
+[gd_scene load_steps=4 format=3 uid="uid://dduk0gvr3grlq"]
+
+[ext_resource type="Script" path="res://scripts/mix_mode.gd" id="1_0ituy"]
+[ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_jo4g6"]
+[ext_resource type="PackedScene" uid="uid://cmeh33s80ucjc" path="res://scenes/uibutton.tscn" id="3_7je3w"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_0ituy")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(578, 321)
+texture = ExtResource("2_jo4g6")
+
+[node name="Orbs" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -414.0
+offset_top = -174.0
+offset_right = 414.0
+offset_bottom = -134.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+
+[node name="FireButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Fire"
+
+[node name="FireCount" type="Label" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Fire"
+horizontal_alignment = 1
+
+[node name="WaterButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Water"
+
+[node name="WaterCount" type="Label" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Water"
+horizontal_alignment = 1
+
+[node name="EarthButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Earth"
+
+[node name="EarthCount" type="Label" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Earth"
+horizontal_alignment = 1
+
+[node name="AirButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Air"
+
+[node name="AirCount" type="Label" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Air"
+horizontal_alignment = 1
+
+[node name="Stack" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -414.0
+offset_top = -104.0
+offset_right = 386.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Spell" type="Label" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -414.0
+offset_top = -4.0
+offset_right = -264.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 2
+
+[node name="Grimoire_Dropdown" type="OptionButton" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -126.0
+offset_top = -4.0
+offset_right = -76.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Grimoire_Val" type="LineEdit" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 24.0
+offset_top = -4.0
+offset_right = 124.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Grimoire_Val_Timer" type="Timer" parent="CanvasLayer/Grimoire_Val"]
+wait_time = 2.5
+one_shot = true
+
+[node name="Grimoire_Val_Terrain" type="OptionButton" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 94.0
+offset_top = -4.0
+offset_right = 137.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Additional Costs" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -414.0
+offset_top = 76.0
+offset_right = -14.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UIButton" parent="CanvasLayer" instance=ExtResource("3_7je3w")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="item_selected" from="CanvasLayer/Grimoire_Dropdown" to="." method="_on_grimoire_dropdown_selected"]
+[connection signal="text_changed" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_changed"]
+[connection signal="text_submitted" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_submitted"]
+[connection signal="timeout" from="CanvasLayer/Grimoire_Val/Grimoire_Val_Timer" to="." method="_on_grimoire_value_timer_timeout"]
+[connection signal="item_selected" from="CanvasLayer/Grimoire_Val_Terrain" to="." method="_on_grimoire_val_terrain_item_selected"]

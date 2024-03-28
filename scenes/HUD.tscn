@@ -1,25 +1,107 @@
-[gd_scene load_steps=2 format=3 uid="uid://v4pkwn5kxsn4"]
+[gd_scene load_steps=3 format=3 uid="uid://v4pkwn5kxsn4"]
 
-[ext_resource type="Script" path="res://scenes/HUD.gd" id="1_c1pmh"]
+[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_rwrww"]
+[ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_uq1cr"]
 
-[node name="canvaslayer" type="CanvasLayer"]
-script = ExtResource("1_c1pmh")
+[node name="Control" type="CanvasLayer"]
+script = ExtResource("1_rwrww")
 
-[node name="Stats" type="Label" parent="."]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -142.0
-offset_right = 250.0
-grow_vertical = 0
-
-[node name="Terrain" type="Label" parent="."]
-anchors_preset = 3
-anchor_left = 1.0
+[node name="Div" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -151.0
-offset_top = -139.0
-grow_horizontal = 0
+offset_top = -135.0
+grow_horizontal = 2
 grow_vertical = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Div"]
+position = Vector2(681, 67.5)
+scale = Vector2(1.18229, 0.208333)
+texture = ExtResource("2_uq1cr")
+
+[node name="Stats" type="Label" parent="Div"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 15.0
+offset_right = 300.0
+offset_bottom = 135.0
+
+[node name="Inventory" type="Control" parent="Div"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 320.0
+offset_top = 10.0
+offset_right = 680.0
+offset_bottom = 135.0
+
+[node name="Slot1" type="Control" parent="Div/Inventory"]
+anchors_preset = 0
+offset_right = 120.0
+offset_bottom = 63.0
+
+[node name="Slot2" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_right = 60.0
+offset_bottom = 63.0
+grow_horizontal = 2
+
+[node name="Slot3" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_bottom = 63.0
+grow_horizontal = 0
+
+[node name="Slot4" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 0
+offset_top = 63.0
+offset_right = 120.0
+offset_bottom = 125.0
+
+[node name="Slot5" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 63.0
+offset_right = 60.0
+offset_bottom = 125.0
+grow_horizontal = 2
+
+[node name="Slot6" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 63.0
+offset_bottom = 125.0
+grow_horizontal = 0
+
+[node name="Commands" type="GridContainer" parent="Div"]
+layout_mode = 1
+offset_left = 680.0
+offset_top = 10.0
+offset_right = 902.0
+offset_bottom = 135.0
+columns = 6
+
+[node name="Terrain" type="Label" parent="Div"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_top = 10.0
+offset_bottom = 135.0
+grow_horizontal = 0

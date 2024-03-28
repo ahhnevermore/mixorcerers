@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjk0h66ajb3ly"]
+[gd_scene load_steps=9 format=3 uid="uid://bjk0h66ajb3ly"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_xh63o"]
 [ext_resource type="PackedScene" uid="uid://bfudhyvp3vw1j" path="res://scenes/map.tscn" id="2_qpj8k"]
@@ -6,12 +6,15 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="4_bgv5q"]
 [ext_resource type="PackedScene" uid="uid://0t8w2vfd3c4x" path="res://scenes/cursor.tscn" id="5_agag1"]
 [ext_resource type="PackedScene" uid="uid://v4pkwn5kxsn4" path="res://scenes/HUD.tscn" id="6_n8d4v"]
+[ext_resource type="PackedScene" uid="uid://bdvr3eh2cbpad" path="res://scenes/enemy.tscn" id="7_a133x"]
+[ext_resource type="Script" path="res://scripts/camera2D.gd" id="8_7m0ks"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_xh63o")
 
 [node name="Map" parent="." instance=ExtResource("2_qpj8k")]
 layer_1/modulate = Color(0.372549, 0.372549, 0.372549, 1)
+layer_2/modulate = Color(0.423529, 0.423529, 0.423529, 0.666667)
 layer_3/name = ""
 layer_3/enabled = true
 layer_3/modulate = Color(0.419608, 0.713726, 0.968627, 0.709804)
@@ -21,22 +24,26 @@ layer_3/z_index = 0
 layer_3/tile_data = PackedInt32Array()
 layer_4/name = "selection"
 layer_4/enabled = true
-layer_4/modulate = Color(1, 1, 1, 0.843137)
+layer_4/modulate = Color(1, 1, 1, 0.8)
 layer_4/y_sort_enabled = false
 layer_4/y_sort_origin = 0
 layer_4/z_index = 0
 layer_4/tile_data = PackedInt32Array()
 
-<<<<<<< HEAD
+
 [node name="Player" parent="." instance=ExtResource("3_v37nu")]
-=======
-[node name="Player1" parent="." instance=ExtResource("3_v37nu")]
->>>>>>> f7041b4666d7d92a43d73ead736ef42f44f09454
 script = ExtResource("4_bgv5q")
 
 [node name="Cursor" parent="." instance=ExtResource("5_agag1")]
+position = Vector2(3, 0)
 
 [node name="HUD" parent="." instance=ExtResource("6_n8d4v")]
 
-[connection signal="area_entered" from="Cursor" to="Player1" method="_on_cursor_area_entered"]
-[connection signal="cursor_tile" from="Cursor" to="." method="_on_cursor_tile"]
+[node name="Enemy" parent="." instance=ExtResource("7_a133x")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.3, 1.3)
+script = ExtResource("8_7m0ks")
+
+[connection signal="cursor_changed" from="Cursor" to="." method="_on_cursor_changed"]
+[connection signal="cursor_changed" from="Cursor" to="Camera2D" method="_on_cursor_changed"]
