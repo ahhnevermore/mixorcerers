@@ -12,26 +12,9 @@ script = ExtResource("1_xh63o")
 
 [node name="Map" parent="." instance=ExtResource("2_qpj8k")]
 layer_1/modulate = Color(0.372549, 0.372549, 0.372549, 1)
-layer_3/name = ""
-layer_3/enabled = true
-layer_3/modulate = Color(0.419608, 0.713726, 0.968627, 0.709804)
-layer_3/y_sort_enabled = false
-layer_3/y_sort_origin = 0
-layer_3/z_index = 0
-layer_3/tile_data = PackedInt32Array()
-layer_4/name = "selection"
-layer_4/enabled = true
-layer_4/modulate = Color(1, 1, 1, 0.843137)
-layer_4/y_sort_enabled = false
-layer_4/y_sort_origin = 0
-layer_4/z_index = 0
-layer_4/tile_data = PackedInt32Array()
+layer_3/modulate = Color(0.513726, 0.654902, 0.980392, 0.709804)
 
-<<<<<<< HEAD
-[node name="Player" parent="." instance=ExtResource("3_v37nu")]
-=======
 [node name="Player1" parent="." instance=ExtResource("3_v37nu")]
->>>>>>> f7041b4666d7d92a43d73ead736ef42f44f09454
 script = ExtResource("4_bgv5q")
 
 [node name="Cursor" parent="." instance=ExtResource("5_agag1")]
@@ -39,4 +22,4 @@ script = ExtResource("4_bgv5q")
 [node name="HUD" parent="." instance=ExtResource("6_n8d4v")]
 
 [connection signal="area_entered" from="Cursor" to="Player1" method="_on_cursor_area_entered"]
-[connection signal="cursor_tile" from="Cursor" to="." method="_on_cursor_tile"]
+[connection signal="cursor_tile" from="Cursor" to="HUD" method="_on_cursor_tile"]
