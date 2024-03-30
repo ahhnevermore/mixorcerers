@@ -6,7 +6,7 @@ var game:Game
 var map:Map
 var allies: Array
 var commands = ["move","vision grid","cast","mix"]
-var orbs = {"fire":10,"water":10,"earth":10,"air":10,"texture":0}
+var orbs = {"fire":10,"water":10,"earth":10,"air":10,"magycke":3}
 var inventory
 var initial_stats = {'move':5,
 			'vision':5,

@@ -65,7 +65,6 @@ func cast(spell:Spell,target:MapGrid):
 	for match in matches:
 		var terrain_stats = map.terrains[map.get_terrain(match[1])]
 		var unit = match[0]
-		print(terrain_stats,unit,spell.modifier)
 		if not Spell.DMG_Distribution in spell.modifier:	#damage distribution will have damage varying across the grid
 			#Calculate dmg
 			var damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +

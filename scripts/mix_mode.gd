@@ -5,6 +5,7 @@ var internal_orbs
 var grimoire_type = 'None'
 var spell
 var stack:Array
+var magycke_stack :Array
 var unsafe_text:String
 var grimoire_value=false
 #percentage for On_DMG
@@ -18,17 +19,21 @@ func _process(_delta):
 		orbs_display(internal_orbs)
 	if Input.is_action_just_pressed("cancel_action"):
 		if stack:
-			var elem = stack.pop_back()
-			match elem:
-				"Fire":
-					internal_orbs['fire']+=1
-				"Water":
-					internal_orbs['water']+=1
-				"Earth":
-					internal_orbs['earth']+=1
-				"Air":
-					internal_orbs['air']+=1
-			stack_display(stack)
+			if not magycke_stack:
+				var elem = stack.pop_back()
+				match elem:
+					"Fire":
+						internal_orbs['fire']+=1
+					"Water":
+						internal_orbs['water']+=1
+					"Earth":
+						internal_orbs['earth']+=1
+					"Air":
+						internal_orbs['air']+=1
+			else:
+				magycke_stack.pop_back()
+				internal_orbs['magycke']+=1
+			stack_display(stack,magycke_stack)
 			spell_display(stack)
 		else:
 			self.windup()
@@ -43,6 +48,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	$CanvasLayer/Orbs/WaterButton.setup("Water",self)
 	$CanvasLayer/Orbs/EarthButton.setup("Earth",self)
 	$CanvasLayer/Orbs/AirButton.setup("Air",self)
+	$CanvasLayer/Control/MagyckeButton.setup("Magycke",self)
 	
 	# grimoire
 	for type in Grimoire.Grimoire_Type:
@@ -54,12 +60,16 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 
 
 
-func stack_display(list):
+func stack_display(xs,ys):
 	for child in $CanvasLayer/Stack.get_children():
 		child.queue_free()
-	for item in list:
+	for x in xs:
 		var label = Label.new()
-		label.text = item
+		label.text = x
+		$CanvasLayer/Stack.add_child(label)
+	for y in ys:
+		var label = Label.new()
+		label.text = y
 		$CanvasLayer/Stack.add_child(label)
 		
 func spell_display(list):
@@ -84,30 +94,37 @@ func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/WaterCount.text= str(orbs['water'])
 	$CanvasLayer/Orbs/EarthCount.text= str(orbs['earth']) 
 	$CanvasLayer/Orbs/AirCount.text= str(orbs['air']) 
+	$CanvasLayer/Control/MagyckeCount.text=str(orbs['magycke'])
 	
 
 func _on_button_message(val):
-	if stack.size() < 5:
-		match val:
-			"Fire":
-				if internal_orbs['fire'] > 0:
-					internal_orbs['fire'] -=  1
-					stack.append(val)
-			"Water":
-				if internal_orbs['water'] > 0:
-					internal_orbs['water'] -= 1
-					stack.append(val)
-			"Earth":
-				if internal_orbs['earth'] > 0:
-					internal_orbs['earth'] -= 1
-					stack.append(val)
-			"Air":
-				if internal_orbs['air'] > 0:
-					internal_orbs['air'] -= 1
-					stack.append(val)
-		stack_display(stack)
-		orbs_display(internal_orbs)
-		spell_display(stack)
+	if val != "Magycke":
+		if stack.size() < 5:
+			match val:
+				"Fire":
+					if internal_orbs['fire'] > 0:
+						internal_orbs['fire'] -=  1
+						stack.append(val)
+				"Water":
+					if internal_orbs['water'] > 0:
+						internal_orbs['water'] -= 1
+						stack.append(val)
+				"Earth":
+					if internal_orbs['earth'] > 0:
+						internal_orbs['earth'] -= 1
+						stack.append(val)
+				"Air":
+					if internal_orbs['air'] > 0:
+						internal_orbs['air'] -= 1
+						stack.append(val)
+	else:
+		if internal_orbs['magycke']>0:
+			internal_orbs['magycke']-=1
+			magycke_stack.append(val)
+			
+	stack_display(stack,magycke_stack)
+	orbs_display(internal_orbs)
+	spell_display(stack)
 		
 func windup()->void:
 	for elem in stack:
@@ -120,6 +137,8 @@ func windup()->void:
 					internal_orbs['earth']+=1
 				"Air":
 					internal_orbs['air']+=1
+	for elem in magycke_stack:
+		internal_orbs['magycke']+=1
 	props[0].orbs = internal_orbs.duplicate()
 	super.windup()
 
