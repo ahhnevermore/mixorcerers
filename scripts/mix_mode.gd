@@ -48,7 +48,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	$CanvasLayer/Orbs/WaterButton.setup("Water",self)
 	$CanvasLayer/Orbs/EarthButton.setup("Earth",self)
 	$CanvasLayer/Orbs/AirButton.setup("Air",self)
-	$CanvasLayer/Control/MagyckeButton.setup("Magycke",self)
+	$CanvasLayer/Magycke/MagyckeButton.setup("Magycke",self)
 	
 	# grimoire
 	for type in Grimoire.Grimoire_Type:
@@ -84,9 +84,26 @@ func spell_display(list):
 		if item == 'Air':
 			res['air'] += 1
 	if res in game.recipes:
-		$CanvasLayer/Spell.text = game.recipes[res]
+		var spell_config = game.spells[game.recipes[res]]
+		$CanvasLayer/Spell.text = spell_config['alias']
+		var spell_count =0
+		for action in game.turn_history:
+			if action[1] == spell_config['alias']:
+				spell_count+=1
+		for item in props[0].inventory:
+			if item.alias == spell_config['alias']:
+				spell_count+=1
+		if spell_count:
+			$"CanvasLayer/Additional Costs/Label".text = (
+				"Additional Costs" + 
+				"     Fire: " + str(spell_config['repeat_cost']['fire']*spell_count) +
+				"     Water: " + str(spell_config['repeat_cost']['water']*spell_count) +
+				"     Earth: " + str(spell_config['repeat_cost']['earth']*spell_count) +
+				"     Air: " + str(spell_config['repeat_cost']['air']*spell_count)
+				)
 	else:
 		$CanvasLayer/Spell.text = 'None'
+		$"CanvasLayer/Additional Costs/Label".text=""
 			
 	
 func orbs_display(orbs:Dictionary):
@@ -94,7 +111,7 @@ func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/WaterCount.text= str(orbs['water'])
 	$CanvasLayer/Orbs/EarthCount.text= str(orbs['earth']) 
 	$CanvasLayer/Orbs/AirCount.text= str(orbs['air']) 
-	$CanvasLayer/Control/MagyckeCount.text=str(orbs['magycke'])
+	$CanvasLayer/Magycke/MagyckeCount.text=str(orbs['magycke'])
 	
 
 func _on_button_message(val):
