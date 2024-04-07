@@ -3,11 +3,14 @@ extends Mode
 # Called when the node enters the scene tree for the first time.
 var internal_orbs
 var grimoire_type = 'None'
-var spell
+var spell_config
 var stack:Array
 var magycke_stack :Array
 var unsafe_text:String
 var grimoire_value=false
+var additional_costs={'fire':0,'water':0,'earth':0,'air':0}
+var grimoire_cost_added=false
+var repeat_cost_added =false
 #percentage for On_DMG
 func _ready():
 	pass # Replace with function body.
@@ -84,7 +87,7 @@ func spell_display(list):
 		if item == 'Air':
 			res['air'] += 1
 	if res in game.recipes:
-		var spell_config = game.spells[game.recipes[res]]
+		spell_config = game.spells[game.recipes[res]]
 		$CanvasLayer/Spell.text = spell_config['alias']
 		var spell_count =0
 		for action in game.turn_history:
@@ -93,17 +96,22 @@ func spell_display(list):
 		for item in props[0].inventory:
 			if item.alias == spell_config['alias']:
 				spell_count+=1
-		if spell_count:
-			$"CanvasLayer/Additional Costs/Label".text = (
-				"Additional Costs" + 
-				"     Fire: " + str(spell_config['repeat_cost']['fire']*spell_count) +
-				"     Water: " + str(spell_config['repeat_cost']['water']*spell_count) +
-				"     Earth: " + str(spell_config['repeat_cost']['earth']*spell_count) +
-				"     Air: " + str(spell_config['repeat_cost']['air']*spell_count)
-				)
+		if not grimoire_cost_added and grimoire_value:
+			grimoire_cost_added=true
+			for elem in spell_config['grimoire_cost']:
+				additional_costs[elem] += spell_config['grimoire_cost'][elem]
+		if spell_count and not repeat_cost_added:
+			repeat_cost_added=true
+			for elem in spell_config['repeat_cost']:
+				additional_costs[elem] += (spell_config['repeat_cost'][elem] *spell_count)
+		if additional_costs.values().filter(func(x): return x>0):
+			additional_costs_display()
 	else:
 		$CanvasLayer/Spell.text = 'None'
 		$"CanvasLayer/Additional Costs/Label".text=""
+		additional_costs={'fire':0,'water':0,'earth':0,'air':0}
+		grimoire_cost_added =false
+		repeat_cost_added = false
 			
 	
 func orbs_display(orbs:Dictionary):
@@ -134,14 +142,19 @@ func _on_button_message(val):
 					if internal_orbs['air'] > 0:
 						internal_orbs['air'] -= 1
 						stack.append(val)
+			stack_display(stack,magycke_stack)
+			orbs_display(internal_orbs)
+			spell_display(stack)
 	else:
 		if internal_orbs['magycke']>0:
 			internal_orbs['magycke']-=1
 			magycke_stack.append(val)
+		
+			stack_display(stack,magycke_stack)
+			orbs_display(internal_orbs)
+			spell_display(stack)
 			
-	stack_display(stack,magycke_stack)
-	orbs_display(internal_orbs)
-	spell_display(stack)
+	
 		
 func windup()->void:
 	for elem in stack:
@@ -190,17 +203,42 @@ func default_grimoire_value(type:String):
 			$CanvasLayer/Grimoire_Val.text =""
 			$CanvasLayer/Grimoire_Val.placeholder_text=""
 			grimoire_value=false
+			if spell_config and grimoire_cost_added:
+				grimoire_cost_added=false
+				for elem in spell_config['grimoire_cost']:
+					additional_costs[elem] = spell_config['grimoire_cost'][elem]
+				additional_costs_display()
+				
 		'On_DMG':
 			$CanvasLayer/Grimoire_Val.show()
 			$CanvasLayer/Grimoire_Val_Terrain.hide()
 			$CanvasLayer/Grimoire_Val.text =""
 			$CanvasLayer/Grimoire_Val.placeholder_text="100%"
 			grimoire_value = 100
+			if spell_config and not grimoire_cost_added:
+				grimoire_cost_added=true
+				for elem in spell_config['grimoire_cost']:
+					additional_costs[elem] += spell_config['grimoire_cost'][elem]
+				additional_costs_display()
 		'On_Terrain_Change':
 			$CanvasLayer/Grimoire_Val.hide()
 			$CanvasLayer/Grimoire_Val_Terrain.show()
 			grimoire_value = map.mod_to_terrain.values()[0]
+			if spell_config and not grimoire_cost_added:
+				grimoire_cost_added=true
+				for elem in spell_config['grimoire_cost']:
+					additional_costs[elem] += spell_config['grimoire_cost'][elem]
+				additional_costs_display()
 
 
 func _on_grimoire_val_terrain_item_selected(index):
 	grimoire_value = map.mod_to_terrain.values()[index]
+
+func additional_costs_display()->void:
+	$"CanvasLayer/Additional Costs/Label".text = (
+				"Additional Costs" + 
+				"     Fire: " + str(additional_costs['fire']) +
+				"     Water: " + str(additional_costs['water']) +
+				"     Earth: " + str(additional_costs['earth']) +
+				"     Air: " + str(additional_costs['air'])
+				)

@@ -75,7 +75,8 @@ var spells = {
 		'magycke_mod':[['dmg',{'fire':5,'water':0,'earth':0,'air':0}],['burn',{'duration':2,'dmg':5}]],
 		'day_mod':[[]],'night_mod':[[]],
 		'modifiers':[['vision',{'duration':2}]],
-		'repeat_cost':{'fire':1,'water':0,'earth':0,'air':0}}
+		'repeat_cost':{'fire':1,'water':0,'earth':0,'air':0},
+		'grimoire_cost':{'fire':1,'water':0,'earth':0,'air':0}}
 }
 
 var recipes= {

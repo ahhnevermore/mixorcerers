@@ -34,7 +34,9 @@ var night_mod:Array
 var modifiers :Array #general purpose array that is primarily used for day night effect or texture surprise
 					#also has "provides vision traits
 					#every modifier will be a 2d array,[name,{props}]
+#additional costs
 var repeat_cost:Dictionary
+var grimoire_cost:Dictionary
 
 
 enum cast_shapes{
@@ -77,7 +79,7 @@ func _init(config:Dictionary,arg_modifiers:Array):
 	modifiers.append_array(config['modifiers'])
 	
 	repeat_cost=config['repeat_cost']
-	
+	grimoire_cost=config['grimoire_cost']
 	var res =[]
 	for mod in modifiers:
 		if mod is String:
