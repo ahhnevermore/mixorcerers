@@ -59,9 +59,6 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	for terrain in map.mod_to_terrain.values():
 		$CanvasLayer/Grimoire_Val_Terrain.add_item(terrain)
 	default_grimoire_value(grimoire_type)
-	
-
-
 
 func stack_display(xs,ys):
 	for child in $CanvasLayer/Stack.get_children():
@@ -112,15 +109,13 @@ func spell_display(list):
 		additional_costs={'fire':0,'water':0,'earth':0,'air':0}
 		grimoire_cost_added =false
 		repeat_cost_added = false
-			
-	
+
 func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/FireCount.text= str(orbs['fire'])
 	$CanvasLayer/Orbs/WaterCount.text= str(orbs['water'])
 	$CanvasLayer/Orbs/EarthCount.text= str(orbs['earth']) 
 	$CanvasLayer/Orbs/AirCount.text= str(orbs['air']) 
 	$CanvasLayer/Magycke/MagyckeCount.text=str(orbs['magycke'])
-	
 
 func _on_button_message(val):
 	if val != "Magycke":
@@ -153,9 +148,7 @@ func _on_button_message(val):
 			stack_display(stack,magycke_stack)
 			orbs_display(internal_orbs)
 			spell_display(stack)
-			
-	
-		
+
 func windup()->void:
 	for elem in stack:
 		match elem:
@@ -172,12 +165,10 @@ func windup()->void:
 	props[0].orbs = internal_orbs.duplicate()
 	super.windup()
 
-
 func _on_grimoire_dropdown_selected(index):
 	grimoire_type = Grimoire.Grimoire_Type.keys()[index]
 	default_grimoire_value(grimoire_type)
-	
-	
+
 func _on_grimoire_value_text_changed(new_text):
 	$CanvasLayer/Grimoire_Val/Grimoire_Val_Timer.start()
 	unsafe_text = new_text
