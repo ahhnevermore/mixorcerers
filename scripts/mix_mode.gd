@@ -1,14 +1,19 @@
 extends Mode
 
+
 # Called when the node enters the scene tree for the first time.
 var internal_orbs
-var grimoire_type = 'None'
-var spell_config
-var stack:Array
-var magycke_stack :Array
-var unsafe_text:String
-var grimoire_value=false
 var additional_costs={'fire':0,'water':0,'earth':0,'air':0}
+
+var grimoire_type = Grimoire.Grimoire_Type.NONE
+var grimoire_value=false
+var unsafe_text:String
+
+var partial_recipe
+var spell_config
+var stack:Array =[]
+var magycke_stack :Array =[]
+
 var grimoire_cost_added=false
 var repeat_cost_added =false
 #percentage for On_DMG
@@ -20,6 +25,23 @@ func _ready():
 func _process(_delta):
 	if update:
 		orbs_display(internal_orbs)
+	if Input.is_action_just_pressed("select_confirm") and spell_config:
+		var modifiers =[]
+		modifiers.append_array(magycke_stack)
+		if map.day:
+			modifiers.append("day")
+		else:
+			modifiers.append("night")
+		var real_cost = partial_recipe.duplicate()
+		real_cost['magycke'] = 0
+		for i in magycke_stack:
+			real_cost['magycke']+=1
+		
+		var mixture = Spell.new(spell_config,modifiers,real_cost)
+		if grimoire_type != 'None':
+			mixture = Grimoire.new(mixture,grimoire_type,grimoire_value)
+		
+		
 	if Input.is_action_just_pressed("cancel_action"):
 		if stack:
 			if not magycke_stack:
@@ -72,19 +94,19 @@ func stack_display(xs,ys):
 		label.text = y
 		$CanvasLayer/Stack.add_child(label)
 		
-func spell_display(list):
-	var res ={'fire':0,'water':0,'earth':0,'air':0}
+func spell_display(list): 
+	partial_recipe ={'fire':0,'water':0,'earth':0,'air':0}
 	for item in list:
 		if item == 'Fire':
-			res['fire'] += 1
+			partial_recipe['fire'] += 1
 		if item == 'Water':
-			res['water'] += 1
+			partial_recipe['water'] += 1
 		if item == 'Earth':
-			res['earth'] += 1
+			partial_recipe['earth'] += 1
 		if item == 'Air':
-			res['air'] += 1
-	if res in game.recipes:
-		spell_config = game.spells[game.recipes[res]]
+			partial_recipe['air'] += 1
+	if partial_recipe in game.recipes:
+		spell_config = game.spells[game.recipes[partial_recipe]]
 		$CanvasLayer/Spell.text = spell_config['alias']
 		var spell_count =0
 		for action in game.turn_history:
@@ -166,7 +188,7 @@ func windup()->void:
 	super.windup()
 
 func _on_grimoire_dropdown_selected(index):
-	grimoire_type = Grimoire.Grimoire_Type.keys()[index]
+	grimoire_type = Grimoire.Grimoire_Type.values()[index]
 	default_grimoire_value(grimoire_type)
 
 func _on_grimoire_value_text_changed(new_text):
@@ -179,16 +201,16 @@ func _on_grimoire_value_timer_timeout():
 func _on_grimoire_value_text_submitted(new_text):
 	var input = int(new_text)
 	match grimoire_type:
-		'None':
+		Grimoire.Grimoire_Type.NONE:
 			default_grimoire_value(grimoire_type)
-		'On_DMG':
+		Grimoire.Grimoire_Type.ON_DMG:
 			if input < 100 and input > 0:
 				grimoire_value = input
 			else:
 				default_grimoire_value(grimoire_type)
-func default_grimoire_value(type:String):
+func default_grimoire_value(type:Grimoire.Grimoire_Type):
 	match type:
-		'None':
+		Grimoire.Grimoire_Type.NONE:
 			$CanvasLayer/Grimoire_Val.show()
 			$CanvasLayer/Grimoire_Val_Terrain.hide()
 			$CanvasLayer/Grimoire_Val.text =""
@@ -200,7 +222,7 @@ func default_grimoire_value(type:String):
 					additional_costs[elem] = spell_config['grimoire_cost'][elem]
 				additional_costs_display()
 				
-		'On_DMG':
+		Grimoire.Grimoire_Type.ON_DMG:
 			$CanvasLayer/Grimoire_Val.show()
 			$CanvasLayer/Grimoire_Val_Terrain.hide()
 			$CanvasLayer/Grimoire_Val.text =""
@@ -211,7 +233,7 @@ func default_grimoire_value(type:String):
 				for elem in spell_config['grimoire_cost']:
 					additional_costs[elem] += spell_config['grimoire_cost'][elem]
 				additional_costs_display()
-		'On_Terrain_Change':
+		Grimoire.Grimoire_Type.On_TERRAIN_CHANGE:
 			$CanvasLayer/Grimoire_Val.hide()
 			$CanvasLayer/Grimoire_Val_Terrain.show()
 			grimoire_value = map.mod_to_terrain.values()[0]

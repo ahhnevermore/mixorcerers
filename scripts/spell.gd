@@ -37,6 +37,7 @@ var modifiers :Array #general purpose array that is primarily used for day night
 #additional costs
 var repeat_cost:Dictionary
 var grimoire_cost:Dictionary
+var real_cost:Dictionary
 
 
 enum cast_shapes{
@@ -51,13 +52,13 @@ enum DMG_Distribution{
 	SHOTGUN
 	
 }#different ways to distribute damage across the cast grid
-func _init(config:Dictionary,arg_modifiers:Array):
+func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	alias= config['alias']
 	sprite  = load(config['sprite'])
 	
 	cast_range = config['cast_range']
 	cast_shape = config['cast_shape']
-	cast_dim = config['cast_dim']
+	cast_dim = config['cast_dim'].duplicate()
 	
 	fire_dmg = config['fire_dmg']
 	water_dmg = config['water_dmg']
@@ -71,15 +72,17 @@ func _init(config:Dictionary,arg_modifiers:Array):
 	elevation_mod = config['elevation_mod']
 	moisture_mod = config['moisture_mod']
 	
-	magycke_mod = config['magycke_mod']
-	day_mod=config['day_mod']
-	night_mod=config['night_mod']
+	magycke_mod = config['magycke_mod'].duplicate()
+	day_mod=config['day_mod'].duplicate()
+	night_mod=config['night_mod'].duplicate()
 
 	modifiers.append_array(arg_modifiers)
 	modifiers.append_array(config['modifiers'])
 	
-	repeat_cost=config['repeat_cost']
-	grimoire_cost=config['grimoire_cost']
+	repeat_cost=config['repeat_cost'].duplicate()
+	grimoire_cost=config['grimoire_cost'].duplicate()
+	real_cost = arg_real_cost.duplicate()
+	
 	var res =[]
 	for mod in modifiers:
 		if mod is String:
@@ -101,4 +104,5 @@ func _init(config:Dictionary,arg_modifiers:Array):
 					res.append(x)
 		else: 
 			res.append(mod)
+	modifiers= res.duplicate(true)
 	
