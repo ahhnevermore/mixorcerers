@@ -22,9 +22,9 @@ func _process(_delta):
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[1],cast_grid)
 		game._on_cursor_changed()
-		props[0].inventory.erase(props[1])
+		var index = props[0].inventory.find(props[1])
+		props[0].inventory[index]=null
 		log_action()
-		props.pop_back()
 		hud.clear_inventory_display()
 		hud.inventory_display(props[0].inventory,self)
 		
@@ -120,4 +120,4 @@ func _on_button_message(val):
 	update = true
 
 func log_action()->void:
-	game.turn_history.append([alias,props[1].alias,cursor.cursor_tile])
+	game.turn_history.append([props[1].alias,cursor.cursor_tile])

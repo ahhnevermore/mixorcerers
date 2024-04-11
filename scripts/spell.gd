@@ -20,7 +20,7 @@ var dmg_dist:DMG_Distribution
 
 #other properties
 var gen_unit
-var gen_item
+var gen_artifact
 
 #terrain modifications
 var elevation_mod:int
@@ -67,7 +67,7 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	dmg_dist = config['dmg_dist']
 	
 	gen_unit = config['gen_unit']
-	gen_item =config['gen_item']
+	gen_artifact =config['gen_artifact']
 	
 	elevation_mod = config['elevation_mod']
 	moisture_mod = config['moisture_mod']
@@ -87,7 +87,7 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	for mod in modifiers:
 		if mod is String:
 			var xs
-			match mod:
+			match mod.to_lower():
 				'magycke':
 					xs = magycke_mod
 				'day':
@@ -95,13 +95,14 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 				'night':
 					xs = night_mod
 			for x in xs:
-				if x[0] == 'dmg':
-					fire_dmg += x[1]['fire']
-					water_dmg += x[1]['water']
-					earth_dmg += x[1]['earth']
-					air_dmg += x[1]['air']
-				else:
-					res.append(x)
+				if x.size()>0:
+					if x[0] == 'dmg':
+						fire_dmg += x[1]['fire']
+						water_dmg += x[1]['water']
+						earth_dmg += x[1]['earth']
+						air_dmg += x[1]['air']
+					else:
+						res.append(x)
 		else: 
 			res.append(mod)
 	modifiers= res.duplicate(true)

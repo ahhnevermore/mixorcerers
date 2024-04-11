@@ -6,7 +6,7 @@ var game:Game
 var map:Map
 var allies: Array
 var commands = ["move","vision grid","cast","mix"]
-var orbs = {"fire":10,"water":10,"earth":10,"air":10,"magycke":3}
+var orbs = {"fire":20,"water":10,"earth":10,"air":10,"magycke":3}
 var inventory
 var initial_stats = {'move':5,
 			'vision':5,
@@ -20,7 +20,10 @@ func _ready():
 	map=get_parent().get_node("Map")
 	position= map.map_to_local(map.map_file[map.player+"_start_position"])
 	allies.push_back(self)
-	inventory =[Spell.new(game.spells["fireball"],[],{}),Spell.new(game.spells["fireball"],[],{})]
+	inventory =[
+		null,null,null,null,
+		null,null,null,null
+		]
 	game.listeners.append(self)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):

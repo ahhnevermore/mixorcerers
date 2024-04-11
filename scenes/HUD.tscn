@@ -38,61 +38,81 @@ offset_bottom = 135.0
 
 [node name="Slot1" type="Control" parent="Div/Inventory"]
 anchors_preset = 0
-offset_right = 120.0
+offset_right = 90.0
 offset_bottom = 63.0
 
 [node name="Slot2" type="Control" parent="Div/Inventory"]
 layout_mode = 1
+anchors_preset = 0
+offset_top = 63.0
+offset_right = 90.0
+offset_bottom = 125.0
+
+[node name="Slot3" type="Control" parent="Div/Inventory"]
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -60.0
-offset_right = 60.0
+offset_left = -90.0
 offset_bottom = 63.0
 grow_horizontal = 2
 
-[node name="Slot3" type="Control" parent="Div/Inventory"]
+[node name="Slot4" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 63.0
+offset_bottom = 125.0
+grow_horizontal = 2
+
+[node name="Slot5" type="Control" parent="Div/Inventory"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -120.0
+offset_left = -180.0
+offset_right = -90.0
 offset_bottom = 63.0
 grow_horizontal = 0
-
-[node name="Slot4" type="Control" parent="Div/Inventory"]
-layout_mode = 1
-anchors_preset = 0
-offset_top = 63.0
-offset_right = 120.0
-offset_bottom = 125.0
-
-[node name="Slot5" type="Control" parent="Div/Inventory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -60.0
-offset_top = 63.0
-offset_right = 60.0
-offset_bottom = 125.0
-grow_horizontal = 2
 
 [node name="Slot6" type="Control" parent="Div/Inventory"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -120.0
+offset_left = -180.0
+offset_top = 63.0
+offset_right = -90.0
+offset_bottom = 125.0
+grow_horizontal = 0
+
+[node name="Slot7" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -90.0
+offset_top = 63.0
+offset_bottom = 125.0
+grow_horizontal = 0
+
+[node name="Slot8" type="Control" parent="Div/Inventory"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -90.0
 offset_top = 63.0
 offset_bottom = 125.0
 grow_horizontal = 0
 
 [node name="Commands" type="GridContainer" parent="Div"]
 layout_mode = 1
-offset_left = 680.0
+offset_left = 700.0
 offset_top = 10.0
-offset_right = 902.0
+offset_right = 922.0
 offset_bottom = 135.0
 columns = 6
 

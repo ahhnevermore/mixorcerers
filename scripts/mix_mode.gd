@@ -25,6 +25,8 @@ func _ready():
 func _process(_delta):
 	if update:
 		orbs_display(internal_orbs)
+		stack_display(stack,magycke_stack)
+		spell_display(stack)
 	if Input.is_action_just_pressed("select_confirm") and spell_config:
 		var modifiers =[]
 		modifiers.append_array(magycke_stack)
@@ -36,12 +38,22 @@ func _process(_delta):
 		real_cost['magycke'] = 0
 		for i in magycke_stack:
 			real_cost['magycke']+=1
+		orbs_operation(real_cost,"add",additional_costs,)
+		orbs_operation(internal_orbs,"sub",additional_costs,)
 		
 		var mixture = Spell.new(spell_config,modifiers,real_cost)
-		if grimoire_type != 'None':
+		if grimoire_type != Grimoire.Grimoire_Type.NONE:
 			mixture = Grimoire.new(mixture,grimoire_type,grimoire_value)
 		
-		
+		add_item(props[0].inventory,mixture,internal_orbs)
+		orbs_display(internal_orbs)
+		hud.clear_inventory_display()
+		hud.inventory_display_uninteractive(props[0].inventory)
+		stack = []
+		magycke_stack =[]
+		stack_display(stack,magycke_stack)
+		spell_display(stack)
+			
 	if Input.is_action_just_pressed("cancel_action"):
 		if stack:
 			if not magycke_stack:
@@ -63,7 +75,21 @@ func _process(_delta):
 		else:
 			self.windup()
 
-
+func add_item(inventory:Array,item,orbs):
+	if item is Spell:
+		if inventory[0]:
+			if inventory[1]:
+				var outgoing_spell:Spell = inventory[1]
+				if outgoing_spell.alias == item.alias and orbs_operation(outgoing_spell.real_cost,"lt",item.real_cost):
+					orbs_operation(orbs,"add",item.real_cost,)
+					item = outgoing_spell
+				else:
+					orbs_operation(orbs,"add",outgoing_spell.real_cost,)
+			inventory[1] = inventory[0]
+			inventory[0] = item
+		else:
+			inventory[0]= item
+	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	
@@ -110,10 +136,10 @@ func spell_display(list):
 		$CanvasLayer/Spell.text = spell_config['alias']
 		var spell_count =0
 		for action in game.turn_history:
-			if action[1] == spell_config['alias']:
+			if action[0] == spell_config['alias']:
 				spell_count+=1
 		for item in props[0].inventory:
-			if item.alias == spell_config['alias']:
+			if item and item.alias == spell_config['alias']:
 				spell_count+=1
 		if not grimoire_cost_added and grimoire_value:
 			grimoire_cost_added=true
@@ -131,6 +157,7 @@ func spell_display(list):
 		additional_costs={'fire':0,'water':0,'earth':0,'air':0}
 		grimoire_cost_added =false
 		repeat_cost_added = false
+		spell_config = {}
 
 func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/FireCount.text= str(orbs['fire'])
@@ -255,3 +282,19 @@ func additional_costs_display()->void:
 				"     Earth: " + str(additional_costs['earth']) +
 				"     Air: " + str(additional_costs['air'])
 				)
+
+func orbs_operation(dict1,operation,dict2):
+	match operation:
+		"add":
+			for elem in dict2:
+				dict1[elem]+= dict2[elem]
+		"sub":
+			for elem in dict2:
+				dict1[elem]-= dict2[elem]
+		"lt":
+			var res=0
+			for elem in dict2:
+				if elem != 'magycke' and dict1[elem] < dict2[elem]:
+					res+=1
+			return res
+			

@@ -10,7 +10,9 @@ script = ExtResource("1_0ituy")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
-position = Vector2(578, 321)
+modulate = Color(1, 1, 1, 0.482353)
+position = Vector2(578, 320)
+scale = Vector2(1, 0.990741)
 texture = ExtResource("2_jo4g6")
 
 [node name="Orbs" type="HBoxContainer" parent="CanvasLayer"]

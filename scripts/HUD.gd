@@ -2,6 +2,7 @@ class_name HUD
 extends CanvasLayer
 
 var UIButton_scene:PackedScene
+var inventory_max_size =8
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	UIButton_scene = load("res://scenes/uibutton.tscn")
@@ -35,16 +36,16 @@ func stats_display(stats_list:Array):
 	)
 	
 func inventory_display_uninteractive(list:Array)->void:
-	for i in range(list.size()):
-		if i < 6:
+	for i in range(inventory_max_size):
+		if list[i] :
 			var slot = $Div/Inventory.get_child(i)
 			var label = Label.new()
 			label.text=list[i].alias
 			slot.add_child(label)
 
 func inventory_display(list:Array,mode_node:Mode)->void:
-	for i in range(list.size()):
-		if i < 6:
+	for i in range(inventory_max_size):
+		if list[i] :
 			var slot = $Div/Inventory.get_child(i)
 			if list[i].castable:
 				

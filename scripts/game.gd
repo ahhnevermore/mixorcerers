@@ -37,6 +37,7 @@ func _process(_delta):
 
 
 #TODO
+#add spell stats when selecting them in cast mode
 #modify cast spell to not apply damage but instead sublet it to the listeners
 #mix mode- additional cost
 #			replacing spells and refunding costs
@@ -70,7 +71,7 @@ var spells = {
 		'alias':"fireball",'sprite':"res://icon.svg",
 		'cast_range':2,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[1],
 		'fire_dmg':10.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0, 'dmg_dist':Spell.DMG_Distribution.CLEAN,
-		'gen_unit':false,'gen_item':false,
+		'gen_unit':false,'gen_artifact':false,
 		'elevation_mod': 0,'moisture_mod':-1,
 		'magycke_mod':[['dmg',{'fire':5,'water':0,'earth':0,'air':0}],['burn',{'duration':2,'dmg':5}]],
 		'day_mod':[[]],'night_mod':[[]],

@@ -16,9 +16,7 @@ func _ready():
 func _process(_delta):
 	pass
 
-func _init(arg_spell:Spell,arg_type:String,arg_value:int):
+func _init(arg_spell:Spell,arg_type:Grimoire_Type,arg_value):
 	spell =arg_spell
-	for x in Grimoire_Type:
-		if Grimoire_Type[x] == arg_type:
-			type = x
+	type=arg_type
 	value =arg_value
