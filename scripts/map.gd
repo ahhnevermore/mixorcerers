@@ -262,22 +262,9 @@ func load_map(filename:String)->Dictionary:
 		
 
 var mod_to_terrain ={
-	[0,0]:"chasm",
-	[0,1]:"ravine",
-	[0,2]:"underground_lake",
-	[0,3]:"ocean",
-	[1,0]:"desert",
-	[1,1]:"beach",
-	[1,2]:"delta",
-	[1,3]:"sea",
-	[2,0]:"plateau",
-	[2,1]:"jungle",
-	[2,2]:"swamp",
-	[2,3]:"river",
-	[3,0]:"cliff",
-	[3,1]:"snowcap",
-	[3,2]:"mountain_lake",
-	[3,3]:"glacier"
+	[0,0]:"chasm",[0,1]:"beach",[0,2]:"delta",[0,3]:"ocean",
+	[1,0]:"desert",[1,1]:"jungle",[1,2]:"river",[1,3]:"sea",
+	[2,0]:"plateau",[2,1]:"snowcap",[2,2]:"canyon",[2,3]:"glacier",
 }	
 var terrains:={
 	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
@@ -350,7 +337,7 @@ var terrains:={
 	"elevation":3,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"mountain_lake":{"sprite_id":14,"sprite_atlas":Vector2i(0,0),
+	"canyon":{"sprite_id":14,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":3,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
