@@ -83,8 +83,8 @@ func cast(spell:Spell,target:MapGrid):
 			var elevation
 			if map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod < 0:
 				elevation = 0
-			elif map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod >3:
-				elevation = 3
+			elif map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod >2:
+				elevation = 2
 			else:
 				elevation =  map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod
 			var moisture
