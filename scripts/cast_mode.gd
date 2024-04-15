@@ -21,10 +21,12 @@ func _process(_delta):
 		_on_cursor_changed()
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[1],cast_grid)
+		log_action()
 		game._on_cursor_changed()
 		var index = props[0].inventory.find(props[1])
 		props[0].inventory[index]=null
-		log_action()
+		props.pop_back()
+		
 		hud.clear_inventory_display()
 		hud.inventory_display(props[0].inventory,self)
 		
