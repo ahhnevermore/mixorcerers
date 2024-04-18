@@ -67,16 +67,10 @@ func cast(spell:Spell,target:MapGrid):
 	for match in matches:
 		var terrain_stats = map.terrains[map.get_terrain(match[1])]
 		var unit = match[0]
-		if spell.dmg_dist == Spell.DMG_Distribution.CLEAN:	#damage distribution will have damage varying across the grid
-			#Calculate dmg
-			var damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
-						spell.water_dmg * (1+terrain_stats['water_affin']) +
-						spell.earth_dmg * (1+terrain_stats['earth_affin']) +
-						spell.air_dmg * (1+terrain_stats['air_affin'])
-			)
-			unit.modified_stats['health'] -= damage
-			print(unit.modified_stats)
+		unit.resolve_cast(spell,terrain_stats)
+		if unit.alias == 'Player':
 			hud.stats_display([['health',unit.modified_stats['health']]])
+			
 	#modify terrain
 	if spell.elevation_mod != 0 or spell.moisture_mod != 0:
 		for tile in tiles:

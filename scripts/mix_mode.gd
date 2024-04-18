@@ -39,20 +39,20 @@ func _process(_delta):
 		for i in magycke_stack:
 			real_cost['magycke']+=1
 		orbs_operation(real_cost,"add",additional_costs,)
-		orbs_operation(internal_orbs,"sub",additional_costs,)
+		if orbs_operation(internal_orbs,"sub",additional_costs,):
 		
-		var mixture = Spell.new(spell_config,modifiers,real_cost)
-		if grimoire_type != Grimoire.Grimoire_Type.NONE:
-			mixture = Grimoire.new(mixture,grimoire_type,grimoire_value)
-		
-		add_item(props[0].inventory,mixture,internal_orbs)
-		orbs_display(internal_orbs)
-		hud.clear_inventory_display()
-		hud.inventory_display_uninteractive(props[0].inventory)
-		stack = []
-		magycke_stack =[]
-		stack_display(stack,magycke_stack)
-		spell_display(stack)
+			var mixture = Spell.new(spell_config,modifiers,real_cost)
+			if grimoire_type != Grimoire.Grimoire_Type.NONE:
+				mixture = Grimoire.new(mixture,grimoire_type,grimoire_value)
+			
+			add_item(props[0].inventory,mixture,internal_orbs)
+			orbs_display(internal_orbs)
+			hud.clear_inventory_display()
+			hud.inventory_display_uninteractive(props[0].inventory)
+			stack = []
+			magycke_stack =[]
+			stack_display(stack,magycke_stack)
+			spell_display(stack)
 			
 	if Input.is_action_just_pressed("cancel_action"):
 		if stack:
@@ -89,6 +89,30 @@ func add_item(inventory:Array,item,orbs):
 			inventory[0] = item
 		else:
 			inventory[0]= item
+	else:
+		var replace_index = false
+		var replaced = false
+		var index
+		for i in range(6):
+			index = i + 2
+			print(index)
+			if not inventory[index]:
+				inventory[index] = item
+				replaced = true
+				break
+			elif inventory[index] is Grimoire and not replace_index:
+				replace_index = index
+		if not replaced:
+			if replace_index:
+				var outgoing_item = inventory[replace_index]
+				if outgoing_item.alias == item.alias and orbs_operation(outgoing_item.spell.real_cost,"lt",item.spell.real_cost):
+					orbs_operation(orbs,"add",item.spell.real_cost,)
+					item = outgoing_item
+				else:
+					orbs_operation(orbs,"add",outgoing_item.spell.real_cost,)
+				inventory[replace_index] = item
+			else:
+				inventory[2] = item
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
@@ -139,8 +163,11 @@ func spell_display(list):
 			if action[0] == spell_config['alias']:
 				spell_count+=1
 		for item in props[0].inventory:
-			if item and item.alias == spell_config['alias']:
+			if item and (
+				item.alias == spell_config['alias'] or 
+				item.alias.substr(0,len(item.alias)-1) ==spell_config['alias']):
 				spell_count+=1
+			
 		if not grimoire_cost_added and grimoire_value:
 			grimoire_cost_added=true
 			for elem in spell_config['grimoire_cost']:
@@ -235,6 +262,7 @@ func _on_grimoire_value_text_submitted(new_text):
 				grimoire_value = input
 			else:
 				default_grimoire_value(grimoire_type)
+
 func default_grimoire_value(type:Grimoire.Grimoire_Type):
 	match type:
 		Grimoire.Grimoire_Type.NONE:
@@ -245,8 +273,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value=false
 			if spell_config and grimoire_cost_added:
 				grimoire_cost_added=false
-				for elem in spell_config['grimoire_cost']:
-					additional_costs[elem] = spell_config['grimoire_cost'][elem]
+				orbs_operation(additional_costs,"sub",spell_config['grimoire_cost'])
 				additional_costs_display()
 				
 		Grimoire.Grimoire_Type.ON_DMG:
@@ -257,8 +284,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value = 100
 			if spell_config and not grimoire_cost_added:
 				grimoire_cost_added=true
-				for elem in spell_config['grimoire_cost']:
-					additional_costs[elem] += spell_config['grimoire_cost'][elem]
+				orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
 				additional_costs_display()
 		Grimoire.Grimoire_Type.On_TERRAIN_CHANGE:
 			$CanvasLayer/Grimoire_Val.hide()
@@ -266,8 +292,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value = map.mod_to_terrain.values()[0]
 			if spell_config and not grimoire_cost_added:
 				grimoire_cost_added=true
-				for elem in spell_config['grimoire_cost']:
-					additional_costs[elem] += spell_config['grimoire_cost'][elem]
+				orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
 				additional_costs_display()
 
 
@@ -291,10 +316,13 @@ func orbs_operation(dict1,operation,dict2):
 		"sub":
 			for elem in dict2:
 				dict1[elem]-= dict2[elem]
+				if dict1[elem] < 0:
+					dict1[elem]+=dict2[elem]
+					return false
 		"lt":
 			var res=0
 			for elem in dict2:
 				if elem != 'magycke' and dict1[elem] < dict2[elem]:
 					res+=1
 			return res
-			
+	return true

@@ -1,10 +1,10 @@
 class_name Grimoire
 extends Node
 
-
+var alias
 var spell:Spell
 var type:Grimoire_Type
-var value:int
+var value
 enum Grimoire_Type{
 	NONE,
 	ON_DMG,
@@ -20,3 +20,4 @@ func _init(arg_spell:Spell,arg_type:Grimoire_Type,arg_value):
 	spell =arg_spell
 	type=arg_type
 	value =arg_value
+	alias = spell.alias + "*"

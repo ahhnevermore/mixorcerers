@@ -6,12 +6,9 @@ var game:Game
 var map:Map
 var allies: Array
 var commands = ["move","vision grid","cast","mix"]
-var orbs = {"fire":20,"water":10,"earth":10,"air":10,"magycke":3}
+var orbs = {"fire":50,"water":10,"earth":10,"air":10,"magycke":3}
 var inventory
-var initial_stats = {'move':5,
-			'vision':5,
-			'health':100}
-var modified_stats = initial_stats.duplicate(true)
+
 var visible_tiles
 # Called when the node enters the scene tree for the first time.
 
