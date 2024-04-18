@@ -263,7 +263,7 @@ func load_map(filename:String)->Dictionary:
 
 var mod_to_terrain ={
 	[0,0]:"chasm",[0,1]:"beach",[0,2]:"delta",[0,3]:"ocean",
-	[1,0]:"desert",[1,1]:"jungle",[1,2]:"river",[1,3]:"sea",
+	[1,0]:"desert",[1,1]:"grasslands",[1,2]:"jungle",[1,3]:"lake",
 	[2,0]:"plateau",[2,1]:"snowcap",[2,2]:"canyon",[2,3]:"glacier",
 }	
 var terrains:={
@@ -272,12 +272,12 @@ var terrains:={
 	"elevation":0,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"ravine":{"sprite_id":1,"sprite_atlas":Vector2i(0,0),
+	"beach":{"sprite_id":5,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"underground_lake":{"sprite_id":2,"sprite_atlas":Vector2i(0,0),
+	"delta":{"sprite_id":6,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
@@ -292,17 +292,17 @@ var terrains:={
 	"elevation":1,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"beach":{"sprite_id":5,"sprite_atlas":Vector2i(0,0),
+	"grasslands":{"sprite_id":9,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"delta":{"sprite_id":6,"sprite_atlas":Vector2i(0,0),
+	"jungle":{"sprite_id":10,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"sea":{"sprite_id":7,"sprite_atlas":Vector2i(0,0),
+	"lake":{"sprite_id":7,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
@@ -312,43 +312,44 @@ var terrains:={
 	"elevation":2,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"jungle":{"sprite_id":9,"sprite_atlas":Vector2i(0,0),
+	"snowcap":{"sprite_id":13,"sprite_atlas":Vector2i(0,1),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"swamp":{"sprite_id":10,"sprite_atlas":Vector2i(0,0),
+	"canyon":{"sprite_id":14,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"river":{"sprite_id":11,"sprite_atlas":Vector2i(0,0),
-	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-	"elevation":2,"moisture":3,
-	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
-	
-	"cliff":{"sprite_id":12,"sprite_atlas":Vector2i(0,1),
-	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-	"elevation":3,"moisture":0,
-	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
-	
-	"snowcap":{"sprite_id":13,"sprite_atlas":Vector2i(0,1),
-	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-	"elevation":3,"moisture":1,
-	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
-	
-	"canyon":{"sprite_id":14,"sprite_atlas":Vector2i(0,0),
-	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-	"elevation":3,"moisture":2,
-	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
-	
 	"glacier":{"sprite_id":15,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-	"elevation":3,"moisture":3,
+	"elevation":2,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
 	"fog":{"sprite_id":16,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":5,"move_cost":100,
 	"elevation":5,"moisture":5,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25}
+	
+#	"ravine":{"sprite_id":1,"sprite_atlas":Vector2i(0,0),
+#	"vision_bonus":0,"vision_cost":1,"move_cost":1,
+#	"elevation":0,"moisture":1,
+#	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
+#
+#	"underground_lake":{"sprite_id":2,"sprite_atlas":Vector2i(0,0),
+#	"vision_bonus":0,"vision_cost":1,"move_cost":1,
+#	"elevation":0,"moisture":2,
+#	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
+
+#	"river":{"sprite_id":11,"sprite_atlas":Vector2i(0,0),
+#	"vision_bonus":0,"vision_cost":1,"move_cost":1,
+#	"elevation":2,"moisture":3,
+#	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
+#
+#	"cliff":{"sprite_id":12,"sprite_atlas":Vector2i(0,1),
+#	"vision_bonus":0,"vision_cost":1,"move_cost":1,
+#	"elevation":3,"moisture":0,
+#	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
+#
 }

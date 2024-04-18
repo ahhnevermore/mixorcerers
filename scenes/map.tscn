@@ -41,7 +41,7 @@ texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6q4le"]
-resource_name = "swamp"
+resource_name = "jungle"
 texture = ExtResource("10_7u60b")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
@@ -177,7 +177,7 @@ texture_region_size = Vector2i(66, 48)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jgrtt"]
-resource_name = "sea"
+resource_name = "lake"
 texture = ExtResource("7_s2qjs")
 margins = Vector2i(0, 16)
 texture_region_size = Vector2i(66, 48)
@@ -191,6 +191,7 @@ texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h77el"]
+resource_name = "grasslands"
 texture = ExtResource("21_4gwo3")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
