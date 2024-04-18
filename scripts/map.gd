@@ -327,6 +327,11 @@ var terrains:={
 	"elevation":2,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
+	"river":{"sprite_id":11,"sprite_atlas":Vector2i(0,0),
+	"vision_bonus":0,"vision_cost":1,"move_cost":1,
+	"elevation":2,"moisture":3,
+	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
+	
 	"fog":{"sprite_id":16,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":5,"move_cost":100,
 	"elevation":5,"moisture":5,
@@ -342,11 +347,6 @@ var terrains:={
 #	"elevation":0,"moisture":2,
 #	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 
-#	"river":{"sprite_id":11,"sprite_atlas":Vector2i(0,0),
-#	"vision_bonus":0,"vision_cost":1,"move_cost":1,
-#	"elevation":2,"moisture":3,
-#	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
-#
 #	"cliff":{"sprite_id":12,"sprite_atlas":Vector2i(0,1),
 #	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 #	"elevation":3,"moisture":0,
