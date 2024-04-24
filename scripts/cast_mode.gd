@@ -59,11 +59,8 @@ func _on_cursor_changed():
 	if cast_grid:
 		map.clear_grid(cast_grid,'cast')
 	if props.size()> 1 and props[1] is Spell and cursor.cursor_tile in cast_range_grid.dict:
-		match props[1].cast_shape:
-			Spell.cast_shapes.CIRCLE:
-				cast_grid = MapGrid.new(map.field_of_prop(cursor.cursor_tile,
-					"cast_cost",props[1].cast_dim[0],[],0,false))
-				map.display_grid(cast_grid,"cast")
+			cast_grid = map.gen_cast_grid(props[1],cursor.cursor_tile)
+			map.display_grid(cast_grid,"cast")
 				
 		
 func cast(spell:Spell,target:MapGrid):

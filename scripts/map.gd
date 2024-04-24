@@ -57,7 +57,7 @@ func display_grid(grid:MapGrid,grid_type:String)->void:
 				set_cell(3,tile[0],terrains['ocean']["sprite_id"],terrains['ocean']["sprite_atlas"])
 		"vision":
 			for tile in grid:
-				set_cell(3,tile[0],terrains['sea']["sprite_id"],terrains['sea']["sprite_atlas"])
+				set_cell(3,tile[0],terrains['lake']["sprite_id"],terrains['lake']["sprite_atlas"])
 		"cast_range":
 			for tile in grid:
 				set_cell(3,tile[0],terrains['river']["sprite_id"],terrains['river']["sprite_atlas"])
@@ -82,6 +82,12 @@ func clear_grid(grid:MapGrid,grid_type:String)->void:
 		_:
 			for xy in grid:
 				erase_cell(3,xy[0])
+
+#wil be expanded
+func gen_cast_grid(spell,cursor_pos):
+	match spell.cast_shape:
+		Spell.cast_shapes.CIRCLE:
+			return MapGrid.new(field_of_prop(cursor_pos,"cast_cost",spell.cast_dim[0],[],0,false))
 
 func gen_vision_grid(unit:Variant)->MapGrid:
 	var xy = local_to_map(unit.position)

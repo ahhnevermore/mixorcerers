@@ -34,7 +34,9 @@ func _process(_delta):
 			cursor_tile = final
 			cursor_changed.emit()
 
-	
+func update(xy:Vector2i):
+	position = map.map_to_local(xy)
+	cursor_tile = xy
 
 func _on_repeat_delay_timeout()->void:
 	cursor_active=true
