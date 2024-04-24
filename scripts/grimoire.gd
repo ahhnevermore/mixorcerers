@@ -1,15 +1,19 @@
 class_name Grimoire
 extends Node
 
+var castable= true
 var alias
 var spell:Spell
 var type:Grimoire_Type
 var value
+var precast_cursor
+
 enum Grimoire_Type{
 	NONE,
 	ON_DMG,
-	On_TERRAIN_CHANGE
+	ON_TERRAIN_CHANGE
 }
+
 func _ready():
 	pass
 

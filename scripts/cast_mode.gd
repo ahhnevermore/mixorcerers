@@ -1,6 +1,6 @@
 extends Mode
 
-#Invariant - there should be props[1] for anything to be cost
+#Invariant - there should be props[1] for anything to be cast
 var cast_range_grid:MapGrid
 var cast_grid:MapGrid
 var vision_grid:MapGrid
@@ -13,6 +13,10 @@ func _ready():
 func _process(_delta):
 	if update and props[1] is Spell:
 		update = false
+		if cast_grid:
+			map.clear_grid(cast_grid,'cast')
+		if cast_range_grid:
+			map.clear_grid(cast_range_grid,"cast_range")
 		match props[1].cast_shape:
 				Spell.cast_shapes.CIRCLE:
 					cast_range_grid = MapGrid.new(map.field_of_prop(map.local_to_map(props[0].position),
@@ -29,7 +33,16 @@ func _process(_delta):
 		
 		hud.clear_inventory_display()
 		hud.inventory_display(props[0].inventory,self)
-		
+	
+	if update and props[1] is Grimoire:
+		update = false
+		if cast_grid:
+			map.clear_grid(cast_grid,'cast')
+		if cast_range_grid:
+			map.clear_grid(cast_range_grid,"cast_range")
+		var precast_mode = game.precast_mode_scene.instantiate()
+		precast_mode.setup(game,map,cursor,hud,props)
+
 	if Input.is_action_just_pressed("cancel_action"):
 		self.windup()
 			
@@ -117,6 +130,11 @@ func windup():
 	super.windup()
 
 func _on_button_message(val):
+	for i in range(game.mode.size()-1,-1,-1):
+		if game.mode[i] == self:
+			break
+		else:
+			game.mode[i].windup()
 	if props.size()>1:
 		props=[props[0]]
 	props.append(val)

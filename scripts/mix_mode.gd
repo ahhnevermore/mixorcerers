@@ -28,6 +28,7 @@ func _process(_delta):
 		stack_display(stack,magycke_stack)
 		spell_display(stack)
 	if Input.is_action_just_pressed("select_confirm") and spell_config:
+		_on_grimoire_value_text_submitted(unsafe_text)
 		var modifiers =[]
 		modifiers.append_array(magycke_stack)
 		if map.day:
@@ -242,6 +243,7 @@ func windup()->void:
 	super.windup()
 
 func _on_grimoire_dropdown_selected(index):
+	$CanvasLayer/Grimoire_Dropdown.release_focus()
 	grimoire_type = Grimoire.Grimoire_Type.values()[index]
 	default_grimoire_value(grimoire_type)
 
@@ -286,7 +288,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 				grimoire_cost_added=true
 				orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
 				additional_costs_display()
-		Grimoire.Grimoire_Type.On_TERRAIN_CHANGE:
+		Grimoire.Grimoire_Type.ON_TERRAIN_CHANGE:
 			$CanvasLayer/Grimoire_Val.hide()
 			$CanvasLayer/Grimoire_Val_Terrain.show()
 			grimoire_value = map.mod_to_terrain.values()[0]
@@ -297,6 +299,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 
 
 func _on_grimoire_val_terrain_item_selected(index):
+	$CanvasLayer/Grimoire_Val_Terrain.release_focus()
 	grimoire_value = map.mod_to_terrain.values()[index]
 
 func additional_costs_display()->void:

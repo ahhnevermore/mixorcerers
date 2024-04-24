@@ -10,8 +10,13 @@ var grid_mode_scene:PackedScene
 var cast_mode_scene:PackedScene
 var mix_mode_scene:PackedScene
 var display_grid_mode_scene:PackedScene
+var precast_mode_scene:PackedScene
+
 var turn_history:Array
 var listeners:Array
+
+signal damage_trigger
+signal terrain_trigger
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	select_mode_scene = load("res://scenes/select_mode.tscn")
@@ -20,6 +25,7 @@ func _ready():
 	cast_mode_scene = load("res://scenes/cast_mode.tscn")
 	mix_mode_scene = load("res://scenes/mix_mode.tscn")
 	display_grid_mode_scene= load("res://scenes/display_grid_mode.tscn")
+	precast_mode_scene=load("res://scenes/precast_mode.tscn")
 
 	$Map.gen_map()
 	$Player.gen_visible_tiles()
