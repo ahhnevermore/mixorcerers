@@ -3,7 +3,6 @@ extends Mode
 #Invariant - there should be props[1] for anything to be cast
 var cast_range_grid:MapGrid
 var cast_grid:MapGrid
-var vision_grid:MapGrid
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -17,12 +16,13 @@ func _process(_delta):
 			map.clear_grid(cast_grid,'cast')
 		if cast_range_grid:
 			map.clear_grid(cast_range_grid,"cast_range")
-		match props[1].cast_shape:
-				Spell.cast_shapes.CIRCLE:
-					cast_range_grid = MapGrid.new(map.field_of_prop(map.local_to_map(props[0].position),
-					"cast_range_cost",props[1].cast_range,[],0,false))
-					map.display_grid(cast_range_grid,"cast_range")
+		
+		cast_range_grid = MapGrid.new(map.field_of_prop(map.local_to_map(props[0].position),
+		"cast_range_cost",props[1].cast_range,[],0,false))
+		map.display_grid(cast_range_grid,"cast_range")
+		
 		_on_cursor_changed()
+		
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[1],cast_grid)
 		log_action()
@@ -50,7 +50,6 @@ func _process(_delta):
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	alias = 'cast'
-	vision_grid = map.gen_vision_grid(props[0])
 	hud.clear_inventory_display()
 	hud.inventory_display(props[0].inventory,self)
 	update=false

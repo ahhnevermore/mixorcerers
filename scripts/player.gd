@@ -17,6 +17,10 @@ func _ready():
 	map=get_parent().get_node("Map")
 	position= map.map_to_local(map.map_file[map.player+"_start_position"])
 	allies.push_back(self)
+	initial_stats = {'move':5,
+			'vision':4,
+			'health':100}
+	modified_stats = initial_stats.duplicate(true)
 	inventory =[
 		null,null,null,null,
 		null,null,null,null

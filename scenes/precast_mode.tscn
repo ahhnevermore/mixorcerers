@@ -57,8 +57,15 @@ offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Precast_Position_Type" type="OptionButton" parent="CanvasLayer"]
+offset_left = 500.0
+offset_top = 412.0
+offset_right = 543.0
+offset_bottom = 452.0
+
 [connection signal="item_selected" from="CanvasLayer/Grimoire_Dropdown" to="." method="_on_grimoire_dropdown_selected"]
 [connection signal="text_changed" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_changed"]
 [connection signal="text_submitted" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_submitted"]
 [connection signal="timeout" from="CanvasLayer/Grimoire_Val/Grimoire_Val_Timer" to="." method="_on_grimoire_value_timer_timeout"]
 [connection signal="item_selected" from="CanvasLayer/Grimoire_Val_Terrain" to="." method="_on_grimoire_val_terrain_item_selected"]
+[connection signal="item_selected" from="CanvasLayer/Precast_Position_Type" to="." method="_on_precast_position_type_selected"]
