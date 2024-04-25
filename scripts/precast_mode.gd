@@ -23,7 +23,8 @@ func _process(delta):
 						'type':precast_position_type,
 						'position': Vector2i(
 							cursor.cursor_tile.x - unit_xy.x,
-							cursor.cursor_tile.y - unit_xy.y)}
+							cursor.cursor_tile.y - unit_xy.y),
+							'y':unit_xy.y % 2}
 			map.clear_grid(cast_grid,'cast')
 			map.clear_grid(cast_range_grid,"cast_range")
 			windup()
@@ -58,15 +59,22 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 		match precast_position_type:
 			Grimoire.Precast_Position_Type.RELATIVE:
 				var unit_pos = map.local_to_map(props[0].position)
-				cast_grid = map.gen_cast_grid(props[1].spell, 
-				Vector2i(
-					unit_pos.x + props[1].precast_position['position'].x,
+				var new_pos
+				if props[1].precast_position['y'] != unit_pos.y % 2 :
+					new_pos = Vector2i(
+					unit_pos.x + props[1].precast_position['position'].x + 1,
 					unit_pos.y + props[1].precast_position['position'].y
-					))
-				cursor.update(Vector2i(
-					unit_pos.x + props[1].precast_position['position'].x,
+					)
+					print(new_pos)
+				else:
+					new_pos = Vector2i(
+					unit_pos.x + props[1].precast_position['position'].x ,
 					unit_pos.y + props[1].precast_position['position'].y
-					))
+					)
+
+						
+				cast_grid = map.gen_cast_grid(props[1].spell,new_pos)
+				cursor.update(new_pos)
 				map.display_grid(cast_grid,"cast")
 			Grimoire.Precast_Position_Type.ABSOLUTE:
 				if props[1].precast_position['position'] in cast_range_grid.dict:
@@ -79,6 +87,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 				
 
 func _on_cursor_changed():
+	print(cursor.cursor_tile.y%2)
 	if cast_grid:
 		map.clear_grid(cast_grid,'cast')
 	if  cursor.cursor_tile in cast_range_grid.dict:
@@ -103,7 +112,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			$CanvasLayer/Grimoire_Val.text =""
 			if not update:
 				$CanvasLayer/Grimoire_Val.placeholder_text= str(props[1].value)+"%"
-				print("here")
+				
 			else:
 				$CanvasLayer/Grimoire_Val.placeholder_text= "100%"
 				props[1].value = 100
@@ -144,6 +153,6 @@ func _on_grimoire_value_text_submitted(new_text):
 
 func _on_precast_position_type_selected(index):
 	precast_position_type = Grimoire.Precast_Position_Type.values()[index]
-	print(precast_position_type)
+	
 	
 	
