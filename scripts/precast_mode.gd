@@ -11,20 +11,17 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("select_confirm"):
 		if cursor.cursor_tile in cast_range_grid.dict:
 			match precast_position_type:
 				Grimoire.Precast_Position_Type.ABSOLUTE:
 					props[1].precast_position = {'type':precast_position_type,'position':cursor.cursor_tile}
 				Grimoire.Precast_Position_Type.RELATIVE:
-					var unit_xy = map.local_to_map(props[0].position)
 					props[1].precast_position = {
-						'type':precast_position_type,
-						'position': Vector2i(
-							cursor.cursor_tile.x - unit_xy.x,
-							cursor.cursor_tile.y - unit_xy.y),
-							'y':unit_xy.y % 2}
+							'type':precast_position_type,
+							'origin':map.local_to_map(props[0].position) ,
+							'position': cursor.cursor_tile}
 			map.clear_grid(cast_grid,'cast')
 			map.clear_grid(cast_range_grid,"cast_range")
 			windup()
@@ -56,31 +53,40 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	if props[1].precast_position:
 		precast_position_type = props[1].precast_position['type']
 		$CanvasLayer/Precast_Position_Type.select(precast_position_type)
+		var cursor_pos
 		match precast_position_type:
-			Grimoire.Precast_Position_Type.RELATIVE:
-				var unit_pos = map.local_to_map(props[0].position)
-				var new_pos
-				if props[1].precast_position['y'] != unit_pos.y % 2 :
-					new_pos = Vector2i(
-					unit_pos.x + props[1].precast_position['position'].x + 1,
-					unit_pos.y + props[1].precast_position['position'].y
-					)
-					print(new_pos)
-				else:
-					new_pos = Vector2i(
-					unit_pos.x + props[1].precast_position['position'].x ,
-					unit_pos.y + props[1].precast_position['position'].y
-					)
-
-						
-				cast_grid = map.gen_cast_grid(props[1].spell,new_pos)
-				cursor.update(new_pos)
-				map.display_grid(cast_grid,"cast")
 			Grimoire.Precast_Position_Type.ABSOLUTE:
-				if props[1].precast_position['position'] in cast_range_grid.dict:
-					cast_grid = map.gen_cast_grid(props[1].spell,props[1].precast_position['position'])
-					map.display_grid(cast_grid,"cast")
-					cursor.update(props[1].precast_position['position'])
+				cursor_pos = props[1].precast_position['position']
+				
+			Grimoire.Precast_Position_Type.RELATIVE:
+				var unit_xy = map.local_to_map(props[0].position)
+				if unit_xy.y % 2 != props[1].precast_position['origin'].y % 2:#line difference
+					if unit_xy.y % 2: #odd line 
+						cursor_pos = Vector2i(
+						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x -1 ,
+						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
+					)
+					else: #even line
+						cursor_pos = Vector2i(
+						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x + 1,
+						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
+					)
+						
+				else:#same line type
+					cursor_pos = Vector2i(
+						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x,
+						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
+					)
+					
+					
+				print(props[1].precast_position,unit_xy,cursor_pos)
+			
+				
+		if cursor_pos in cast_range_grid.dict:
+			cast_grid = map.gen_cast_grid(props[1].spell,cursor_pos)
+			map.display_grid(cast_grid,"cast")
+			cursor.update(cursor_pos)
+			
 	else:
 		precast_position_type = Grimoire.Precast_Position_Type.RELATIVE
 					
