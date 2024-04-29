@@ -1,4 +1,6 @@
 {
+  "p1_start_position": [8,8],
+  "p2_start_position": [2, 7],
   "tiles": [
     [
       "lake",
@@ -540,7 +542,6 @@
       "beach",
       "grasslands"
     ]
-  ],
-  "p1_start_position": [3, 3],
-  "p2_start_position": [0, 3]
+  ]
+
 }

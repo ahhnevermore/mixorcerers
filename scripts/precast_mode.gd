@@ -32,6 +32,8 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	update = false
 	
+	tests()
+	
 	#dropdowns
 	for type in Grimoire.Grimoire_Type:
 		if Grimoire.Grimoire_Type[type] != Grimoire.Grimoire_Type.NONE:
@@ -60,26 +62,12 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 				
 			Grimoire.Precast_Position_Type.RELATIVE:
 				var unit_xy = map.local_to_map(props[0].position)
-				if unit_xy.y % 2 != props[1].precast_position['origin'].y % 2:#line difference
-					if unit_xy.y % 2: #odd line 
-						cursor_pos = Vector2i(
-						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x -1 ,
-						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
-					)
-					else: #even line
-						cursor_pos = Vector2i(
-						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x + 1,
-						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
-					)
-						
-				else:#same line type
-					cursor_pos = Vector2i(
-						props[1].precast_position['position'].x - props[1].precast_position['origin'].x + unit_xy.x,
-						props[1].precast_position['position'].y - props[1].precast_position['origin'].y + unit_xy.y
-					)
-					
-					
+				cursor_pos = calc_relative_cursor(unit_xy,props[1].precast_position)
 				print(props[1].precast_position,unit_xy,cursor_pos)
+				
+					
+					
+				
 			
 				
 		if cursor_pos in cast_range_grid.dict:
@@ -161,4 +149,32 @@ func _on_precast_position_type_selected(index):
 	precast_position_type = Grimoire.Precast_Position_Type.values()[index]
 	
 	
+func tests():
+	var results=[]
+	if calc_relative_cursor(Vector2i(8, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(6, 8) })== Vector2i(6, 7):
+		results.append(true)
+	else:
+		results.append(false)
+	if calc_relative_cursor(Vector2i(9, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(8, 9) })== Vector2i(8, 8):
+		results.append(true)
+	else:
+		results.append(false)
 	
+	for i in range(len(results)):
+		if results[i]:
+			print("Test "+ str(i) + " passed")
+		else:
+			print("Test "+ str(i) + " failed")
+	
+func calc_relative_cursor(unit_xy,precast_position):
+	var res
+	res = Vector2i(
+						precast_position['position'].x - precast_position['origin'].x + unit_xy.x,
+						precast_position['position'].y - precast_position['origin'].y + unit_xy.y
+					)
+	if unit_xy.y % 2 != res.y % 2:#line difference
+		if res.y % 2:
+			res.x += 1
+		else: #even line
+			res.x -= 1
+	return res

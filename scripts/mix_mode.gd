@@ -96,7 +96,6 @@ func add_item(inventory:Array,item,orbs):
 		var index
 		for i in range(6):
 			index = i + 2
-			print(index)
 			if not inventory[index]:
 				inventory[index] = item
 				replaced = true
