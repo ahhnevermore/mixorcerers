@@ -18,14 +18,15 @@ func _ready():
 	position= map.map_to_local(map.map_file[map.player+"_start_position"])
 	allies.push_back(self)
 	initial_stats = {'move':5,
-			'vision':4,
-			'health':100}
+			'vision':5,
+			'health':100,
+			'max_health':120}
 	modified_stats = initial_stats.duplicate(true)
 	inventory =[
 		null,null,null,null,
 		null,null,null,null
 		]
-	game.listeners.append(self)
+	game.add_listener(self)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass

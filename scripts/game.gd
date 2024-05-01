@@ -40,7 +40,8 @@ func _process(_delta):
 		var select_mode = select_mode_scene.instantiate()
 		select_mode.setup(self,$Map,$Cursor,$HUD,[])
 
-
+func add_listener(listener):
+	listeners.append(listener)
 
 #TODO
 #add spell stats when selecting them in cast mode
@@ -70,7 +71,7 @@ func _process(_delta):
 #All terrain modifications have to set the cache of the terrain to null
 
 func _on_cursor_changed()->void:
-	$HUD.terrain_display($Map.get_terrain($Map.get_tile($Cursor.cursor_tile)))
+	$HUD.terrain_display($Map.get_terrain($Map.get_tile($Cursor.cursor_tile)),$Cursor.cursor_tile)
 
 var spells = {
 	"fireball":{

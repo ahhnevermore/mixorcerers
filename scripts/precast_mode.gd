@@ -32,8 +32,8 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	update = false
 	
-	tests()
-	
+#	tests()
+#
 	#dropdowns
 	for type in Grimoire.Grimoire_Type:
 		if Grimoire.Grimoire_Type[type] != Grimoire.Grimoire_Type.NONE:
@@ -63,13 +63,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 			Grimoire.Precast_Position_Type.RELATIVE:
 				var unit_xy = map.local_to_map(props[0].position)
 				cursor_pos = calc_relative_cursor(unit_xy,props[1].precast_position)
-				print(props[1].precast_position,unit_xy,cursor_pos)
-				
-					
-					
-				
-			
-				
+
 		if cursor_pos in cast_range_grid.dict:
 			cast_grid = map.gen_cast_grid(props[1].spell,cursor_pos)
 			map.display_grid(cast_grid,"cast")
@@ -81,7 +75,6 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 				
 
 func _on_cursor_changed():
-	print(cursor.cursor_tile.y%2)
 	if cast_grid:
 		map.clear_grid(cast_grid,'cast')
 	if  cursor.cursor_tile in cast_range_grid.dict:
@@ -172,8 +165,8 @@ func calc_relative_cursor(unit_xy,precast_position):
 						precast_position['position'].x - precast_position['origin'].x + unit_xy.x,
 						precast_position['position'].y - precast_position['origin'].y + unit_xy.y
 					)
-	if unit_xy.y % 2 != res.y % 2:#line difference
-		if res.y % 2:
+	if unit_xy.y % 2 != res.y % 2 && precast_position['origin'].y %2 != unit_xy.y %2:#line difference
+		if res.y % 2: 
 			res.x += 1
 		else: #even line
 			res.x -= 1
