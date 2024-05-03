@@ -40,8 +40,7 @@ func _process(_delta):
 		var select_mode = select_mode_scene.instantiate()
 		select_mode.setup(self,$Map,$Cursor,$HUD,[])
 
-func add_listener(listener):
-	listeners.append(listener)
+
 
 #TODO
 #add spell stats when selecting them in cast mode

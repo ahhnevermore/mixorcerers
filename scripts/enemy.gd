@@ -11,7 +11,8 @@ var inventory
 func _ready():
 	game=get_parent()
 	map=get_parent().get_node("Map")
-	position= map.map_to_local(map.map_file[map.enemy +"_start_position"])
+	xy = map.map_file[map.enemy +"_start_position"]
+	position= map.map_to_local(xy)
 	inventory =[Spell.new(game.spells["fireball"],[],{}),Spell.new(game.spells["fireball"],[],{}),null,null,null,null,null,null]
 	game.listeners.append(self)
 # Called every frame. 'delta' is the elapsed time since the previous frame.

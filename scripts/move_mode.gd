@@ -18,6 +18,8 @@ func _process(_delta):
 	if Input.is_action_just_pressed("select_confirm") and path:
 		map.display_grid(vision_grid,'fog')
 		map.clear_grid(move_grid,'move')
+		props[0].xy = path[0][-1]
+		print(props[0].xy)
 		props[0].position = map.map_to_local(path[0][-1])
 		
 		vision_grid=map.gen_vision_grid(props[0])

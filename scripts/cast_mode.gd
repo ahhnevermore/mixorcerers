@@ -64,28 +64,18 @@ func _on_cursor_changed():
 				
 		
 func cast(spell:Spell,target:MapGrid):
-	var matches = []
-	var tiles=[]
-	for xy in target:
-		var tile = map.get_tile(xy[0])
-		tiles.append(tile)
-		for listener in game.listeners:
-			if map.map_to_local(tile.xy) == listener.position:
-				matches.append([listener,tile])
+	
+	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
+	var matches = find_matches(target.dict.keys())
+		
 
 	for match in matches:
 		var terrain_stats = map.terrains[map.get_terrain(match[1])]
 		var unit = match[0]
-		if spell.dmg_dist == Spell.DMG_Distribution.CLEAN:	#damage distribution will have damage varying across the grid
-			#Calculate dmg
-			var damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
-						spell.water_dmg * (1+terrain_stats['water_affin']) +
-						spell.earth_dmg * (1+terrain_stats['earth_affin']) +
-						spell.air_dmg * (1+terrain_stats['air_affin'])
-			)
-			unit.modified_stats['health'] -= damage
-			if unit.alias == 'Player':
-				hud.stats_display([['health',unit.modified_stats['health']]])
+		var damage = calc_damage(spell,terrain_stats)
+		unit.modified_stats['health'] -= damage
+		if unit.alias == 'Player':
+			hud.stats_display([['health',unit.modified_stats['health']]])
 			
 	#modify terrain
 	if spell.elevation_mod != 0 or spell.moisture_mod != 0:
@@ -138,3 +128,21 @@ func _on_button_message(val):
 
 func log_action()->void:
 	game.turn_history.append([props[1].alias,cursor.cursor_tile])
+
+func calc_damage(spell,terrain_stats):
+	var damage
+	if spell.dmg_dist == Spell.DMG_Distribution.CLEAN:	#damage distribution will have damage varying across the grid
+			#Calculate dmg
+			damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
+					spell.water_dmg * (1+terrain_stats['water_affin']) +
+					spell.earth_dmg * (1+terrain_stats['earth_affin']) +
+					spell.air_dmg * (1+terrain_stats['air_affin'])
+			)
+	return damage
+
+func find_matches(tiles:Array):
+	var res = []
+	for listener in game.listeners:
+		if listener.xy in tiles:
+			res.append([listener,map.get_tile(listener.xy)])
+	return res	
