@@ -43,4 +43,15 @@ func _on_repeat_delay_timeout()->void:
 	cursor_active=true
 
 
-
+func calc_relative_cursor(unit_xy,precast_position):
+	var res
+	res = Vector2i(
+						precast_position['position'].x - precast_position['origin'].x + unit_xy.x,
+						precast_position['position'].y - precast_position['origin'].y + unit_xy.y
+					)
+	if unit_xy.y % 2 != res.y % 2 && precast_position['origin'].y %2 != unit_xy.y %2:#line difference
+		if res.y % 2: 
+			res.x += 1
+		else: #even line
+			res.x -= 1
+	return res

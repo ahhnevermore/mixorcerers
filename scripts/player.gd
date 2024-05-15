@@ -7,7 +7,7 @@ var map:Map
 var allies: Array
 var commands = ["move","vision grid","cast","mix"]
 var orbs = {"fire":50,"water":10,"earth":10,"air":10,"magycke":3}
-var inventory
+
 
 var visible_tiles
 # Called when the node enters the scene tree for the first time.

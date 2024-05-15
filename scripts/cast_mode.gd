@@ -66,16 +66,30 @@ func _on_cursor_changed():
 func cast(spell:Spell,target:MapGrid):
 	
 	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
-	var matches = find_matches(target.dict.keys())
-		
+	var collisions = find_collisions(target.dict.keys())
 
-	for match in matches:
-		var terrain_stats = map.terrains[map.get_terrain(match[1])]
-		var unit = match[0]
+	for collision in collisions:
+		var terrain_stats = map.terrains[map.get_terrain(collision[1])]
+		var unit = collision[0]
 		var damage = calc_damage(spell,terrain_stats)
-		unit.modified_stats['health'] -= damage
-		if unit.alias == 'Player':
-			hud.stats_display([['health',unit.modified_stats['health']]])
+		
+		var on_dmg_grimoires = unit.damage_trigger(damage)
+		on_dmg_grimoires.sort_custom(func(a,b):return a.value > b.value)
+	
+		for grimoire in on_dmg_grimoires:
+			if unit.xy == collision[1].xy:
+				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
+				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
+				var index = unit.inventory.find(grimoire)
+				unit.inventory[index]=null
+			elif unit.xy in target.dict.keys():
+				collisions.append(unit,map.get_tile(unit.xy))
+				
+		#after on_dmg_grimoires are resolved
+		if unit.xy == collision[1].xy:
+			unit.modified_stats['health'] -= damage
+			if unit.alias == 'Player':
+				hud.stats_display([['health',unit.modified_stats['health']]])
 			
 	#modify terrain
 	if spell.elevation_mod != 0 or spell.moisture_mod != 0:
@@ -131,7 +145,8 @@ func log_action()->void:
 
 func calc_damage(spell,terrain_stats):
 	var damage
-	if spell.dmg_dist == Spell.DMG_Distribution.CLEAN:	#damage distribution will have damage varying across the grid
+	match spell.dmg_dist:
+		Spell.DMG_Distribution.CLEAN:	#damage distribution will have damage varying across the grid
 			#Calculate dmg
 			damage = (spell.fire_dmg * (1+terrain_stats['fire_affin']) +
 					spell.water_dmg * (1+terrain_stats['water_affin']) +
@@ -140,7 +155,7 @@ func calc_damage(spell,terrain_stats):
 			)
 	return damage
 
-func find_matches(tiles:Array):
+func find_collisions(tiles:Array):
 	var res = []
 	for listener in game.listeners:
 		if listener.xy in tiles:

@@ -62,7 +62,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 				
 			Grimoire.Precast_Position_Type.RELATIVE:
 				var unit_xy = map.local_to_map(props[0].position)
-				cursor_pos = calc_relative_cursor(unit_xy,props[1].precast_position)
+				cursor_pos = cursor.calc_relative_cursor(unit_xy,props[1].precast_position)
 
 		if cursor_pos in cast_range_grid.dict:
 			cast_grid = map.gen_cast_grid(props[1].spell,cursor_pos)
@@ -144,11 +144,11 @@ func _on_precast_position_type_selected(index):
 	
 func tests():
 	var results=[]
-	if calc_relative_cursor(Vector2i(8, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(6, 8) })== Vector2i(6, 7):
+	if cursor.calc_relative_cursor(Vector2i(8, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(6, 8) })== Vector2i(6, 7):
 		results.append(true)
 	else:
 		results.append(false)
-	if calc_relative_cursor(Vector2i(9, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(8, 9) })== Vector2i(8, 8):
+	if cursor.calc_relative_cursor(Vector2i(9, 7),{ "type": 0, "origin": Vector2i(8, 8), "position": Vector2i(8, 9) })== Vector2i(8, 8):
 		results.append(true)
 	else:
 		results.append(false)
@@ -159,15 +159,4 @@ func tests():
 		else:
 			print("Test "+ str(i) + " failed")
 	
-func calc_relative_cursor(unit_xy,precast_position):
-	var res
-	res = Vector2i(
-						precast_position['position'].x - precast_position['origin'].x + unit_xy.x,
-						precast_position['position'].y - precast_position['origin'].y + unit_xy.y
-					)
-	if unit_xy.y % 2 != res.y % 2 && precast_position['origin'].y %2 != unit_xy.y %2:#line difference
-		if res.y % 2: 
-			res.x += 1
-		else: #even line
-			res.x -= 1
-	return res
+

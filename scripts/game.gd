@@ -32,6 +32,12 @@ func _ready():
 	$Player.display_vision([])
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
+	
+#	var nums = [1,2,3,4]
+#	for num in nums:
+#		if nums[-1] < 10:
+#			nums.append(nums[-1]+1)
+#		print(num)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -45,9 +51,7 @@ func _process(_delta):
 #TODO
 #add spell stats when selecting them in cast mode
 #modify cast spell to not apply damage but instead sublet it to the listeners
-#mix mode- additional cost
-#			replacing spells and refunding costs
-#precasting grimoires
+
 #Spells - various dmg distributions, various spells,various casts
 #add sprites for spells
 #add sound effects for spells and tiles
@@ -63,6 +67,9 @@ func _process(_delta):
 #add enemy
 #loading maps from filea
 #camera
+#mix mode- additional cost
+#			replacing spells and refunding costs
+#precasting grimoires
 
 
 # all the user content in user://
