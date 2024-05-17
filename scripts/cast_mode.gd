@@ -73,15 +73,20 @@ func cast(spell:Spell,target:MapGrid):
 		var unit = collision[0]
 		var damage = calc_damage(spell,terrain_stats)
 		
+		if spell.terrain_mod:
+			pass
+		
 		var on_dmg_grimoires = unit.damage_trigger(damage)
 		on_dmg_grimoires.sort_custom(func(a,b):return a.value > b.value)
 	
 		for grimoire in on_dmg_grimoires:
 			if unit.xy == collision[1].xy:
-				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
-				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
 				var index = unit.inventory.find(grimoire)
 				unit.inventory[index]=null
+				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
+				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
+				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
+				
 			elif unit.xy in target.dict.keys():
 				collisions.append(unit,map.get_tile(unit.xy))
 				
@@ -92,24 +97,14 @@ func cast(spell:Spell,target:MapGrid):
 				hud.stats_display([['health',unit.modified_stats['health']]])
 			
 	#modify terrain
-	if spell.elevation_mod != 0 or spell.moisture_mod != 0:
+	if spell.terrain_mod:
 		for tile in tiles:
-			var elevation
-			if map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod < 0:
-				elevation = 0
-			elif map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod >2:
-				elevation = 2
-			else:
-				elevation =  map.terrains[map.get_terrain(tile)]['elevation']+spell.elevation_mod
-			var moisture
-			if map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod < 0:
-				moisture=0
-			elif map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod>3:
-				moisture=3
-			else:
-				moisture=map.terrains[map.get_terrain(tile)]['moisture']+ spell.moisture_mod
+			var terrain_stats = map.terrains[map.get_terrain(tile)]
+			var new_terrain_id = [terrain_stats['elevation']+ spell.terrain_mod[0],terrain_stats['moisture']+spell.terrain_mod[1]]
+			new_terrain_id[0] = 0 if new_terrain_id[0] < 0 else (2 if new_terrain_id[0]> 2 else new_terrain_id[0])
+			new_terrain_id[1] = 0 if new_terrain_id[1] < 0 else (3 if new_terrain_id[1]> 3 else new_terrain_id[1])
 				
-			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[[elevation,moisture]],'all':map.turn,'p':INF})
+			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[new_terrain_id],'all':map.turn,'p':INF})
 			map.update_vision(props[0].visible_tiles)
 			props[0].display_vision([])
 			

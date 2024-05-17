@@ -23,8 +23,7 @@ var gen_unit
 var gen_artifact
 
 #terrain modifications
-var elevation_mod:int
-var moisture_mod :int
+var terrain_mod
 
 #specific buffs got from the magyckes
 var magycke_mod:Array
@@ -69,8 +68,7 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	gen_unit = config['gen_unit']
 	gen_artifact =config['gen_artifact']
 	
-	elevation_mod = config['elevation_mod']
-	moisture_mod = config['moisture_mod']
+	terrain_mod = config['terrain_mod'].duplicate()
 	
 	magycke_mod = config['magycke_mod'].duplicate()
 	day_mod=config['day_mod'].duplicate()

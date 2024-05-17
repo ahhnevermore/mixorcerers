@@ -85,7 +85,7 @@ var spells = {
 		'cast_range':5,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[1],
 		'fire_dmg':10.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0, 'dmg_dist':Spell.DMG_Distribution.CLEAN,
 		'gen_unit':false,'gen_artifact':false,
-		'elevation_mod': 0,'moisture_mod':-1,
+		'terrain_mod':[0,-1],
 		'magycke_mod':[['dmg',{'fire':5,'water':0,'earth':0,'air':0}],['burn',{'duration':2,'dmg':5}]],
 		'day_mod':[[]],'night_mod':[[]],
 		'modifiers':[['vision',{'duration':2}]],
