@@ -99,12 +99,7 @@ func cast(spell:Spell,target:MapGrid):
 	#modify terrain
 	if spell.terrain_mod:
 		for tile in tiles:
-			var terrain_stats = map.terrains[map.get_terrain(tile)]
-			var new_terrain_id = [terrain_stats['elevation']+ spell.terrain_mod[0],terrain_stats['moisture']+spell.terrain_mod[1]]
-			new_terrain_id[0] = 0 if new_terrain_id[0] < 0 else (2 if new_terrain_id[0]> 2 else new_terrain_id[0])
-			new_terrain_id[1] = 0 if new_terrain_id[1] < 0 else (3 if new_terrain_id[1]> 3 else new_terrain_id[1])
-				
-			tile.terrain_list.push_front({'terrain':map.mod_to_terrain[new_terrain_id],'all':map.turn,'p':INF})
+			tile.update_terrain(get_modded_terrain(map.terrains[map.get_terrain(tile)],spell.terrain_mod),map.turn)
 			map.update_vision(props[0].visible_tiles)
 			props[0].display_vision([])
 			
@@ -156,3 +151,10 @@ func find_collisions(tiles:Array):
 		if listener.xy in tiles:
 			res.append([listener,map.get_tile(listener.xy)])
 	return res	
+
+func get_modded_terrain(terrain_stats, terrain_mod):
+	var new_terrain_id = [terrain_stats['elevation']+ terrain_mod[0],terrain_stats['moisture']+ terrain_mod[1]]
+	new_terrain_id[0] = 0 if new_terrain_id[0] < 0 else (2 if new_terrain_id[0]> 2 else new_terrain_id[0])
+	new_terrain_id[1] = 0 if new_terrain_id[1] < 0 else (3 if new_terrain_id[1]> 3 else new_terrain_id[1])
+	
+	return map.mod_to_terrain[new_terrain_id]

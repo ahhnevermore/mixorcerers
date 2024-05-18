@@ -8,3 +8,6 @@ func _init(arg_xy,arg_terrain):
 	self.xy=arg_xy
 	self.terrain_list=arg_terrain
 	self.cache=""
+
+func update_terrain(terrain,turn):
+	terrain_list.push_front({'terrain':terrain,'all':turn,'p':INF})
