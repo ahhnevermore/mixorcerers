@@ -73,11 +73,22 @@ func cast(spell:Spell,target:MapGrid):
 		var unit = collision[0]
 		var damage = calc_damage(spell,terrain_stats)
 		
+		var on_terrain_grimoires
 		if spell.terrain_mod:
-			pass
+			on_terrain_grimoires = unit.terrain_trigger(get_modded_terrain(terrain_stats,spell.terrain_mod),terrain_stats['alias'])
+		
+		for grimoire in on_terrain_grimoires:
+			if unit.xy == collision[1].xy:
+				var index = unit.inventory.find(grimoire)
+				unit.inventory[index]=null
+				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
+				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
+				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
+				
+			elif unit.xy in target.dict.keys():
+				collisions.append(unit,map.get_tile(unit.xy))
 		
 		var on_dmg_grimoires = unit.damage_trigger(damage)
-		on_dmg_grimoires.sort_custom(func(a,b):return a.value > b.value)
 	
 		for grimoire in on_dmg_grimoires:
 			if unit.xy == collision[1].xy:

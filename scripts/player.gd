@@ -2,8 +2,7 @@ extends Unit
 
 
 var alias = "Player"
-var game:Game
-var map:Map
+
 var allies: Array
 var commands = ["move","vision grid","cast","mix"]
 var orbs = {"fire":50,"water":10,"earth":10,"air":10,"magycke":3}
@@ -13,8 +12,7 @@ var visible_tiles
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
-	game=get_parent()
-	map=get_parent().get_node("Map")
+	super._ready()
 	xy = map.map_file[map.player+"_start_position"]
 	position= map.map_to_local(xy)
 	allies.push_back(self)

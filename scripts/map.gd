@@ -273,72 +273,72 @@ var mod_to_terrain ={
 	[2,0]:"plateau",[2,1]:"snowcap",[2,2]:"canyon",[2,3]:"glacier",
 }	
 var terrains:={
-	"chasm":{"sprite_id":0,"sprite_atlas":Vector2i(0,0),
+	"chasm":{'alias':"chasm","sprite_id":0,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"beach":{"sprite_id":5,"sprite_atlas":Vector2i(0,0),
+	"beach":{'alias':"beach","sprite_id":5,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"delta":{"sprite_id":6,"sprite_atlas":Vector2i(0,0),
+	"delta":{'alias':"delta","sprite_id":6,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"ocean":{"sprite_id":3,"sprite_atlas":Vector2i(0,0),
+	"ocean":{'alias':"ocean","sprite_id":3,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":0,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"desert":{"sprite_id":4,"sprite_atlas":Vector2i(0,0),
+	"desert":{'alias':"desert","sprite_id":4,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"grasslands":{"sprite_id":9,"sprite_atlas":Vector2i(0,0),
+	"grasslands":{'alias':"grasslands","sprite_id":9,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"jungle":{"sprite_id":10,"sprite_atlas":Vector2i(0,0),
+	"jungle":{'alias':"jungle","sprite_id":10,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"lake":{"sprite_id":7,"sprite_atlas":Vector2i(0,0),
+	"lake":{'alias':"lake","sprite_id":7,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":1,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"plateau":{"sprite_id":8,"sprite_atlas":Vector2i(0,0),
+	"plateau":{'alias':"plateau","sprite_id":8,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":0,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"snowcap":{"sprite_id":13,"sprite_atlas":Vector2i(0,1),
+	"snowcap":{'alias':"snowcap","sprite_id":13,"sprite_atlas":Vector2i(0,1),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":1,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"canyon":{"sprite_id":14,"sprite_atlas":Vector2i(0,0),
+	"canyon":{'alias':"canyon","sprite_id":14,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":2,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"glacier":{"sprite_id":15,"sprite_atlas":Vector2i(0,0),
+	"glacier":{'alias':"glacier","sprite_id":15,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"river":{"sprite_id":11,"sprite_atlas":Vector2i(0,0),
+	"river":{'alias':"river","sprite_id":11,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":1,"move_cost":1,
 	"elevation":2,"moisture":3,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 	
-	"fog":{"sprite_id":16,"sprite_atlas":Vector2i(0,0),
+	"fog":{'alias':"fog","sprite_id":16,"sprite_atlas":Vector2i(0,0),
 	"vision_bonus":0,"vision_cost":5,"move_cost":100,
 	"elevation":5,"moisture":5,
 	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25}
