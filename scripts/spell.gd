@@ -23,7 +23,7 @@ var gen_unit
 var gen_artifact
 
 #terrain modifications
-var terrain_mod
+var terrain_mod=false
 
 #specific buffs got from the magyckes
 var magycke_mod:Array
@@ -53,7 +53,8 @@ enum DMG_Distribution{
 }#different ways to distribute damage across the cast grid
 func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	alias= config['alias']
-	sprite  = load(config['sprite'])
+	if config['sprite']:
+		sprite  = load(config['sprite'])
 	
 	cast_range = config['cast_range']
 	cast_shape = config['cast_shape']
@@ -68,7 +69,8 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 	gen_unit = config['gen_unit']
 	gen_artifact =config['gen_artifact']
 	
-	terrain_mod = config['terrain_mod'].duplicate()
+	if config['terrain_mod']:
+		terrain_mod = config['terrain_mod'].duplicate()
 	
 	magycke_mod = config['magycke_mod'].duplicate()
 	day_mod=config['day_mod'].duplicate()

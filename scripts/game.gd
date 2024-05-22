@@ -50,9 +50,9 @@ func _process(_delta):
 
 
 #TODO
+#Spell- Blink
+#persistent effects,check for burn etc when moving
 #add spell stats when selecting them in cast mode
-#modify cast spell to not apply damage but instead sublet it to the listeners
-
 #Spells - various dmg distributions, various spells,various casts
 #add sprites for spells
 #add sound effects for spells and tiles
@@ -71,6 +71,8 @@ func _process(_delta):
 #mix mode- additional cost
 #			replacing spells and refunding costs
 #precasting grimoires
+#modify cast spell to not apply damage but instead sublet it to the listeners
+
 
 
 # all the user content in user://
@@ -91,9 +93,22 @@ var spells = {
 		'day_mod':[[]],'night_mod':[[]],
 		'modifiers':[['vision',{'duration':2}]],
 		'repeat_cost':{'fire':1,'water':0,'earth':0,'air':0},
-		'grimoire_cost':{'fire':1,'water':0,'earth':0,'air':0}}
+		'grimoire_cost':{'fire':1,'water':0,'earth':0,'air':0}},
+	"blink":{
+		'alias':"blink",'sprite':"",
+		'cast_range':3,'cast_shape':Spell.cast_shapes.CIRCLE,'cast_dim':[0],
+		'fire_dmg':0.0,'water_dmg':0.0,'earth_dmg':0.0,'air_dmg':0.0, 'dmg_dist':Spell.DMG_Distribution.CLEAN,
+		'gen_unit':false,'gen_artifact':false,
+		'terrain_mod':false,
+		'magycke_mod':[['dmg',{'fire':1,'water':0,'earth':0,'air':1}],['cast_dim',[1]]],
+		'day_mod':[[]],'night_mod':[[]],
+		'modifiers':[['move',{}]],
+		'repeat_cost':{'fire':1,'water':0,'earth':0,'air':1},
+		'grimoire_cost':{'fire':0,'water':1,'earth':0,'air':0}
+	}
 }
 
 var recipes= {
-	{'fire':3,'water':0,'earth':0,'air':0 }: 'fireball'
+	{'fire':3,'water':0,'earth':0,'air':0 }: 'fireball',
+	{'fire':1,'water':1,'earth':0,'air':1 }: 'blink',
 }

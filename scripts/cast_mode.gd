@@ -67,6 +67,7 @@ func cast(spell:Spell,target:MapGrid):
 	
 	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
 	var collisions = find_collisions(target.dict.keys())
+	
 
 	for collision in collisions:
 		var terrain_stats = map.terrains[map.get_terrain(collision[1])]
@@ -114,7 +115,11 @@ func cast(spell:Spell,target:MapGrid):
 			map.update_vision(props[0].visible_tiles)
 			props[0].display_vision([])
 			
-	
+	#other modifiers
+	for mod in spell.modifiers:
+		match mod:
+			_:
+				print(mod)
 	
 	map.clear_grid(cast_grid,'cast')
 	map.clear_grid(cast_range_grid,'cast_range')
