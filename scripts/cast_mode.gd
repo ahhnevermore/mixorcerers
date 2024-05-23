@@ -24,8 +24,7 @@ func _process(_delta):
 		_on_cursor_changed()
 		
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
-		cast(props[1],cast_grid)
-		log_action()
+		cast(props[0],props[1],cursor.cursor_tile,0,[])
 		game._on_cursor_changed()
 		var index = props[0].inventory.find(props[1])
 		props[0].inventory[index]=null
@@ -63,8 +62,8 @@ func _on_cursor_changed():
 			map.display_grid(cast_grid,"cast")
 				
 		
-func cast(spell:Spell,target:MapGrid):
-	
+func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
+	var target = map.gen_cast_grid(spell,cursor_pos)
 	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
 	var collisions = find_collisions(target.dict.keys())
 	
@@ -83,8 +82,8 @@ func cast(spell:Spell,target:MapGrid):
 				var index = unit.inventory.find(grimoire)
 				unit.inventory[index]=null
 				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
-				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
+				cast(unit,grimoire.spell,
+				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
 				
 			elif unit.xy in target.dict.keys():
 				collisions.append(unit,map.get_tile(unit.xy))
@@ -96,8 +95,8 @@ func cast(spell:Spell,target:MapGrid):
 				var index = unit.inventory.find(grimoire)
 				unit.inventory[index]=null
 				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-				cast(grimoire.spell,map.gen_cast_grid(grimoire.spell,
-				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy))
+				cast(unit,grimoire.spell,
+				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
 				
 			elif unit.xy in target.dict.keys():
 				collisions.append(unit,map.get_tile(unit.xy))
@@ -120,7 +119,9 @@ func cast(spell:Spell,target:MapGrid):
 		match mod:
 			_:
 				print(mod)
-	
+	history.append([caster.alias,spell.alias,cursor_pos])
+	if depth == 0:
+		log_action(history)
 	map.clear_grid(cast_grid,'cast')
 	map.clear_grid(cast_range_grid,'cast_range')
 				
@@ -146,8 +147,9 @@ func _on_button_message(val):
 	props.append(val)
 	update = true
 
-func log_action()->void:
-	game.turn_history.append([props[1].alias,cursor.cursor_tile])
+func log_action(arr:Array)->void:
+	arr.reverse()
+	game.turn_history.append_array(arr)
 
 func calc_damage(spell,terrain_stats):
 	var damage

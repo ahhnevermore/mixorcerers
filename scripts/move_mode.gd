@@ -66,4 +66,4 @@ func windup()->void:
 	super.windup()
 	
 func log_action()->void:
-	game.turn_history.append([alias,props[0].position])
+	game.turn_history.append([props[0].alias,alias,props[0].xy])

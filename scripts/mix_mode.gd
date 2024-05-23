@@ -160,7 +160,7 @@ func spell_display(list):
 		$CanvasLayer/Spell.text = spell_config['alias']
 		var spell_count =0
 		for action in game.turn_history:
-			if action[0] == spell_config['alias']:
+			if action[0]==props[0].alias and action[1] == spell_config['alias']:
 				spell_count+=1
 		for item in props[0].inventory:
 			if item and (
