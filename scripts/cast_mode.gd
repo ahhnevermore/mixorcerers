@@ -76,7 +76,7 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
 		var unit = collision[0]
 		var damage = calc_damage(spell,terrain_stats)
 		
-		var on_terrain_grimoires
+		var on_terrain_grimoires=[]
 		if spell.terrain_mod:
 			on_terrain_grimoires = unit.terrain_trigger(get_modded_terrain(terrain_stats,spell.terrain_mod),terrain_stats['alias'])
 		
@@ -122,19 +122,16 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
 		match mod[0]:
 			"move":
 				if caster in player.allies:
-					pass
-#				map.display_grid(vision_grid,'fog')
-#				map.clear_grid(move_grid,'move')
-#
-#				caster.xy = cursor_pos
-#				caster.position = map.map_to_local(cursor_pos)
-#
-#				vision_grid=map.gen_vision_grid(props[0])
-#				props[0].gen_visible_tiles()
-#				map.update_vision(props[0].visible_tiles)
-#				props[0].display_vision([])
-#
-#
+					map.display_grid(map.gen_vision_grid(caster),'fog')
+
+				caster.xy = cursor_pos
+				caster.position = map.map_to_local(cursor_pos)
+				
+				player.gen_visible_tiles()
+				map.update_vision(player.visible_tiles)
+				player.display_vision([])
+
+
 			_:
 				print(mod)
 	history.append([caster.alias,spell.alias,cursor_pos])

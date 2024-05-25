@@ -50,7 +50,8 @@ func _process(_delta):
 
 
 #TODO
-#Spell- Blink
+#add hotkeys
+#decide regarding spell speeds
 #persistent effects,check for burn etc when moving
 #add spell stats when selecting them in cast mode
 #Spells - various dmg distributions, various spells,various casts
@@ -62,6 +63,8 @@ func _process(_delta):
 #turn transition
 
 #COMPLETED
+
+#Spell- Blink
 #Path finding algorithm and movement - Completed
 #vision - done
 #add spell prop to dict-not sure what it means but done

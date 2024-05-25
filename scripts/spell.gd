@@ -96,13 +96,16 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 					xs = night_mod
 			for x in xs:
 				if x.size()>0:
-					if x[0] == 'dmg':
-						fire_dmg += x[1]['fire']
-						water_dmg += x[1]['water']
-						earth_dmg += x[1]['earth']
-						air_dmg += x[1]['air']
-					else:
-						res.append(x)
+					match x[0]:
+						'dmg':
+							fire_dmg += x[1]['fire']
+							water_dmg += x[1]['water']
+							earth_dmg += x[1]['earth']
+							air_dmg += x[1]['air']
+						'cast_dim':
+							cast_dim = x[1]
+						_:
+							res.append(x)
 		else: 
 			res.append(mod)
 	modifiers= res.duplicate(true)
