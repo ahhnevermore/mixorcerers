@@ -90,14 +90,12 @@ func gen_cast_grid(spell,cursor_pos):
 			return MapGrid.new(field_of_prop(cursor_pos,"cast_cost",spell.cast_dim[0],[],0,false))
 
 func gen_vision_grid(unit:Variant)->MapGrid:
-	var xy = local_to_map(unit.position)
-	var aug_vision = max(unit.modified_stats['vision'] + terrains[get_terrain(get_tile(xy))]["vision_bonus"],1)
-	return MapGrid.new(field_of_prop(xy,"vision_cost",aug_vision,[],0,false))
+	var aug_vision = max(unit.modified_stats['vision'] + terrains[get_terrain(get_tile(unit.xy))]["vision_bonus"],1)
+	return MapGrid.new(field_of_prop(unit.xy,"vision_cost",aug_vision,[],0,false))
 
 func gen_move_grid(unit:Variant)->MapGrid:
-	var xy = local_to_map(unit.position)
 	var aug_move = unit.modified_stats['move']
-	return MapGrid.new(field_of_prop(xy,"move_cost",aug_move,[],0,false))
+	return MapGrid.new(field_of_prop(unit.xy,"move_cost",aug_move,[],0,false))
 
 func update_vision(grid:MapGrid):
 	for xy in grid:

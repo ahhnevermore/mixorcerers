@@ -9,10 +9,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if update:
-		if props[1]=='vision':
-			grid = map.gen_vision_grid(props[0])
-		elif props[1]=='move':
-			grid = map.gen_move_grid(props[0])
+		match props[1]:
+			'vision':
+				grid = map.gen_vision_grid(props[0])
+			'move':
+				grid = map.gen_move_grid(props[0])
 		map.display_grid(grid,props[1])
 
 	if Input.is_action_just_pressed('cancel_action'):

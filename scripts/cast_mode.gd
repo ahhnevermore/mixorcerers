@@ -3,6 +3,8 @@ extends Mode
 #Invariant - there should be props[1] for anything to be cast
 var cast_range_grid:MapGrid
 var cast_grid:MapGrid
+var player
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -53,6 +55,7 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	hud.inventory_display(props[0].inventory,self)
 	update=false
 	cursor.cursor_changed.connect(_on_cursor_changed)
+	player = game.get_node("Player")
 	
 func _on_cursor_changed():
 	if cast_grid:
@@ -116,7 +119,22 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
 			
 	#other modifiers
 	for mod in spell.modifiers:
-		match mod:
+		match mod[0]:
+			"move":
+				if caster in player.allies:
+					pass
+#				map.display_grid(vision_grid,'fog')
+#				map.clear_grid(move_grid,'move')
+#
+#				caster.xy = cursor_pos
+#				caster.position = map.map_to_local(cursor_pos)
+#
+#				vision_grid=map.gen_vision_grid(props[0])
+#				props[0].gen_visible_tiles()
+#				map.update_vision(props[0].visible_tiles)
+#				props[0].display_vision([])
+#
+#
 			_:
 				print(mod)
 	history.append([caster.alias,spell.alias,cursor_pos])

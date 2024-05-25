@@ -1,7 +1,6 @@
 extends Mode
 #Props is a unit
 var move_grid:MapGrid
-var vision_grid:MapGrid
 var path :=[]
 var initial_move
 # Called when the node enters the scene tree for the first time.
@@ -16,13 +15,12 @@ func _process(_delta):
 		map.display_grid(move_grid,'move')
 		update = false
 	if Input.is_action_just_pressed("select_confirm") and path:
-		map.display_grid(vision_grid,'fog')
+		map.display_grid(map.gen_vision_grid(props[0]),'fog')
 		map.clear_grid(move_grid,'move')
 		
 		props[0].xy = path[0][-1]
 		props[0].position = map.map_to_local(path[0][-1])
 		
-		vision_grid=map.gen_vision_grid(props[0])
 		props[0].gen_visible_tiles()
 		map.update_vision(props[0].visible_tiles)
 		props[0].display_vision([])
@@ -41,7 +39,6 @@ func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	alias = "move"
 	move_grid= map.gen_move_grid(props[0])
 	map.display_grid(move_grid,'move')
-	vision_grid=map.gen_vision_grid(props[0])
 	update = false
 	initial_move=props[0].modified_stats['move']
 	_on_cursor_changed()
