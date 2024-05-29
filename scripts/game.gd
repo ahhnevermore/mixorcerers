@@ -50,9 +50,9 @@ func _process(_delta):
 
 
 #TODO
+#camera zoom in and out
 #add hotkeys
-#decide regarding spell speeds
-#persistent effects,check for burn etc when moving
+#persistent effects,check for burn etc when moving - dependent on good UI so I can show effects
 #add spell stats when selecting them in cast mode
 #Spells - various dmg distributions, various spells,various casts
 #add sprites for spells
@@ -64,6 +64,7 @@ func _process(_delta):
 
 #COMPLETED
 
+#decide regarding spell speeds-remains same
 #Spell- Blink
 #Path finding algorithm and movement - Completed
 #vision - done

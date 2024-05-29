@@ -8,10 +8,10 @@ Arch Mixorcerer
 
 Features Planned
 
-1. Spell Crafting- No cooldowns, only increasing costs
+1. Spell Crafting- No cooldowns, only increasing costs (Done)
 2. Tons of Spells- starting with elemental and movement, later units etc 
-3. Modifiable Terrain that affects combat
-4. Precast Spells at a higher cost, triggered during the opponent turn (Grimoires)
+3. Modifiable Terrain that affects combat (Done)
+4. Precast Spells at a higher cost, triggered during the opponent turn (Grimoires) (Done)
 5. Day(effects)/Night(dmg), power modifiers to bait and juke
 6. Replay system (in-game and standalone)
 7. LAN Multiplayer and Ladder
@@ -19,5 +19,15 @@ Features Planned
 
 This project is rather ambitious for a person of my skill, so please be patient.
 I would be very grateful if any security-related issues were brought to my attention
+-kryzel
 
-kryzel
+Special thanks to (in no particular order):
+Eleven
+Lorentz
+Hyperi0n
+LimitingFactor
+Kukiric
+Jebalnik
+Dark_Matter
+and many others from the Solaris and Godot Discord communities
+
