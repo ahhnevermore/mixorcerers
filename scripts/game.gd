@@ -33,7 +33,7 @@ func _ready():
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
 	
-	
+	print(IP.get_local_interfaces())
 #	var nums = [1,2,3,4]
 #	for num in nums:
 #		if nums[-1] < 10:
