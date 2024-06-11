@@ -32,8 +32,8 @@ func _ready():
 	$Player.display_vision([])
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
-	
-	print(IP.get_local_interfaces())
+#
+#	print(IP.get_local_interfaces())
 #	var nums = [1,2,3,4]
 #	for num in nums:
 #		if nums[-1] < 10:
@@ -44,8 +44,8 @@ func _ready():
 func _process(_delta):
 	if not mode and Input.is_action_just_pressed("select_confirm"):
 		$Cursor/RepeatDelay.stop()
-		var select_mode = select_mode_scene.instantiate()
-		select_mode.setup(self,$Map,$Cursor,$HUD,[])
+		add_child(SelectMode.new(self,$Map,$Cursor,$HUD,[]))
+
 
 
 

@@ -1,3 +1,4 @@
+class_name DisplayGridMode
 extends Mode
 
 var grid
@@ -18,8 +19,8 @@ func _process(_delta):
 
 	if Input.is_action_just_pressed('cancel_action'):
 		
-		self.windup()
+		windup()
 
 func windup()->void:
 	map.clear_grid(grid,props[1])
-	super.windup()
+	super()

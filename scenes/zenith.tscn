@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cay3yo02gyte6"]
+
+[ext_resource type="PackedScene" uid="uid://buun3sgpqfanu" path="res://scenes/client.tscn" id="1_wjwgp"]
+
+[node name="Zenith" type="Node2D"]
+
+[node name="Client" parent="." instance=ExtResource("1_wjwgp")]

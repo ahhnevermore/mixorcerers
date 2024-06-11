@@ -1,7 +1,13 @@
-extends Mode
+extends Node2D
 
-
-# Called when the node enters the scene tree for the first time.
+var alias:String
+var game :Game
+var map :Map 
+var cursor :Cursor
+var hud: HUD
+var update = true
+var props:Array
+	
 var internal_orbs
 var additional_costs={'fire':0,'water':0,'earth':0,'air':0}
 
@@ -115,8 +121,13 @@ func add_item(inventory:Array,item,orbs):
 				inventory[2] = item
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
-	
+	game = arg_game
+	map = arg_map
+	cursor = arg_cursor
+	hud = arg_hud
+	props = arg_props.duplicate()
+	#this goddamn lack of duplicate cost me 1 hour.	
+	game.mode.append(self)
 	#orb bar
 	internal_orbs=props[0].orbs.duplicate()
 	$CanvasLayer/Orbs/FireButton.setup("Fire",self)
@@ -239,7 +250,8 @@ func windup()->void:
 	for elem in magycke_stack:
 		internal_orbs['magycke']+=1
 	props[0].orbs = internal_orbs.duplicate()
-	super.windup()
+	game.mode.erase(self)
+	self.queue_free()
 
 func _on_grimoire_dropdown_selected(index):
 	$CanvasLayer/Grimoire_Dropdown.release_focus()

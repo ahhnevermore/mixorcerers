@@ -1,3 +1,4 @@
+class_name CastMode
 extends Mode
 
 #Invariant - there should be props[1] for anything to be cast
@@ -41,15 +42,14 @@ func _process(_delta):
 			map.clear_grid(cast_grid,'cast')
 		if cast_range_grid:
 			map.clear_grid(cast_range_grid,"cast_range")
-		var precast_mode = game.precast_mode_scene.instantiate()
-		precast_mode.setup(game,map,cursor,hud,props)
+		game.add_child(PrecastMode.new(game,map,cursor,hud,props))
 
 	if Input.is_action_just_pressed("cancel_action"):
-		self.windup()
+		windup()
 			
 	
-func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
+	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	alias = 'cast'
 	hud.clear_inventory_display()
 	hud.inventory_display(props[0].inventory,self)

@@ -1,3 +1,4 @@
+class_name MoveMode
 extends Mode
 #Props is a unit
 var move_grid:MapGrid
@@ -32,10 +33,10 @@ func _process(_delta):
 		log_action()
 		update = true
 	if Input.is_action_just_pressed("cancel_action"):
-		self.windup()
+		windup()
 	
-func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
+	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	alias = "move"
 	move_grid= map.gen_move_grid(props[0])
 	map.display_grid(move_grid,'move')
@@ -60,7 +61,7 @@ func windup()->void:
 	hud.stats_display([['move',initial_move]])
 	if path:
 		map.clear_path(path)
-	super.windup()
+	super()
 	
 func log_action()->void:
 	game.turn_history.append([props[0].alias,alias,props[0].xy])

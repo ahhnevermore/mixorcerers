@@ -1,3 +1,4 @@
+class_name PrecastMode
 extends Mode
 
 var unsafe_text
@@ -28,8 +29,8 @@ func _process(_delta):
 	if Input.is_action_just_pressed("cancel_action"):
 		windup()
 
-func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	super.setup(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
+	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	update = false
 	
 #	tests()
@@ -89,7 +90,7 @@ func windup()->void:
 		map.clear_grid(cast_grid,'cast')
 	if cast_range_grid:
 		map.clear_grid(cast_range_grid,"cast_range")
-	super.windup()
+	super()
 	
 func default_grimoire_value(type:Grimoire.Grimoire_Type):
 	match type:
