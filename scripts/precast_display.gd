@@ -1,5 +1,5 @@
 class_name PrecastMode
-extends Mode
+extends Display
 
 var unsafe_text
 var cast_grid:MapGrid
@@ -29,7 +29,7 @@ func _process(_delta):
 	if Input.is_action_just_pressed("cancel_action"):
 		windup()
 
-func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
+func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	update = false
 	

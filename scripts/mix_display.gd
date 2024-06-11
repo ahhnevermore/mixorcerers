@@ -1,13 +1,5 @@
-extends Node2D
+extends Display
 
-var alias:String
-var game :Game
-var map :Map 
-var cursor :Cursor
-var hud: HUD
-var update = true
-var props:Array
-	
 var internal_orbs
 var additional_costs={'fire':0,'water':0,'earth':0,'air':0}
 
@@ -121,20 +113,9 @@ func add_item(inventory:Array,item,orbs):
 				inventory[2] = item
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	game = arg_game
-	map = arg_map
-	cursor = arg_cursor
-	hud = arg_hud
-	props = arg_props.duplicate()
-	#this goddamn lack of duplicate cost me 1 hour.	
-	game.mode.append(self)
+	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	#orb bar
 	internal_orbs=props[0].orbs.duplicate()
-	$CanvasLayer/Orbs/FireButton.setup("Fire",self)
-	$CanvasLayer/Orbs/WaterButton.setup("Water",self)
-	$CanvasLayer/Orbs/EarthButton.setup("Earth",self)
-	$CanvasLayer/Orbs/AirButton.setup("Air",self)
-	$CanvasLayer/Magycke/MagyckeButton.setup("Magycke",self)
 	
 	# grimoire
 	for type in Grimoire.Grimoire_Type:
@@ -203,6 +184,29 @@ func orbs_display(orbs:Dictionary):
 	$CanvasLayer/Orbs/EarthCount.text= str(orbs['earth']) 
 	$CanvasLayer/Orbs/AirCount.text= str(orbs['air']) 
 	$CanvasLayer/Magycke/MagyckeCount.text=str(orbs['magycke'])
+	
+
+func _on_fire_button_pressed():
+	$CanvasLayer/Orbs/FireButton.release_focus()
+	_on_button_message('Fire')
+
+func _on_water_button_pressed():
+	$CanvasLayer/Orbs/WaterButton.release_focus()
+	_on_button_message('Water')
+
+func _on_air_button_pressed():
+	$CanvasLayer/Orbs/AirButton.release_focus()
+	_on_button_message('Air')
+	
+func _on_earth_button_pressed():
+	$CanvasLayer/Orbs/EarthButton.release_focus()
+	_on_button_message('Earth')
+
+func _on_magycke_button_pressed():
+	$CanvasLayer/Magycke/MagyckeButton.release_focus()
+	_on_button_message('Magycke')
+
+
 
 func _on_button_message(val):
 	if val != "Magycke":
@@ -250,8 +254,7 @@ func windup()->void:
 	for elem in magycke_stack:
 		internal_orbs['magycke']+=1
 	props[0].orbs = internal_orbs.duplicate()
-	game.mode.erase(self)
-	self.queue_free()
+	super()
 
 func _on_grimoire_dropdown_selected(index):
 	$CanvasLayer/Grimoire_Dropdown.release_focus()
@@ -340,3 +343,5 @@ func orbs_operation(dict1,operation,dict2):
 					res+=1
 			return res
 	return true
+
+

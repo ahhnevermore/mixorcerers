@@ -39,10 +39,8 @@ func _on_button_message(val:String)->void:
 		"vision grid":
 			game.add_child(DisplayGridMode.new(game,map,cursor,hud,props))
 		"mix":
-			var mix_mode = game.mix_mode_scene.instantiate()
-			mix_mode.setup(game,map,cursor,hud,props)
-			game.add_child(mix_mode)
-			print(typeof(mix_mode))
+			var mix_display = game.mix_display_scene.instantiate()
+			mix_display.setup(game,map,cursor,hud,props)
 			
 func windup():
 		hud.clear_command_display()

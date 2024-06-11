@@ -42,7 +42,8 @@ func _process(_delta):
 			map.clear_grid(cast_grid,'cast')
 		if cast_range_grid:
 			map.clear_grid(cast_range_grid,"cast_range")
-		game.add_child(PrecastMode.new(game,map,cursor,hud,props))
+		var precast_display = game.precast_display_scene.instantiate()
+		precast_display.setup(game,map,cursor,hud,props)
 
 	if Input.is_action_just_pressed("cancel_action"):
 		windup()

@@ -3,14 +3,9 @@ extends Node
 
 var replay :bool = false
 var mode :Array =[]
-var select_mode_scene:PackedScene
-var base_mode_scene:PackedScene
-var move_mode_scene:PackedScene
-var grid_mode_scene:PackedScene
-var cast_mode_scene:PackedScene
-var mix_mode_scene:PackedScene
-var display_grid_mode_scene:PackedScene
-var precast_mode_scene:PackedScene
+
+var mix_display_scene:PackedScene
+var precast_display_scene:PackedScene
 
 var turn_history:Array
 var listeners:Array
@@ -19,13 +14,8 @@ signal damage_trigger
 signal terrain_trigger
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	select_mode_scene = load("res://scenes/select_mode.tscn")
-	base_mode_scene = load("res://scenes/base_mode.tscn")
-	move_mode_scene=load("res://scenes/move_mode.tscn")
-	cast_mode_scene = load("res://scenes/cast_mode.tscn")
-	mix_mode_scene = load("res://scenes/mix_mode.tscn")
-	display_grid_mode_scene= load("res://scenes/display_grid_mode.tscn")
-	precast_mode_scene=load("res://scenes/precast_mode.tscn")
+	mix_display_scene = load("res://scenes/mix_display.tscn")
+	precast_display_scene=load("res://scenes/precast_display.tscn")
 
 	$Map.gen_map()
 	$Player.gen_visible_tiles()

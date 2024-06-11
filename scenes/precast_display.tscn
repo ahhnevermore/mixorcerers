@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cd0xt8qsfmfwn"]
 
-[ext_resource type="Script" path="res://scripts/precast_mode.gd" id="1_jkcly"]
+[ext_resource type="Script" path="res://scripts/precast_display.gd" id="1_jkcly"]
 [ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_byc76"]
 
 [node name="Node2D" type="Node2D"]

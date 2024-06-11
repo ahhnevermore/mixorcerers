@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dduk0gvr3grlq"]
+[gd_scene load_steps=3 format=3 uid="uid://dduk0gvr3grlq"]
 
-[ext_resource type="Script" path="res://scripts/mix_mode.gd" id="1_0ituy"]
+[ext_resource type="Script" path="res://scripts/mix_display.gd" id="1_0ituy"]
 [ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_jo4g6"]
-[ext_resource type="PackedScene" uid="uid://cmeh33s80ucjc" path="res://scenes/uibutton.tscn" id="3_7je3w"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_0ituy")
@@ -16,21 +15,22 @@ scale = Vector2(1, 0.990741)
 texture = ExtResource("2_jo4g6")
 
 [node name="Orbs" type="HBoxContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(100, 0)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -414.0
+offset_left = -404.0
 offset_top = -174.0
-offset_right = 414.0
+offset_right = 424.0
 offset_bottom = -134.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
 
-[node name="FireButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
-custom_minimum_size = Vector2(100, 0)
+[node name="FireButton" type="Button" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Fire"
 
@@ -40,8 +40,8 @@ layout_mode = 2
 text = "Fire"
 horizontal_alignment = 1
 
-[node name="WaterButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
-custom_minimum_size = Vector2(100, 0)
+[node name="WaterButton" type="Button" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Water"
 
@@ -51,8 +51,8 @@ layout_mode = 2
 text = "Water"
 horizontal_alignment = 1
 
-[node name="EarthButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
-custom_minimum_size = Vector2(100, 0)
+[node name="EarthButton" type="Button" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Earth"
 
@@ -62,8 +62,8 @@ layout_mode = 2
 text = "Earth"
 horizontal_alignment = 1
 
-[node name="AirButton" parent="CanvasLayer/Orbs" instance=ExtResource("3_7je3w")]
-custom_minimum_size = Vector2(100, 0)
+[node name="AirButton" type="Button" parent="CanvasLayer/Orbs"]
+custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "Air"
 
@@ -151,19 +151,11 @@ offset_top = 320.0
 offset_right = 1000.0
 offset_bottom = 360.0
 
-[node name="MagyckeButton" parent="CanvasLayer/Magycke" instance=ExtResource("3_7je3w")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 0.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MagyckeButton" type="Button" parent="CanvasLayer/Magycke"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 40.0
+text = "Magycke"
 
 [node name="MagyckeCount" type="Label" parent="CanvasLayer/Magycke"]
 layout_mode = 0
@@ -189,8 +181,13 @@ grow_vertical = 2
 [node name="Label" type="Label" parent="CanvasLayer/Additional Costs"]
 layout_mode = 2
 
+[connection signal="pressed" from="CanvasLayer/Orbs/FireButton" to="." method="_on_fire_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Orbs/WaterButton" to="." method="_on_water_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Orbs/EarthButton" to="." method="_on_earth_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Orbs/AirButton" to="." method="_on_air_button_pressed"]
 [connection signal="item_selected" from="CanvasLayer/Grimoire_Dropdown" to="." method="_on_grimoire_dropdown_selected"]
 [connection signal="text_changed" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_changed"]
 [connection signal="text_submitted" from="CanvasLayer/Grimoire_Val" to="." method="_on_grimoire_value_text_submitted"]
 [connection signal="timeout" from="CanvasLayer/Grimoire_Val/Grimoire_Val_Timer" to="." method="_on_grimoire_value_timer_timeout"]
 [connection signal="item_selected" from="CanvasLayer/Grimoire_Val_Terrain" to="." method="_on_grimoire_val_terrain_item_selected"]
+[connection signal="pressed" from="CanvasLayer/Magycke/MagyckeButton" to="." method="_on_magycke_button_pressed"]
