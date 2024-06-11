@@ -4,7 +4,7 @@ extends Mode
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	cursor.get_child(2).stop()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

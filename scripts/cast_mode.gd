@@ -32,9 +32,11 @@ func _process(_delta):
 		var index = props[0].inventory.find(props[1])
 		props[0].inventory[index]=null
 		props.pop_back()
-		
+		if not props[0].inventory.filter(func(x): return x != null):
+			windup()
 		hud.clear_inventory_display()
 		hud.inventory_display(props[0].inventory,self)
+		
 	
 	if update and props[1] is Grimoire:
 		update = false
@@ -51,6 +53,8 @@ func _process(_delta):
 	
 func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
+	if not props[0].inventory.filter(func(x): return x != null):
+			windup()
 	alias = 'cast'
 	hud.clear_inventory_display()
 	hud.inventory_display(props[0].inventory,self)

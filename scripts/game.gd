@@ -33,7 +33,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if not mode and Input.is_action_just_pressed("select_confirm"):
-		$Cursor/RepeatDelay.stop()
 		add_child(SelectMode.new(self,$Map,$Cursor,$HUD,[]))
 
 

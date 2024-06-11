@@ -31,6 +31,8 @@ func _process(_delta):
 		initial_move= props[0].modified_stats['move']	
 		map.clear_path(path)
 		log_action()
+		if initial_move == 0:
+			windup()
 		update = true
 	if Input.is_action_just_pressed("cancel_action"):
 		windup()
@@ -40,10 +42,12 @@ func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	alias = "move"
 	move_grid= map.gen_move_grid(props[0])
 	map.display_grid(move_grid,'move')
-	update = false
 	initial_move=props[0].modified_stats['move']
 	_on_cursor_changed()
 	cursor.cursor_changed.connect(_on_cursor_changed)
+	if initial_move == 0:
+			windup()
+	update = false
 	
 func _on_cursor_changed():
 	if path:

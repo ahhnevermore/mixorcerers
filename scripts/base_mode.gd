@@ -14,6 +14,10 @@ func _process(_delta):
 		hud.stats_display([])
 		hud.command_display(props[0].commands,self)
 		hud.inventory_display_uninteractive(props[0].inventory)
+	if Input.is_action_just_pressed("select_confirm") and game.mode[-1]==self:
+		game.add_child(SelectMode.new(game,map,cursor,hud,[]))
+		windup()
+		
 	if Input.is_action_just_pressed("cancel_action") and game.mode[-1]==self:
 		windup()
 		
@@ -35,9 +39,9 @@ func _on_button_message(val:String)->void:
 		"cast":
 			game.add_child(CastMode.new(game,map,cursor,hud,props))
 		"move grid":
-			game.add_child(MoveMode.new(game,map,cursor,hud,props))
+			game.add_child(MoveMode.new(game,map,cursor,hud,[props[0],'move']))
 		"vision grid":
-			game.add_child(DisplayGridMode.new(game,map,cursor,hud,props))
+			game.add_child(DisplayGridMode.new(game,map,cursor,hud,[props[0],'vision']))
 		"mix":
 			var mix_display = game.mix_display_scene.instantiate()
 			mix_display.setup(game,map,cursor,hud,props)

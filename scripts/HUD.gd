@@ -1,12 +1,10 @@
 class_name HUD
 extends CanvasLayer
 
-var UIButton_scene:PackedScene
 var inventory_max_size =8
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	UIButton_scene = load("res://scenes/uibutton.tscn")
-
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
@@ -20,9 +18,7 @@ func terrain_display(terrain:String,cursor:Vector2i)->void:
 
 func command_display(list:Array,mode_node:Mode)->void:
 	for obj in list:
-		var button = UIButton_scene.instantiate()
-		button.setup(obj,mode_node)
-		$Div/Commands.add_child(button)
+		$Div/Commands.add_child(UIButton.new(obj,mode_node))
 		
 func clear_command_display()->void:
 	for item in $Div/Commands.get_children():
@@ -51,10 +47,7 @@ func inventory_display(list:Array,mode_node:Mode)->void:
 		if list[i] :
 			var slot = $Div/Inventory.get_child(i)
 			if list[i].castable:
-				
-				var button = UIButton_scene.instantiate()
-				button.setup(list[i],mode_node)
-				slot.add_child(button)
+				slot.add_child(UIButton.new(list[i],mode_node))
 			else:
 				var label = Label.new()
 				label.text=list[i].alias
