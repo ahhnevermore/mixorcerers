@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://v4pkwn5kxsn4"]
 
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_rwrww"]
+[ext_resource type="Script" path="res://scripts/Game/HUD.gd" id="1_rdysc"]
 [ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_uq1cr"]
 
 [node name="Control" type="CanvasLayer"]
-script = ExtResource("1_rwrww")
+script = ExtResource("1_rdysc")
 
 [node name="Div" type="Control" parent="."]
 layout_mode = 3

@@ -14,8 +14,8 @@ signal damage_trigger
 signal terrain_trigger
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	mix_display_scene = load("res://scenes/mix_display.tscn")
-	precast_display_scene=load("res://scenes/precast_display.tscn")
+	mix_display_scene = load("res://scenes/Game/States/mix_display.tscn")
+	precast_display_scene=load("res://scenes/Game/States/precast_display.tscn")
 
 	$Map.gen_map()
 	$Player.gen_visible_tiles()

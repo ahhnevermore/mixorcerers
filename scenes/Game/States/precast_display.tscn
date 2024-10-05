@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://cd0xt8qsfmfwn"]
 
-[ext_resource type="Script" path="res://scripts/precast_display.gd" id="1_jkcly"]
+[ext_resource type="Script" path="res://scripts/Game/States/precast_display.gd" id="1_45xkp"]
 [ext_resource type="Texture2D" uid="uid://btj86acis3hsq" path="res://assets/mix_mode_background.png" id="2_byc76"]
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource("1_jkcly")
+script = ExtResource("1_45xkp")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

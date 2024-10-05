@@ -5,5 +5,5 @@ const DEFAULT_PORT = 37568
 
 
 func _ready():
-	
+	pass
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bdvr3eh2cbpad"]
 
-[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_8vsc4"]
+[ext_resource type="Script" path="res://scripts/Game/Units/enemy.gd" id="1_1u3nd"]
 [ext_resource type="Texture2D" uid="uid://djtghfmtuoyy1" path="res://assets/enemy_priest_t2.png" id="1_fb36m"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y57x6"]
@@ -9,7 +9,7 @@ height = 16.0
 
 [node name="Enemy" type="Area2D"]
 z_index = 5
-script = ExtResource("1_8vsc4")
+script = ExtResource("1_1u3nd")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(1.5, 1.5)

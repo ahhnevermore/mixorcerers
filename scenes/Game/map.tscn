@@ -1,26 +1,28 @@
-[gd_scene load_steps=43 format=3 uid="uid://bfudhyvp3vw1j"]
+[gd_scene load_steps=47 format=3 uid="uid://bfudhyvp3vw1j"]
 
 [ext_resource type="Texture2D" uid="uid://bav8euoyahjt4" path="res://assets/beach.png" id="1_n48py"]
 [ext_resource type="Texture2D" uid="uid://md3odttyf4om" path="res://assets/ravine.png" id="2_26lgj"]
 [ext_resource type="Texture2D" uid="uid://cg4cq4mn2dfr6" path="res://assets/chasm.png" id="2_fbruk"]
 [ext_resource type="Texture2D" uid="uid://d28xithgkobq" path="res://assets/mountain-lake.png" id="3_cut15"]
 [ext_resource type="Texture2D" uid="uid://jgi4ox2lwv72" path="res://assets/plateau.png" id="4_ts274"]
-[ext_resource type="Texture2D" uid="uid://dtc63yb63sqtr" path="res://assets/player.png" id="5_c63ud"]
 [ext_resource type="Texture2D" uid="uid://jbtify3722kl" path="res://assets/river.png" id="6_jgd2n"]
 [ext_resource type="Texture2D" uid="uid://dlrrny2i4kb7u" path="res://assets/sea.png" id="7_s2qjs"]
 [ext_resource type="Texture2D" uid="uid://nyywp2alesao" path="res://assets/snow-mountain.png" id="8_bb7b5"]
-[ext_resource type="Texture2D" uid="uid://dq45bqmj5blex" path="res://assets/spawn.png" id="9_o6636"]
 [ext_resource type="Texture2D" uid="uid://df0eciv4qfo7e" path="res://assets/swamp.png" id="10_7u60b"]
+[ext_resource type="Texture2D" uid="uid://dapdkio30p8hl" path="res://assets/red.png" id="10_kds2s"]
+[ext_resource type="Texture2D" uid="uid://drybm2ol6kr6c" path="res://assets/path_horizontal.png" id="11_2bxyl"]
 [ext_resource type="Texture2D" uid="uid://diq2d7h1ima46" path="res://assets/underground-lake.png" id="11_rr6fb"]
+[ext_resource type="Texture2D" uid="uid://du66xk5bnj74b" path="res://assets/path_horizontal_end.png" id="12_wsh85"]
 [ext_resource type="Texture2D" uid="uid://c04yswa6pofkc" path="res://assets/cliff.png" id="13_h4dyd"]
-[ext_resource type="Texture2D" uid="uid://bgpr42ccwicxu" path="res://assets/enemy.png" id="14_2ts5h"]
+[ext_resource type="Texture2D" uid="uid://cyyqyh12wbyic" path="res://assets/path_diagonal.png" id="13_q0s8t"]
+[ext_resource type="Texture2D" uid="uid://cc4jiqv0stlf0" path="res://assets/path_diagonal_end.png" id="14_uv4dd"]
 [ext_resource type="Texture2D" uid="uid://bph1tupjbvqad" path="res://assets/ocean.png" id="15_4iq3f"]
 [ext_resource type="Texture2D" uid="uid://eyxbec8oguht" path="res://assets/desert.png" id="16_bsey8"]
 [ext_resource type="Texture2D" uid="uid://b20g7081hluy8" path="res://assets/delta.png" id="18_x3umm"]
 [ext_resource type="Texture2D" uid="uid://cd36l2pe4sw7u" path="res://assets/fog.png" id="19_neibl"]
 [ext_resource type="Texture2D" uid="uid://d4b76tjqkp5wb" path="res://assets/glacier.png" id="20_m32n3"]
 [ext_resource type="Texture2D" uid="uid://cwsufvl05a5it" path="res://assets/jungle.png" id="21_4gwo3"]
-[ext_resource type="Script" path="res://scripts/map.gd" id="21_v2u8d"]
+[ext_resource type="Script" path="res://scripts/Game/map.gd" id="23_t1r38"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_isluo"]
 resource_name = "chasm"
@@ -39,7 +41,7 @@ texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6q4le"]
-resource_name = "swamp"
+resource_name = "jungle"
 texture = ExtResource("10_7u60b")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
@@ -67,7 +69,6 @@ texture_region_size = Vector2i(66, 58)
 0:1/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ff54x"]
-resource_name = "mountain-lake"
 texture = ExtResource("3_cut15")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
@@ -87,26 +88,11 @@ margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ds3fo"]
-resource_name = "building"
-texture = ExtResource("9_o6636")
-margins = Vector2i(0, 18)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4v0ql"]
+texture = ExtResource("10_kds2s")
+margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
-0:1/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rq0n5"]
-resource_name = "player"
-texture = ExtResource("5_c63ud")
-margins = Vector2i(0, 17)
-texture_region_size = Vector2i(39, 53)
-0:1/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k2mcf"]
-resource_name = "enemy"
-texture = ExtResource("14_2ts5h")
-margins = Vector2i(27, 17)
-texture_region_size = Vector2i(39, 53)
-0:1/0 = 0
+0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pj2q6"]
 resource_name = "underground-lake"
@@ -114,6 +100,52 @@ texture = ExtResource("11_rr6fb")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_foeu5"]
+texture = ExtResource("11_2bxyl")
+margins = Vector2i(0, 11)
+texture_region_size = Vector2i(66, 53)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/transpose = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ra0ac"]
+texture = ExtResource("12_wsh85")
+margins = Vector2i(0, 11)
+texture_region_size = Vector2i(66, 53)
+0:0/next_alternative_id = 4
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/flip_h = true
+0:0/2 = 2
+0:0/2/transpose = true
+0:0/3 = 3
+0:0/3/flip_v = true
+0:0/3/transpose = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_538hd"]
+texture = ExtResource("13_q0s8t")
+margins = Vector2i(0, 11)
+texture_region_size = Vector2i(66, 53)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/flip_v = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a60p1"]
+texture = ExtResource("14_uv4dd")
+margins = Vector2i(0, 11)
+texture_region_size = Vector2i(66, 53)
+0:0/next_alternative_id = 7
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/flip_h = true
+0:0/2 = 2
+0:0/2/flip_h = true
+0:0/2/flip_v = true
+0:0/3 = 3
+0:0/3/flip_v = true
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ibrw"]
 resource_name = "ocean"
@@ -144,7 +176,7 @@ texture_region_size = Vector2i(66, 48)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jgrtt"]
-resource_name = "sea"
+resource_name = "lake"
 texture = ExtResource("7_s2qjs")
 margins = Vector2i(0, 16)
 texture_region_size = Vector2i(66, 48)
@@ -158,6 +190,7 @@ texture_region_size = Vector2i(66, 53)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h77el"]
+resource_name = "grasslands"
 texture = ExtResource("21_4gwo3")
 margins = Vector2i(0, 11)
 texture_region_size = Vector2i(66, 53)
@@ -184,27 +217,21 @@ sources/13 = SubResource("TileSetAtlasSource_0d0ni")
 sources/14 = SubResource("TileSetAtlasSource_ff54x")
 sources/15 = SubResource("TileSetAtlasSource_infqu")
 sources/16 = SubResource("TileSetAtlasSource_ikh2u")
-sources/17 = SubResource("TileSetAtlasSource_ds3fo")
-sources/18 = SubResource("TileSetAtlasSource_rq0n5")
-sources/19 = SubResource("TileSetAtlasSource_k2mcf")
+sources/20 = SubResource("TileSetAtlasSource_foeu5")
+sources/21 = SubResource("TileSetAtlasSource_ra0ac")
+sources/22 = SubResource("TileSetAtlasSource_538hd")
+sources/23 = SubResource("TileSetAtlasSource_a60p1")
+sources/17 = SubResource("TileSetAtlasSource_4v0ql")
 
 [node name="TileMap" type="TileMap"]
 tile_set = SubResource("TileSet_v8cgj")
 format = 2
-layer_0/name = "map"
-layer_0/modulate = Color(0.27451, 0.27451, 0.27451, 1)
-layer_1/name = "fog"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 0.592157)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
+layer_0/name = "day_map"
+layer_1/name = "night_map"
+layer_1/modulate = Color(0.34902, 0.34902, 0.34902, 1)
 layer_1/tile_data = PackedInt32Array()
-layer_2/name = "ui"
-layer_2/enabled = true
-layer_2/modulate = Color(1, 1, 1, 1)
-layer_2/y_sort_enabled = false
-layer_2/y_sort_origin = 0
-layer_2/z_index = 0
+layer_2/name = "fog"
+layer_2/modulate = Color(0.0431373, 0.0431373, 0.0431373, 0.733333)
+layer_2/z_index = 1
 layer_2/tile_data = PackedInt32Array()
-script = ExtResource("21_v2u8d")
+script = ExtResource("23_t1r38")

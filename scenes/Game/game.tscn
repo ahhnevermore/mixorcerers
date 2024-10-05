@@ -1,16 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjk0h66ajb3ly"]
+[gd_scene load_steps=8 format=3 uid="uid://bjk0h66ajb3ly"]
 
-[ext_resource type="Script" path="res://scripts/game.gd" id="1_xh63o"]
-[ext_resource type="PackedScene" uid="uid://bfudhyvp3vw1j" path="res://scenes/map.tscn" id="2_qpj8k"]
-[ext_resource type="PackedScene" uid="uid://dr1tsqatgvxyn" path="res://scenes/player.tscn" id="3_v37nu"]
-[ext_resource type="Script" path="res://scripts/player.gd" id="4_bgv5q"]
-[ext_resource type="PackedScene" uid="uid://0t8w2vfd3c4x" path="res://scenes/cursor.tscn" id="5_agag1"]
-[ext_resource type="PackedScene" uid="uid://v4pkwn5kxsn4" path="res://scenes/HUD.tscn" id="6_n8d4v"]
-[ext_resource type="PackedScene" uid="uid://bdvr3eh2cbpad" path="res://scenes/enemy.tscn" id="7_a133x"]
+[ext_resource type="Script" path="res://scripts/Game/game.gd" id="1_mw0m6"]
+[ext_resource type="PackedScene" uid="uid://bfudhyvp3vw1j" path="res://scenes/Game/map.tscn" id="2_qpj8k"]
+[ext_resource type="PackedScene" uid="uid://dr1tsqatgvxyn" path="res://scenes/Game/Units/player.tscn" id="3_v37nu"]
+[ext_resource type="PackedScene" uid="uid://0t8w2vfd3c4x" path="res://scenes/Game/cursor.tscn" id="5_agag1"]
+[ext_resource type="PackedScene" uid="uid://v4pkwn5kxsn4" path="res://scenes/Game/HUD.tscn" id="6_n8d4v"]
+[ext_resource type="PackedScene" uid="uid://bdvr3eh2cbpad" path="res://scenes/Game/Units/enemy.tscn" id="7_a133x"]
 [ext_resource type="Script" path="res://scripts/camera2D.gd" id="8_7m0ks"]
 
 [node name="Game" type="Node"]
-script = ExtResource("1_xh63o")
+script = ExtResource("1_mw0m6")
 
 [node name="Map" parent="." instance=ExtResource("2_qpj8k")]
 layer_1/modulate = Color(0.372549, 0.372549, 0.372549, 1)
@@ -22,7 +21,6 @@ layer_4/modulate = Color(1, 1, 1, 0.8)
 layer_4/tile_data = PackedInt32Array()
 
 [node name="Player" parent="." instance=ExtResource("3_v37nu")]
-script = ExtResource("4_bgv5q")
 
 [node name="Cursor" parent="." instance=ExtResource("5_agag1")]
 position = Vector2(3, 0)

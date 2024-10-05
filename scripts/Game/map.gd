@@ -105,8 +105,8 @@ func update_vision(grid:MapGrid):
 			tile.terrain_list[0]['p']=turn
 
 func get_surrounding_values(xy:Vector2i,prop:String)->Array:
-	var list= get_surrounding_cells(xy).filter(func(xy):return xy[0]<xw and xy[0]>=0)\
-									   .filter(func(xy):return xy[1]<yw and xy[1]>=0)
+	var list= get_surrounding_cells(xy).filter(func(pos):return pos[0]<xw and pos[0]>=0)\
+									   .filter(func(pos):return pos[1]<yw and pos[1]>=0)
 	var result=[]
 	if prop in ["cast_cost","cast_range_cost"]:
 		for cell in list:
