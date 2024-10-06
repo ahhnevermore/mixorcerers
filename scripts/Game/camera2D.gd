@@ -2,6 +2,10 @@ extends Camera2D
 
 var cursor:Cursor
 var map:Map
+#this variable is used to move camera when the cursor tile is is a bit too far off the middle of the screen
+# size/2 * 2/3
+var camera_move_threshold
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	cursor = get_parent().get_node('Cursor')
@@ -13,6 +17,7 @@ func _ready():
 	limit_bottom = map.map_to_local(Vector2i(map.xw,map.yw)).y +100
 	@warning_ignore("narrowing_conversion")
 	limit_right = map.map_to_local(Vector2i(map.xw,map.yw)).x +20
+	camera_move_threshold=(get_viewport().get_visible_rect().size/4)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
@@ -20,12 +25,9 @@ func _process(_delta):
 
 func _on_cursor_changed():
 	
-	var centre = get_screen_center_position()
-	
 	if (
-		(abs(centre.x - cursor.cursor_tile.x)  > int((abs(centre.x - limit_left) *2)/3)) or
-		(abs(centre.x - cursor.cursor_tile.x)  > int((abs(centre.x - limit_right) *2)/3)) or
-		(abs(centre.y - cursor.cursor_tile.y)  > int((abs(centre.y - limit_top) *2)/3)) or
-		(abs(centre.y - cursor.cursor_tile.y)  > int((abs(centre.y - limit_bottom) *2)/3))
-	):
-		position = cursor.position
+		(abs(position.x - cursor.position.x)  > camera_move_threshold.x) or 
+		(abs(position.y - cursor.position.y)  > camera_move_threshold.y)
+		):
+		var tween = create_tween()
+		tween.tween_property(self,"position",cursor.position,0.3)

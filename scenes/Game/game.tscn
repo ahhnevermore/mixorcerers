@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://0t8w2vfd3c4x" path="res://scenes/Game/cursor.tscn" id="5_agag1"]
 [ext_resource type="PackedScene" uid="uid://v4pkwn5kxsn4" path="res://scenes/Game/HUD.tscn" id="6_n8d4v"]
 [ext_resource type="PackedScene" uid="uid://bdvr3eh2cbpad" path="res://scenes/Game/Units/enemy.tscn" id="7_a133x"]
-[ext_resource type="Script" path="res://scripts/camera2D.gd" id="8_7m0ks"]
+[ext_resource type="Script" path="res://scripts/Game/camera2D.gd" id="7_gitiv"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_mw0m6")
@@ -31,7 +31,7 @@ position = Vector2(3, 0)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.3, 1.3)
-script = ExtResource("8_7m0ks")
+script = ExtResource("7_gitiv")
 
 [connection signal="cursor_changed" from="Cursor" to="." method="_on_cursor_changed"]
 [connection signal="cursor_changed" from="Cursor" to="Camera2D" method="_on_cursor_changed"]

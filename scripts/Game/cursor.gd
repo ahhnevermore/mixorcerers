@@ -9,10 +9,14 @@ signal cursor_changed
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#centre on map cursor tile
 	map=get_parent().get_node("Map")
 	cursor_tile= map.map_file[map.player+"_start_position"]
 	position= map.map_to_local(cursor_tile)
+	
 	$RepeatDelay.start()
+	
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	var change = Vector2i.ZERO
@@ -30,8 +34,10 @@ func _process(_delta):
 	if change:
 		var final=map.local_to_map(position)+change
 		if final.x< map.xw and final.y< map.yw and final.x>=0 and final.y>=0:
+			#move cursor
 			position=map.map_to_local(final)
 			cursor_tile = final
+
 			cursor_changed.emit()
 
 func update(xy:Vector2i):
