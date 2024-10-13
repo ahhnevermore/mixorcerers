@@ -1,7 +1,12 @@
 [gd_scene load_steps=2 format=3 uid="uid://buun3sgpqfanu"]
 
-[ext_resource type="PackedScene" uid="uid://bjk0h66ajb3ly" path="res://scenes/Game/game.tscn" id="1_u5n1a"]
+[ext_resource type="Script" path="res://scripts/client.gd" id="1_8p0ma"]
 
-[node name="Client" type="Node2D"]
-
-[node name="Game" parent="." instance=ExtResource("1_u5n1a")]
+[node name="Client" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8p0ma")

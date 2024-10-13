@@ -1,6 +1,7 @@
 class_name LocalServer
 extends Node
 
+signal localserver_message
 var address
 var udp_peer
 func _init(port:int=49500):
