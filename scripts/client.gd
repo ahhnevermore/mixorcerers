@@ -1,10 +1,10 @@
 extends Control
 
 var main_menu_scene:PackedScene
-var main_menu_handle
+var hmain_menu
 
 var game_scene:PackedScene
-var game_handle
+var hgame
 enum Scenes{
 	MAIN_MENU,
 	GAME
@@ -21,19 +21,31 @@ func _ready():
 func _process(delta):
 	pass
 
+func unload_scene(hscene:Node,hard=false):
+	if hard:
+		remove_child(hscene)
+	else:
+		hscene.hide()
+		
 func load_scene(scene_type:Scenes):
 	match scene_type:
 		Scenes.MAIN_MENU:
-			set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
-			main_menu_handle = main_menu_scene.instantiate()
-			main_menu_handle.get_node("LaunchGameDebug").pressed.connect(_on_launchgame_pressed)
-			add_child(main_menu_handle)
+			if hmain_menu:
+				hmain_menu.show()
+			else:
+				set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
+				hmain_menu = main_menu_scene.instantiate()
+				hmain_menu.get_node("LaunchGameDebug").pressed.connect(_on_launchgame_pressed)
+				add_child(hmain_menu)
 		Scenes.GAME:
-			set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
-			game_handle = game_scene.instantiate()
-			add_child(game_handle)
+			if hgame:
+				hgame.show()
+			else:
+				set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
+				hgame = game_scene.instantiate()
+				add_child(hgame)
 
 
 func _on_launchgame_pressed():
-	main_menu_handle.hide()
+	unload_scene(hmain_menu)
 	load_scene(Scenes.GAME)

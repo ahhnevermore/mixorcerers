@@ -48,3 +48,8 @@ Casting: On entering cast mode, the inventory now becomes clickable. When the sp
 
 With these simple rules out of the way, I hope you will be able to enjoy the current game a little bit, even though it is basically a demo. Please reach out to me for any issues
 -kryzel
+
+Common Coding Patter(ns)
+
+1. h before a variable denotes a handle
+2. xw is the max x position. yw is the corollary
