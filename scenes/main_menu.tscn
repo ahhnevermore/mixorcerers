@@ -32,3 +32,14 @@ offset_top = -8.0
 offset_right = 8.0
 grow_vertical = 0
 text = "Launch Game(debug)"
+
+[node name="LocalMultiplayer" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -68.0
+offset_right = 141.0
+offset_bottom = -37.0
+grow_vertical = 0
+text = "Local Multiplayer"

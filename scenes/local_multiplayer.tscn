@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://c2t02kwier2q"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="JoinServerButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.5
+offset_top = -74.0
+offset_right = 45.5
+offset_bottom = -43.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Join Server"
+
+[node name="Port" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -15.0
+offset_right = 91.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+placeholder_text = "Port:49500"
+alignment = 1
+
+[node name="CreateServerButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.5
+offset_top = 26.0
+offset_right = 56.5
+offset_bottom = 57.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Create Server"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 386.0
+offset_top = -332.0
+offset_right = -383.0
+offset_bottom = -193.0
+grow_horizontal = 2
+grow_vertical = 0
