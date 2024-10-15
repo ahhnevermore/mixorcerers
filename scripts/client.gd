@@ -1,106 +1,119 @@
 extends Control
 
-var main_menu_scene:PackedScene
-var hmain_menu
+func unload_scene(hscene:Node,hard=false):
+	if hard:
+		remove_child(hscene)
+	else:
+		hscene.hide()
 
-var game_scene:PackedScene
-var hgame
-
-
-var local_multiplayer_scene:PackedScene
-var hlocal_multiplayer
-
-var hJoinServerButton
-var hPort
-var hCreateServerButton
-var unsafe_text
-
-
-
-enum Scenes{
-	MAIN_MENU,
-	GAME,
-	LOCAL_MULTIPLAYER
-}
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	main_menu_scene = load("res://scenes/main_menu.tscn")
 	game_scene = load("res://scenes/Game/game.tscn")
 	local_multiplayer_scene = load("res://scenes/local_multiplayer.tscn")
 	
-	load_scene(Scenes.MAIN_MENU)
+	load_main_menu()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
-func unload_scene(hscene:Node,hard=false):
-	if hard:
-		match hscene:
-			hgame:
-				pass
-			hmain_menu:
-				pass
-			hlocal_multiplayer:
-				hCreateServerButton =  null
-				hJoinServerButton = null
-				hPort = null
-				
-		remove_child(hscene)
-	else:
-		hscene.hide()
-		
-func load_scene(scene_type:Scenes):
-	match scene_type:
-		Scenes.MAIN_MENU:
-			if hmain_menu:
+#MAIN MENU
+var main_menu_scene:PackedScene
+var hmain_menu
+
+func load_main_menu():
+	if is_instance_valid(hmain_menu):
 				hmain_menu.show()
-			else:
-				set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
-				hmain_menu = main_menu_scene.instantiate()
-				
-				hmain_menu.get_node("LaunchGameDebug").pressed.connect(_on_launchgame_pressed)
-				hmain_menu.get_node("LocalMultiplayer").pressed.connect(_on_local_multiplayer_pressed)
-				
-				add_child(hmain_menu)
-		Scenes.GAME:
-			if hgame:
-				hgame.show()
-			else:
-				set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
-				hgame = game_scene.instantiate()
-				add_child(hgame)
-		Scenes.LOCAL_MULTIPLAYER:
-			if hlocal_multiplayer:
-				hlocal_multiplayer.show()
-			else:
-				set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
-				hlocal_multiplayer = local_multiplayer_scene.instantiate()
-				
-				hJoinServerButton = hlocal_multiplayer.get_node("JoinServerButton")
-				hJoinServerButton.pressed.connect(_on_joinserver_pressed)
-				hCreateServerButton = hlocal_multiplayer.get_node("CreateServerButton")
-				hCreateServerButton.pressed.connect(_on_createserver_pressed)
-				hPort = hlocal_multiplayer.get_node("Port")
-				hPort.text_changed.connect(_on_port_text_changed)
-				
-				add_child(hlocal_multiplayer)
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
+		hmain_menu = main_menu_scene.instantiate()
+		
+		hmain_menu.get_node("LaunchGameDebug").pressed.connect(_on_launchgame_pressed)
+		hmain_menu.get_node("LocalMultiplayer").pressed.connect(_on_local_multiplayer_pressed)
+		
+		add_child(hmain_menu)
 
 func _on_launchgame_pressed():
 	unload_scene(hmain_menu)
-	load_scene(Scenes.GAME)
+	load_game()
 
 func _on_local_multiplayer_pressed():
 	unload_scene(hmain_menu)
-	load_scene(Scenes.LOCAL_MULTIPLAYER)
+	load_local_multiplayer()
+	
+
+#------------------
+#GAME
+var game_scene:PackedScene
+var hgame
+
+func load_game():
+	if is_instance_valid(hgame):
+			hgame.show()
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
+		hgame = game_scene.instantiate()
+		add_child(hgame)
+
+
+#-------------------
+#LOCAL MULTIPLAYER
+var local_multiplayer_scene:PackedScene
+var hlocal_multiplayer
+
+var hlm_nodes:Dictionary
+# back hBackButton		join hJoinServerButton		list hServerList		port hPort		create hCreateServerButton
+var unsafe_text:String
+
+func load_local_multiplayer():
+	if hlocal_multiplayer:
+		hlocal_multiplayer.show()
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
+		hlocal_multiplayer = local_multiplayer_scene.instantiate()
+		
+		#set up connections
+		var i = 0
+		var arr = hlocal_multiplayer.get_children()
+		for node in ["back","join","list","port","create"]:
+			hlm_nodes[node]=arr[i]
+			i += 1
+			
+		hlm_nodes["back"].pressed.connect(_on_backbuttonlm_pressed)
+		hlm_nodes["join"].pressed.connect(_on_joinserver_pressed)
+		hlm_nodes["port"].text_changed.connect(_on_port_text_changed)
+		hlm_nodes["create"].pressed.connect(_on_createserver_pressed)
+		
+		add_child(hlocal_multiplayer)		
+
+func _on_backbuttonlm_pressed():
+	unload_scene(hlocal_multiplayer)
+	load_main_menu()
+
+func _on_backbuttonlmjoincreate_pressed():
+	hlm_nodes["back"].pressed.disconnect(_on_backbuttonlmjoincreate_pressed)
+	hlm_nodes["back"].pressed.connect(_on_backbuttonlm_pressed)
+	
+	hlm_nodes["join"].show()
+	hlm_nodes["port"].show()
+	hlm_nodes["create"].show()
+	hlm_nodes["list"].hide()
 	
 func _on_joinserver_pressed():
-	hCreateServerButton.hide()
-	hPort.hide()
+	hlm_nodes["back"].pressed.disconnect(_on_backbuttonlm_pressed)
+	hlm_nodes["back"].pressed.connect(_on_backbuttonlmjoincreate_pressed)
 
+	hlm_nodes['create'].hide()
+	hlm_nodes['port'].hide()
+	
 func _on_createserver_pressed():
-	pass
+	hlm_nodes["back"].pressed.disconnect(_on_backbuttonlm_pressed)
+	hlm_nodes["back"].pressed.connect(_on_backbuttonlmjoincreate_pressed)
+
+	var port = int(unsafe_text) if unsafe_text.is_valid_int() else 0
+	if port<49152 or port > 65535:
+		hlm_nodes['port'].text = "Invalid Port"
+		
 
 func _on_port_text_changed(new_text:String):
-	pass
+	unsafe_text = new_text

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bb58npeg5eqvr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j0kon"]
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_wbjwj"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+process_material = SubResource("ShaderMaterial_j0kon")
+draw_pass_1 = SubResource("RibbonTrailMesh_wbjwj")
