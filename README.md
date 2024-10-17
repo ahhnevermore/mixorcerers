@@ -24,11 +24,13 @@ I would be very grateful if any security-related issues were brought to my atten
 Special thanks to (in no particular order):
 Eleven
 Lorentz
+Nonchip
 Hyperi0n
 LimitingFactor
 Kukiric
 Jebalnik
 Dark_Matter
+Evan
 and many others from the Solaris and Godot Discord communities
 
 How To Play The Game

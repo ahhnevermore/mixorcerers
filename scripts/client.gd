@@ -1,5 +1,10 @@
 extends Control
 
+func _on_local_server_message(message):
+	match message[0]:
+		"hello":
+			if is_instance_valid(hlm_nodes['port']):
+				hlm_nodes['port'].text = message[0]
 func unload_scene(hscene:Node,hard=false):
 	if hard:
 		remove_child(hscene)
@@ -58,9 +63,10 @@ func load_game():
 
 #-------------------
 #LOCAL MULTIPLAYER
+var hlocal_server
+
 var local_multiplayer_scene:PackedScene
 var hlocal_multiplayer
-
 var hlm_nodes:Dictionary
 # back hBackButton		join hJoinServerButton		list hServerList		port hPort		create hCreateServerButton
 var unsafe_text:String
@@ -107,12 +113,17 @@ func _on_joinserver_pressed():
 	hlm_nodes['port'].hide()
 	
 func _on_createserver_pressed():
-	hlm_nodes["back"].pressed.disconnect(_on_backbuttonlm_pressed)
-	hlm_nodes["back"].pressed.connect(_on_backbuttonlmjoincreate_pressed)
+	#hlm_nodes["back"].pressed.disconnect(_on_backbuttonlm_pressed)
+	#hlm_nodes["back"].pressed.connect(_on_backbuttonlmjoincreate_pressed)
 
-	var port = int(unsafe_text) if unsafe_text.is_valid_int() else 0
+	var port = int(unsafe_text) if unsafe_text.is_valid_int() else 49500
 	if port<49152 or port > 65535:
 		hlm_nodes['port'].text = "Invalid Port"
+	
+	hlocal_server = LocalServer.new(port)
+	hlocal_server.localserver_message.connect(_on_local_server_message)
+	add_child(hlocal_server)
+	
 		
 
 func _on_port_text_changed(new_text:String):
