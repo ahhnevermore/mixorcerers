@@ -15,6 +15,7 @@ func _ready():
 	main_menu_scene = load("res://scenes/main_menu.tscn")
 	game_scene = load("res://scenes/Game/game.tscn")
 	local_multiplayer_scene = load("res://scenes/local_multiplayer.tscn")
+	lobby_scene = load("res://scenes/lobby.tscn")
 	
 	load_main_menu()
 
@@ -46,21 +47,6 @@ func _on_local_multiplayer_pressed():
 	unload_scene(hmain_menu)
 	load_local_multiplayer()
 	
-
-#------------------
-#GAME
-var game_scene:PackedScene
-var hgame
-
-func load_game():
-	if is_instance_valid(hgame):
-			hgame.show()
-	else:
-		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
-		hgame = game_scene.instantiate()
-		add_child(hgame)
-
-
 #-------------------
 #LOCAL MULTIPLAYER
 var hlocal_server
@@ -72,7 +58,7 @@ var hlm_nodes:Dictionary
 var unsafe_text:String
 
 func load_local_multiplayer():
-	if hlocal_multiplayer:
+	if is_instance_valid( hlocal_multiplayer):
 		hlocal_multiplayer.show()
 	else:
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
@@ -128,3 +114,37 @@ func _on_createserver_pressed():
 
 func _on_port_text_changed(new_text:String):
 	unsafe_text = new_text
+#----------------
+#LOBBY
+var lobby_scene:PackedScene
+var hlobby
+
+
+func load_lobby():
+	if is_instance_valid(hlobby):
+		hlobby.show()
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
+		hlobby = lobby_scene.instantiate()
+		hlobby.get_node("StartGameButton").pressed.connect(_on_startgame_pressed)
+		
+		add_child(hlobby)
+func _on_startgame_pressed():
+	load_game()
+
+#------------------
+#GAME
+var game_scene:PackedScene
+var hgame
+
+func load_game():
+	if is_instance_valid(hgame):
+			hgame.show()
+	else:
+		load_lobby()
+		for child in hlobby.get_children():
+			child.queue_free()
+		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
+
+		hgame = game_scene.instantiate()
+		hlobby.add_child(hgame)
