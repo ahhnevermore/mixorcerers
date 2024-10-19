@@ -11,6 +11,7 @@ var allow_discovery:bool
 func _init(arg_port:int,arg_lobby_name='Test Lobby'):
 	port = arg_port
 	lobby_name = arg_lobby_name
+	name = "LocalServer"
 	
 	
 #WHEN NOT LOCAL WILL CALL HTTP REQUEST TO THE WEBSERVER WHICH HAS DB CONNECTION	
