@@ -4,15 +4,15 @@ extends Mode
 #Invariant - there should be props[1] for anything to be cast
 var cast_range_grid:MapGrid
 var cast_grid:MapGrid
-var player
+var player:Player
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready()->void:
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta:float)->void:
 	if update and props[1] is Spell:
 		update = false
 		if cast_grid:
@@ -29,10 +29,10 @@ func _process(_delta):
 	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
 		cast(props[0],props[1],cursor.cursor_tile,0,[])
 		game._on_cursor_changed()
-		var index = props[0].inventory.find(props[1])
+		var index:int = props[0].inventory.find(props[1])
 		props[0].inventory[index]=null
 		props.pop_back()
-		if not props[0].inventory.filter(func(x): return x != null):
+		if not props[0].inventory.filter(func(x:Variant)->bool: return x != null):
 			windup()
 		hud.clear_inventory_display()
 		hud.inventory_display(props[0].inventory,self)
@@ -44,7 +44,7 @@ func _process(_delta):
 			map.clear_grid(cast_grid,'cast')
 		if cast_range_grid:
 			map.clear_grid(cast_range_grid,"cast_range")
-		var precast_display = game.precast_display_scene.instantiate()
+		var precast_display:Display = game.precast_display_scene.instantiate()
 		precast_display.setup(game,map,cursor,hud,props)
 
 	if Input.is_action_just_pressed("cancel_action"):
@@ -53,7 +53,7 @@ func _process(_delta):
 	
 func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
-	if not props[0].inventory.filter(func(x): return x != null):
+	if not props[0].inventory.filter(func(x:Variant)->bool: return x != null):
 			windup()
 	alias = 'cast'
 	hud.clear_inventory_display()
@@ -62,7 +62,7 @@ func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 	cursor.cursor_changed.connect(_on_cursor_changed)
 	player = game.get_node("Player")
 	
-func _on_cursor_changed():
+func _on_cursor_changed()->void:
 	if cast_grid:
 		map.clear_grid(cast_grid,'cast')
 	if props.size()> 1 and props[1] is Spell and cursor.cursor_tile in cast_range_grid.dict:
@@ -70,8 +70,8 @@ func _on_cursor_changed():
 			map.display_grid(cast_grid,"cast")
 				
 		
-func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
-	var target = map.gen_cast_grid(spell,cursor_pos)
+func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->void:
+	var target:MapGrid = map.gen_cast_grid(spell,cursor_pos)
 	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
 	var collisions = find_collisions(target.dict.keys())
 	
@@ -119,8 +119,8 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth,history):
 	if spell.terrain_mod:
 		for tile in tiles:
 			tile.update_terrain(get_modded_terrain(map.terrains[map.get_terrain(tile)],spell.terrain_mod),map.turn)
-			map.update_vision(props[0].visible_tiles)
-			props[0].display_vision([])
+			map.update_vision(player.visible_tiles)
+			player.display_vision([])
 			
 	#other modifiers
 	for mod in spell.modifiers:

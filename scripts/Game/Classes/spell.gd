@@ -2,7 +2,7 @@ class_name Spell
 extends Area2D
 
 #programmatic properties
-var castable = true
+var castable := true
 var alias:String
 var sprite:Texture2D
 
@@ -19,11 +19,11 @@ var air_dmg:float
 var dmg_dist:DMG_Distribution
 
 #other properties
-var gen_unit
-var gen_artifact
+var gen_unit := false
+var gen_artifact :=false
 
 #terrain modifications
-var terrain_mod=false
+var terrain_mod:=[]
 
 #specific buffs got from the magyckes
 var magycke_mod:Array
@@ -51,7 +51,7 @@ enum DMG_Distribution{
 	SHOTGUN
 	
 }#different ways to distribute damage across the cast grid
-func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
+func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary)->void:
 	alias= config['alias']
 	if config['sprite']:
 		sprite  = load(config['sprite'])
@@ -110,3 +110,4 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary):
 			res.append(mod)
 	modifiers= res.duplicate(true)
 	
+

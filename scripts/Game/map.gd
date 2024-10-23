@@ -10,7 +10,7 @@ var turn:int
 var player:String
 var enemy:String
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready()->void:
 	
 	map_file = load_map("res://user_test_copies/map.json")
 	map= map_file["tiles"]
@@ -26,7 +26,7 @@ func _ready():
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta:float)->void:
 	pass
 
 func manhattan(a:Vector2i,b:Vector2i)->int:
@@ -88,6 +88,7 @@ func gen_cast_grid(spell,cursor_pos):
 	match spell.cast_shape:
 		Spell.cast_shapes.CIRCLE:
 			return MapGrid.new(field_of_prop(cursor_pos,"cast_cost",spell.cast_dim[0],[],0,false))
+
 
 func gen_vision_grid(unit:Variant)->MapGrid:
 	var aug_vision = max(unit.modified_stats['vision'] + terrains[get_terrain(get_tile(unit.xy))]["vision_bonus"],1)
