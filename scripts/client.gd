@@ -77,6 +77,7 @@ var port:int
 var lobby_name:String
 const DEFAULT_CLIENT_PORT = 56472
 const MAX_CONNECTIONS =20
+var local_servers_list:=[]
 func load_local_multiplayer()->void:
 	if is_instance_valid( hlocal_multiplayer):
 		hlocal_multiplayer.show()
@@ -84,16 +85,22 @@ func load_local_multiplayer()->void:
 	else:
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT,Control.PRESET_MODE_KEEP_SIZE)
 		hlocal_multiplayer = local_multiplayer_scene.instantiate()
-		hlocal_multiplayer.lm_exit.connect(_lm_to_mainmenu)
-		hlocal_multiplayer.lm_client.connect(_start_local_client)
-		hlocal_multiplayer.lm_server.connect(_start_local_server)
+		hlocal_multiplayer.lm_exit.connect(_handle_lm_exit)
+		hlocal_multiplayer.lm_find_server.connect(_discover_local_servers_setup)
+		hlocal_multiplayer.lm_create_server.connect(_start_local_server)
+		hlocal_multiplayer.lm_join_server.connect(_start_local_client)
 		#set up connections
 		
 		add_child(hlocal_multiplayer)		
 
-func _lm_to_mainmenu()->void:
-	unload_scene(hlocal_multiplayer)
-	load_main_menu()				
+func _handle_lm_exit(val)->void:
+	match val:
+		"hard":
+			unload_scene(hlocal_multiplayer)
+			load_main_menu()
+			is_local = false
+		"windup":
+			lm_windup()		
 
 func _start_local_server(arg_server_params:Dictionary)->void:
 	port =arg_server_params['port']
@@ -109,15 +116,39 @@ func _start_local_server(arg_server_params:Dictionary)->void:
 	udp_server_socket.set_broadcast_enabled(true)
 	udp_server_socket.set_dest_address("255.255.255.255", DEFAULT_CLIENT_PORT)
 	
-	allow_discovery= true
 	discovery_ping()
 
-func _start_local_client()->void:
-	pass
 func discovery_ping()->void:
-	if allow_discovery:
+	if is_instance_valid(udp_server_socket):
 		udp_server_socket.put_packet(str("Mixorcerers|0.1.0|",port,"|",lobby_name).to_ascii_buffer())
 		get_tree().create_timer(1.).timeout.connect(discovery_ping)
+	
+func discover_local_servers()->void:
+	if is_instance_valid(udp_client_socket):
+		var packet_count = udp_client_socket.get_available_packet_count()
+		if  packet_count > 0:
+			for i in range(packet_count):
+				var data = udp_client_socket.get_packet().get_string_from_ascii().split('|',false)
+				var address = udp_client_socket.get_packet_ip()
+				if data[0] == 'Mixorcerers':
+					match data[1]:
+						"0.1.0":
+							if data.size() == 4:
+								var server = {'address':address,'port':data[2],"lobby_name":data[3]}
+								if server not in local_servers_list:
+									local_servers_list.append(server)
+									hlocal_multiplayer.display_local_servers(local_servers_list)
+		
+		get_tree().create_timer(1.).timeout.connect(discover_local_servers)
+
+func _start_local_client(arg)->void:
+	print(arg)
+
+func _discover_local_servers_setup()->void:
+	udp_client_socket = PacketPeerUDP.new()
+	udp_client_socket.bind(DEFAULT_CLIENT_PORT)
+	discover_local_servers()
+	
 
 
 

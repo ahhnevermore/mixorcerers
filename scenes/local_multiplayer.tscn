@@ -64,7 +64,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Create Server"
 
-[node name="JoinServerButton" type="Button" parent="."]
+[node name="FindServerButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -77,7 +77,7 @@ offset_right = 45.5
 offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Join Server"
+text = "Find Servers"
 
 [node name="ServerList" type="VBoxContainer" parent="."]
 layout_mode = 1
