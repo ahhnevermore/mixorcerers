@@ -77,7 +77,6 @@ var port:int
 var lobby_name:String
 const DEFAULT_CLIENT_PORT = 56472
 const MAX_CONNECTIONS =20
-var local_servers_list:=[]
 func load_local_multiplayer()->void:
 	if is_instance_valid( hlocal_multiplayer):
 		hlocal_multiplayer.show()
@@ -123,7 +122,7 @@ func discovery_ping()->void:
 		udp_server_socket.put_packet(str("Mixorcerers|0.1.0|",port,"|",lobby_name).to_ascii_buffer())
 		get_tree().create_timer(1.).timeout.connect(discovery_ping)
 	
-func discover_local_servers()->void:
+func discover_local_servers(timeout:int = 0,local_servers:=[])->void:
 	if is_instance_valid(udp_client_socket):
 		var packet_count = udp_client_socket.get_available_packet_count()
 		if  packet_count > 0:
@@ -134,15 +133,24 @@ func discover_local_servers()->void:
 					match data[1]:
 						"0.1.0":
 							if data.size() == 4:
-								var server = {'address':address,'port':data[2],"lobby_name":data[3]}
-								if server not in local_servers_list:
-									local_servers_list.append(server)
-									hlocal_multiplayer.display_local_servers(local_servers_list)
-		
-		get_tree().create_timer(1.).timeout.connect(discover_local_servers)
+								var unsafe_port = int(data[2]) if data[2].is_valid_int() else -1
+								if unsafe_port>49152 and unsafe_port < 65535:
+									var server = {'address':address,'port':unsafe_port,"lobby_name":data[3]}
+									if server not in local_servers:
+										local_servers.append(server)
+										hlocal_multiplayer.display_local_servers(local_servers)
+		else:
+			hlocal_multiplayer.display_local_servers([])
+		get_tree().create_timer(1.).timeout.connect(discover_local_servers.bind(0 if timeout>2 else timeout+1,[] if timeout>2 else local_servers))
 
-func _start_local_client(arg)->void:
+func _start_local_client(arg):
 	print(arg)
+	var peer = ENetMultiplayerPeer.new()
+	
+	var err = peer.create_client(arg['address'],arg['port'])
+	if err:
+		return err
+	multiplayer.multiplayer_peer = peer
 
 func _discover_local_servers_setup()->void:
 	udp_client_socket = PacketPeerUDP.new()
@@ -165,7 +173,7 @@ func _on_server_connected_ok()->void:
 
 
 func _on_server_connected_fail()->void:
-	pass
+	print ("fail")
 
 func _on_server_disconnected()->void:
 	pass

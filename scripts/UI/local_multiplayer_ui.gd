@@ -39,13 +39,21 @@ func _back_lmmain_mainmenu():
 
 
 func _on_findserver_pressed():
+	hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
+	
 	hlm_nodes["back"].pressed.disconnect(_back_lmmain_mainmenu)
 	hlm_nodes["back"].pressed.connect(_back_joincreate_lmmain)
+	
+	hlm_nodes["createserver"].pressed.disconnect(_createserver_screen)
+	hlm_nodes["createserver"].pressed.connect(_on_createserver_pressed)
+	
 	
 	only_show_lmnodes(["findserver","back","serverlist"])
 	lm_find_server.emit()
 	
 func _createserver_screen():
+	hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
+	
 	hlm_nodes["createserver"].pressed.disconnect(_createserver_screen)
 	hlm_nodes["createserver"].pressed.connect(_on_createserver_pressed)
 	
@@ -63,6 +71,8 @@ func _back_joincreate_lmmain():
 	
 	hlm_nodes["createserver"].pressed.disconnect(_on_createserver_pressed)
 	hlm_nodes["createserver"].pressed.connect(_createserver_screen)
+	
+	hlm_nodes["findserver"].pressed.connect(_on_findserver_pressed)
 	
 	only_show_lmnodes(["back","findserver","createserver"])
 	lm_exit.emit("windup")
@@ -83,12 +93,14 @@ func _on_port_text_changed(new_text:String):
 	unsafe_port_text = new_text
 
 func display_local_servers(xs:Array):
+	for child in hlm_nodes['serverlist'].get_children():
+		child.hide()
+		child.queue_free()
 	for x in xs:
 		var button = Button.new()
 		button.text = x['lobby_name']
-		button.set_meta("server_id",x.hash())
-		button.pressed.connect(_on_joinserver_pressed.bind(button.get_meta("server_id")))
+		button.pressed.connect(_on_joinserver_pressed.bind(x))
 		hlm_nodes["serverlist"].add_child(button)
-
+		
 func _on_joinserver_pressed(arg):
 	lm_join_server.emit(arg)
