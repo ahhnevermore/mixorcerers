@@ -21,4 +21,3 @@ func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Arr
 func windup()->void:
 	game.mode.erase(self)
 	self.queue_free()
-

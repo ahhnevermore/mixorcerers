@@ -1,6 +1,8 @@
 class_name Client
 extends Control
 
+
+var players :=[]
 func unload_scene(hscene:Node,hard:=false)->void:
 	if is_instance_valid(hscene):
 		if hard:
@@ -13,8 +15,8 @@ func _ready()->void:
 	game_scene = load("res://scenes/Game/game.tscn")
 	local_multiplayer_scene = load("res://scenes/local_multiplayer.tscn")
 	
-	multiplayer.peer_connected.connect(_on_client_connected)
-	multiplayer.peer_disconnected.connect(_on_client_disconnected)
+	#multiplayer.peer_connected.connect(_on_client_connected)
+	#multiplayer.peer_disconnected.connect(_on_client_disconnected)
 	multiplayer.connected_to_server.connect(_on_server_connected_ok)
 	multiplayer.connection_failed.connect(_on_server_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
@@ -25,7 +27,7 @@ func _ready()->void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float)->void:
 	pass
-
+#------------------------------------------------
 #MAIN MENU
 var main_menu_scene:PackedScene
 var hmain_menu:Control
@@ -101,7 +103,7 @@ func _handle_lm_exit(val)->void:
 		"windup":
 			lm_windup()		
 
-func _start_local_server(arg_server_params:Dictionary)->void:
+func _start_local_server(arg_server_params:Dictionary):
 	port =arg_server_params['port']
 	lobby_name=arg_server_params['lobby_name']
 	hlocal_multiplayer.hlm_nodes['port'].text="hello"
@@ -114,6 +116,12 @@ func _start_local_server(arg_server_params:Dictionary)->void:
 	udp_server_socket = PacketPeerUDP.new()
 	udp_server_socket.set_broadcast_enabled(true)
 	udp_server_socket.set_dest_address("255.255.255.255", DEFAULT_CLIENT_PORT)
+	
+	var peer = ENetMultiplayerPeer.new()
+	var err = peer.create_server(port)
+	if err:
+		return err
+	multiplayer.multiplayer_peer = peer	
 	
 	discovery_ping()
 
@@ -143,33 +151,71 @@ func discover_local_servers(timeout:int = 0,local_servers:=[])->void:
 			hlocal_multiplayer.display_local_servers([])
 		get_tree().create_timer(1.).timeout.connect(discover_local_servers.bind(0 if timeout>2 else timeout+1,[] if timeout>2 else local_servers))
 
+
+func _discover_local_servers_setup()->void:
+	udp_client_socket = PacketPeerUDP.new()
+	var error = udp_client_socket.bind(DEFAULT_CLIENT_PORT)
+	if error:
+		print("discover local failed")
+		hlocal_multiplayer._back_joincreate_lmmain()
+	else:	
+		discover_local_servers()
+
+
 func _start_local_client(arg):
-	print(arg)
 	var peer = ENetMultiplayerPeer.new()
-	
 	var err = peer.create_client(arg['address'],arg['port'])
 	if err:
 		return err
 	multiplayer.multiplayer_peer = peer
 
-func _discover_local_servers_setup()->void:
-	udp_client_socket = PacketPeerUDP.new()
-	udp_client_socket.bind(DEFAULT_CLIENT_PORT)
-	discover_local_servers()
+
+		
+
+#This approach wont work
+#Client connected and register player work in an odd way. First every peer gets a signal of the new peer id. 
+#each peer then sends its own info and calls register player on the new peer n times. 
+#every client registers itself with itself on connecting first
+
+
+#func _on_client_connected(id:int)->void:
+	#_register_player.rpc_id(id, {'name':'Client'})
+#
+#@rpc("authority", "reliable")
+#func _register_player(new_player_info):
+	#var new_player_id = multiplayer.get_remote_sender_id()
+	#players[new_player_id] = new_player_info
+	#
+#func _on_server_connected_ok()->void:
+	#var peer_id = multiplayer.get_unique_id()
+	#players[peer_id] = {'name':'Client'}
+	#
+
+func _on_server_connected_ok():
+	rem_register_player.rpc_id(1,get_client_info())
+
+func get_client_info():
+	if multiplayer.is_server():
+		return {'name':'Server'}
+	else:
+		return {'name':'Client'}
+
+@rpc("authority","reliable")		
+func rem_register_player(new_player_info):
+	players[multiplayer.get_remote_sender_id()]=new_player_info
+	for id in players:
+		rem_display.rpc_id(id,players,"players",true)
+	 
+@rpc("any_peer","reliable")
+func rem_display(data,meta,local:=false,):
+	pass
 	
-
-
-
-
-
-func _on_client_connected(id:int)->void:
-	print(id)
+	
 	
 func _on_client_disconnected(id:int)->void:
 	print(id)
 
-func _on_server_connected_ok()->void:
-	pass
+
 
 
 func _on_server_connected_fail()->void:

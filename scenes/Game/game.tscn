@@ -14,11 +14,10 @@ script = ExtResource("1_mw0m6")
 [node name="Map" parent="." instance=ExtResource("2_qpj8k")]
 layer_1/modulate = Color(0.372549, 0.372549, 0.372549, 1)
 layer_2/modulate = Color(0.423529, 0.423529, 0.423529, 0.666667)
+layer_3/name = "Layer3"
 layer_3/modulate = Color(0.419608, 0.713726, 0.968627, 0.709804)
-layer_3/tile_data = PackedInt32Array()
 layer_4/name = "selection"
 layer_4/modulate = Color(1, 1, 1, 0.8)
-layer_4/tile_data = PackedInt32Array()
 
 [node name="Player" parent="." instance=ExtResource("3_v37nu")]
 

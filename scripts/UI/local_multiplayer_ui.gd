@@ -101,6 +101,15 @@ func display_local_servers(xs:Array):
 		button.text = x['lobby_name']
 		button.pressed.connect(_on_joinserver_pressed.bind(x))
 		hlm_nodes["serverlist"].add_child(button)
+
+func display_players(xs:Array):
+	for child in hlm_nodes['playerlist'].get_children():
+		child.hide()
+		child.queue_free()
+	for x in xs:
+		var button = Button.new()
+		button.text = x['player_name']
+		hlm_nodes["playerlist"].add_child(button)
 		
 func _on_joinserver_pressed(arg):
 	lm_join_server.emit(arg)
