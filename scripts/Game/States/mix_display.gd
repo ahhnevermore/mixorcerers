@@ -343,5 +343,3 @@ func orbs_operation(dict1,operation,dict2):
 					res+=1
 			return res
 	return true
-
-

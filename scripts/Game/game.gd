@@ -10,8 +10,8 @@ var precast_display_scene:PackedScene
 var turn_history:Array
 var listeners:Array
 
-signal damage_trigger
-signal terrain_trigger
+#signal damage_trigger
+#signal terrain_trigger
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	mix_display_scene = load("res://scenes/Game/States/mix_display.tscn")
