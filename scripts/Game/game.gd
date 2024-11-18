@@ -10,12 +10,20 @@ var precast_display_scene:PackedScene
 var turn_history:Array
 var listeners:Array
 
+var player#p1,p2
+var enemy
 #signal damage_trigger
 #signal terrain_trigger
-# Called when the node enters the scene tree for the first time.
+func setup(arg_player):
+	player = arg_player
+	if player == 'p1':
+		enemy ='p2'
+	else:
+		enemy='p1'	
 func _ready():
 	mix_display_scene = load("res://scenes/Game/States/mix_display.tscn")
 	precast_display_scene=load("res://scenes/Game/States/precast_display.tscn")
+	
 
 	$Map.gen_map()
 	$Player.gen_visible_tiles()
@@ -37,6 +45,7 @@ func _process(_delta):
 
 
 
+	
 
 #TODO
 #camera zoom in and out

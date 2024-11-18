@@ -7,6 +7,7 @@ signal lm_exit
 signal lm_find_server
 signal lm_create_server
 signal lm_join_server
+signal lm_start_game
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var i = 0
@@ -19,7 +20,7 @@ func _ready():
 	hlm_nodes["findserver"].pressed.connect(_on_findserver_pressed)
 	hlm_nodes["port"].text_changed.connect(_on_port_text_changed)
 	hlm_nodes["createserver"].pressed.connect(_createserver_screen)
-	
+	hlm_nodes["startgame"].pressed.connect(_on_startgame_pressed)
 	only_show_lmnodes(["back","findserver","createserver"])
 		
 
@@ -114,3 +115,6 @@ func display_players(xs:Array):
 func _on_joinserver_pressed(arg):
 	print("joinserver emitted",arg)
 	lm_join_server.emit(arg)
+	
+func _on_startgame_pressed():
+	lm_start_game.emit()

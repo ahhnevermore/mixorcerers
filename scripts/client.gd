@@ -68,7 +68,9 @@ func load_game()->void:
 	else:
 		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
 		hgame = game_scene.instantiate()
+		hgame.setup("p1" if players.size()==0 or multiplayer.get_unique_id() == players[0]['id'] else "p2")
 		add_child(hgame)
+		
 
 #-------------------
 #LOCAL MULTIPLAYER
@@ -95,6 +97,7 @@ func load_local_multiplayer()->void:
 		hlocal_multiplayer.lm_find_server.connect(_discover_local_servers_setup)
 		hlocal_multiplayer.lm_create_server.connect(_start_local_server)
 		hlocal_multiplayer.lm_join_server.connect(_start_client)
+		hlocal_multiplayer.lm_start_game.connect(_start_local_game.rpc)
 		#set up connections
 		
 		add_child(hlocal_multiplayer)		
@@ -184,9 +187,11 @@ func _start_client(arg):
 		multiplayer.multiplayer_peer = peer
 		print("local client created")
 
-
-		
-
+@rpc("call_local","authority",'reliable')
+func _start_local_game():
+	if players.size()>=2:
+		unload_scene(hlocal_multiplayer,true)	
+		load_game()
 #This approach will have to work
 #Client connected and register player work in an odd way. First every peer gets a signal of the new peer id. 
 #each peer then sends its own info and calls register player on the new peer n times. 
@@ -200,18 +205,17 @@ func _start_client(arg):
 func rem_register_player(new_player_info):
 	players.append(new_player_info)
 	for player in players:
-		sync_data.rpc_id(player['id'],players,"players",multiplayer.get_unique_id())
+		sync_data.rpc(players,"players")
 	if is_local:
 		hlocal_multiplayer.display_players(players)
 	
-@rpc("any_peer","reliable")
-func sync_data(data,meta,sender):
-	if sender != multiplayer.get_unique_id():
-		match meta:
-			"players":
-				players = data
-				if is_local:
-					hlocal_multiplayer.display_players(players)
+@rpc("any_peer","reliable","call_remote")
+func sync_data(data,meta):
+	match meta:
+		"players":
+			players = data
+			if is_local:
+				hlocal_multiplayer.display_players(players)
 func _on_peer_connected(_id):
 	pass
 			

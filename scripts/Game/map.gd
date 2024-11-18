@@ -7,8 +7,7 @@ var xw:int
 var yw:int
 var day:bool
 var turn:int
-var player:String
-var enemy:String
+
 # Called when the node enters the scene tree for the first time.
 func _ready()->void:
 	
@@ -18,11 +17,7 @@ func _ready()->void:
 	yw = map.size()
 	day = true
 	turn = 0
-	player = 'p1' #will be a method later synchronized
-	if player == 'p1':
-		enemy ='p2'
-	else:
-		enemy='p1'
+	
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -14,7 +14,7 @@ var visible_tiles
 
 func _ready():
 	super._ready()
-	xy = map.map_file[map.player+"_start_position"]
+	xy = map.map_file[game.player+"_start_position"]
 	position= map.map_to_local(xy)
 	allies.push_back(self)
 	initial_stats = {'move':5,
@@ -27,6 +27,8 @@ func _ready():
 		null,null,null,null
 		]
 	game.listeners.append(self)
+	
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
@@ -54,6 +56,3 @@ func display_vision(grid):
 				listener.show()
 			else:
 				listener.hide()
-
-
-

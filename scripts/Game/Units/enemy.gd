@@ -8,7 +8,7 @@ var commands = ["move grid","vision grid"]
 
 func _ready():
 	super._ready()
-	xy = map.map_file[map.enemy +"_start_position"]
+	xy = map.map_file[game.enemy +"_start_position"]
 	position= map.map_to_local(xy)
 	inventory =[Spell.new(game.spells["fireball"],[],{}),Spell.new(game.spells["fireball"],[],{}),
 	Grimoire.new(Spell.new(game.spells["fireball"],[],{}),Grimoire.Grimoire_Type.ON_DMG,100),null,null,null,null,null]
@@ -21,6 +21,3 @@ func _ready():
 
 func _process(_delta):
 	pass
-
-
-

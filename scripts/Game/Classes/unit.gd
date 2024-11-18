@@ -26,6 +26,7 @@ func damage_trigger(damage)->Array:
 	on_dmg_grimoires.sort_custom(func(a,b):return a.value > b.value)
 	return on_dmg_grimoires	
 
+#TODO move this Map
 func terrain_diff(terr1,terr2):
 	var xdiff = map.terrains[terr1]['elevation']-map.terrains[terr2]['elevation']
 	var ydiff = map.terrains[terr1]['moisture']-map.terrains[terr2]['moisture']
@@ -77,4 +78,3 @@ func terrain_trigger(new_terrain,unit_terrain)->Array:
 							on_terrain_grimoires.append([item,grimoire_terrain_diff])	
 				
 	return on_terrain_grimoires.map(func(a):return a[0])
-
