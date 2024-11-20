@@ -18,7 +18,7 @@ func _ready():
 	position= map.map_to_local(xy)
 	allies.push_back(self)
 	initial_stats = {'move':5,
-			'vision':6,
+			'vision':4,
 			'health':100,
 			'max_health':120}
 	modified_stats = initial_stats.duplicate(true)

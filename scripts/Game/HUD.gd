@@ -2,9 +2,20 @@ class_name HUD
 extends CanvasLayer
 
 var inventory_max_size =8
+signal end_turn
+
+var endturn_state := "unhovered"
+var turn_time 
+var is_myturn
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	$Div/EndTurn.pressed.connect(_on_endturn_pressed)
+	$Div/EndTurn.mouse_entered.connect(_on_endturn_mouse_entered)
+	$Div/EndTurn.mouse_exited.connect(_on_endturn_mouse_exited)
+	
+	
+	
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
@@ -60,3 +71,41 @@ func clear_inventory_display()->void:
 		
 func clear_stats_display()->void:
 	$Div/Stats.text=""
+
+func _on_endturn_pressed():
+	if is_myturn:
+		end_turn.emit()
+
+func _on_endturn_mouse_entered():
+	endturn_state="hovered"
+	endturn_display()
+
+func _on_endturn_mouse_exited():
+	endturn_state = "unhovered"
+	endturn_display()
+	
+func endturn_display():
+	if is_myturn: 
+		if endturn_state == "hovered":
+			$Div/EndTurn.text = "Submit Turn"
+		else:
+			$Div/EndTurn.text = turn_time
+	else:
+		$Div/EndTurn.text = "Enemy Turn"
+func turn_timer(arg):
+	if arg:
+		turn_time = str(arg)
+		endturn_display()
+		get_tree().create_timer(1.).timeout.connect(turn_timer.bind(arg-1))
+	else:
+		turn_time = "TIMES UP!"
+		endturn_display()
+
+
+func _on_game_turn(_turn_number,arg_ismyturn) -> void:
+	
+	is_myturn = arg_ismyturn
+	print(is_myturn)
+	if is_myturn:
+		turn_timer(120)
+	endturn_display()

@@ -16,7 +16,7 @@ func _ready()->void:
 	xw = map[0].size()
 	yw = map.size()
 	day = true
-	turn = 0
+	
 	
 	
 
@@ -353,3 +353,7 @@ var terrains:={
 #	"fire_affin":0.25,"water_affin":0.25,"earth_affin":0.25,"air_affin":0.25},
 #
 }
+
+
+func _on_game_turn(turn_number,_ismyturn) -> void:
+	turn = turn_number

@@ -17,8 +17,8 @@ grow_horizontal = 2
 grow_vertical = 0
 
 [node name="Sprite2D" type="Sprite2D" parent="Div"]
-position = Vector2(681, 67.5)
-scale = Vector2(1.18229, 0.208333)
+position = Vector2(577, 67.5)
+scale = Vector2(1.00174, 0.208333)
 texture = ExtResource("2_uq1cr")
 
 [node name="Stats" type="Label" parent="Div"]
@@ -122,5 +122,12 @@ anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -100.0
 offset_top = 10.0
-offset_bottom = 135.0
+offset_bottom = 70.0
 grow_horizontal = 0
+
+[node name="EndTurn" type="Button" parent="Div"]
+layout_mode = 0
+offset_left = 1052.0
+offset_top = 70.0
+offset_right = 1132.0
+offset_bottom = 130.0

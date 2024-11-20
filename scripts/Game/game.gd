@@ -12,25 +12,34 @@ var listeners:Array
 
 var player#p1,p2
 var enemy
+
+var is_myturn
+
+signal turn
 #signal damage_trigger
 #signal terrain_trigger
 func setup(arg_player):
+	
 	player = arg_player
 	if player == 'p1':
 		enemy ='p2'
+		is_myturn = true
 	else:
 		enemy='p1'	
+		is_myturn = false
+		
+
 func _ready():
 	mix_display_scene = load("res://scenes/Game/States/mix_display.tscn")
 	precast_display_scene=load("res://scenes/Game/States/precast_display.tscn")
 	
-
+	turn.emit(0,is_myturn)
 	$Map.gen_map()
 	$Player.gen_visible_tiles()
 	$Player.display_vision([])
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
-#
+	
 #	print(IP.get_local_interfaces())
 #	var nums = [1,2,3,4]
 #	for num in nums:

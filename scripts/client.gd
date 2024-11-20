@@ -68,6 +68,8 @@ func load_game()->void:
 	else:
 		set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,Control.PRESET_MODE_KEEP_SIZE)
 		hgame = game_scene.instantiate()
+		hgame.turn.connect(hgame.get_node("Map")._on_game_turn)
+		hgame.turn.connect(hgame.get_node("HUD")._on_game_turn)
 		hgame.setup("p1" if players.size()==0 or multiplayer.get_unique_id() == players[0]['id'] else "p2")
 		add_child(hgame)
 		
