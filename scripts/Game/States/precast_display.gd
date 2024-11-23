@@ -160,4 +160,3 @@ func tests():
 		else:
 			print("Test "+ str(i) + " failed")
 	
-

@@ -2,10 +2,10 @@ class_name Mode
 extends Node
 
 var alias:String
-var game :Game
-var map :Map 
-var cursor :Cursor
-var hud: HUD
+var game
+var map
+var cursor
+var hud
 var update = true
 var props:Array
 

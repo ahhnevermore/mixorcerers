@@ -1,5 +1,6 @@
 extends Display
 
+#PROPS[0] = PLAYER
 var internal_orbs
 var additional_costs={'fire':0,'water':0,'earth':0,'air':0}
 
@@ -15,9 +16,13 @@ var magycke_stack :Array =[]
 var grimoire_cost_added=false
 var repeat_cost_added =false
 #percentage for On_DMG
+
+
+#aliased variable
+var mixer
 func _ready():
 	pass # Replace with function body.
-
+	mixer = props[0]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -77,30 +82,36 @@ func _process(_delta):
 func add_item(inventory:Array,item,orbs):
 	if item is Spell:
 		if inventory[0]:
+			var unviable:=false
 			if inventory[1]:
 				var outgoing_spell:Spell = inventory[1]
 				if outgoing_spell.alias == item.alias and orbs_operation(outgoing_spell.real_cost,"lt",item.real_cost):
 					orbs_operation(orbs,"add",item.real_cost,)
 					item = outgoing_spell
+					unviable = true
 				else:
 					orbs_operation(orbs,"add",outgoing_spell.real_cost,)
+					game.commit_action(mixer,"remove",outgoing_spell)
+
 			inventory[1] = inventory[0]
 			inventory[0] = item
+			if not unviable:
+				game.commit_action(mixer,"create",item)
 		else:
 			inventory[0]= item
+			game.commit_action(mixer,"create",item)
 	else:
 		var replace_index = false
-		var replaced = false
-		var index
-		for i in range(6):
-			index = i + 2
-			if not inventory[index]:
-				inventory[index] = item
-				replaced = true
+		var placed = false
+		for i in range(2,8):
+			if not inventory[i]:
+				inventory[i] = item
+				placed = true
+				game.commit_action(mixer,"create",item)
 				break
-			elif inventory[index] is Grimoire and not replace_index:
-				replace_index = index
-		if not replaced:
+			elif inventory[i] is Grimoire and not replace_index:
+				replace_index = i
+		if not placed:
 			if replace_index:
 				var outgoing_item = inventory[replace_index]
 				if outgoing_item.alias == item.alias and orbs_operation(outgoing_item.spell.real_cost,"lt",item.spell.real_cost):
@@ -108,9 +119,14 @@ func add_item(inventory:Array,item,orbs):
 					item = outgoing_item
 				else:
 					orbs_operation(orbs,"add",outgoing_item.spell.real_cost,)
+					game.commit_action(mixer,"remove",outgoing_item)
+					game.commit_action(mixer,"create",item)
+					
 				inventory[replace_index] = item
 			else:
+				game.commit_action(mixer,"remove",inventory[2])
 				inventory[2] = item
+				game.commit_action(mixer,"create",item)
 	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
@@ -150,16 +166,7 @@ func spell_display(list):
 	if partial_recipe in game.recipes:
 		spell_config = game.spells[game.recipes[partial_recipe]]
 		$CanvasLayer/Spell.text = spell_config['alias']
-		var spell_count =0
-		for action in game.turn_history:
-			if action[0]==props[0].alias and action[1] == spell_config['alias']:
-				spell_count+=1
-		for item in props[0].inventory:
-			if item and (
-				item.alias == spell_config['alias'] or 
-				item.alias.substr(0,len(item.alias)-1) ==spell_config['alias']):
-				spell_count+=1
-			
+		var spell_count = game.get_spell_repetitions(spell_config,props[0])	
 		if not grimoire_cost_added and grimoire_value:
 			grimoire_cost_added=true
 			for elem in spell_config['grimoire_cost']:

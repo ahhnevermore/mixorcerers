@@ -52,8 +52,52 @@ func _process(_delta):
 	if not mode and Input.is_action_just_pressed("select_confirm"):
 		add_child(SelectMode.new(self,$Map,$Cursor,$HUD,[]))
 
+#what is an action.there can only be 3 - movement. creation. destruction. everything else can be resolved
+#move		create		precast		cast	remove
+#precast actions of an object delete the previous precast action to that object
+#top level action field 
+# id	Caster	action-desc		object		top-level
+#CAUTION cycling spell could lead to overballooning turn history
+func commit_action(caster,desc,obj,top_level:=true):
+	if desc == "precast":
+		var line_to_del = turn_history.filter(func (x): return (x[2] == 'precast' and x[3] == obj)  )
+		var rm_idx = line_to_del[0][0]
+		turn_history.remove_at(rm_idx)
+		for i in range(rm_idx,turn_history.size()):
+			turn_history[i][0] = i
+			
+	turn_history.append([turn_history.size(),caster.alias,desc,obj,top_level])
 
-
+func get_spell_repetitions(spell_config,mixer):
+	var count:=0
+	var deleted_list:=[]
+	#CLASSIC DUPLICATION ISSUE GODDAMN
+	var xs = turn_history.duplicate()
+	xs.reverse()
+	for action in xs:
+		if action[1]==mixer.alias:
+			if action[2] == "remove":
+				deleted_list.append(action[3])
+			else:
+				if action[3] not in deleted_list and action[2] in ["create","cast"]:
+					if (
+						(action[3] is Spell and spell_config['alias'] == action[3].alias) 
+					or (action[3] is Grimoire and spell_config['alias'] == action[3].spell.alias)
+					):
+						count+=1
+	return count
+					
+				
+		
+		
+	
+		
+func serialize_turn():
+	return {
+		"turn": $Map.turn,
+#		"actions": turn_history,
+		"debug": turn_history.map(func (x): return [x[0],x[1],x[2],x[3].alias,x[3]])
+	}
 	
 
 #TODO
@@ -68,6 +112,8 @@ func _process(_delta):
 #create a game moves data structure, then make the enemy perform its moves
 #write turns to file
 #turn transition
+#Spell woodland wonderland(very expensive) - every spell you cast will fill your empty slots with iron branches(stats+ can be planted
+# to create jungle terrain). maybe some active to go with it
 
 #COMPLETED
 

@@ -105,7 +105,6 @@ func turn_timer(arg):
 func _on_game_turn(_turn_number,arg_ismyturn) -> void:
 	
 	is_myturn = arg_ismyturn
-	print(is_myturn)
 	if is_myturn:
 		turn_timer(120)
 	endturn_display()

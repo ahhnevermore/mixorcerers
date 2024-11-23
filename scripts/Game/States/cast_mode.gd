@@ -71,80 +71,83 @@ func _on_cursor_changed()->void:
 				
 		
 func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->void:
-	var target:MapGrid = map.gen_cast_grid(spell,cursor_pos)
-	var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
-	var collisions = find_collisions(target.dict.keys())
-	
-
-	for collision in collisions:
-		var terrain_stats = map.terrains[map.get_terrain(collision[1])]
-		var unit = collision[0]
-		var damage = calc_damage(spell,terrain_stats)
+	var cast_range_check = MapGrid.new(map.field_of_prop(map.local_to_map(caster.position),
+		"cast_range_cost",spell.cast_range,[],0,false))
+	if cursor_pos in cast_range_check.dict:
+		var target:MapGrid = map.gen_cast_grid(spell,cursor_pos)
+		var tiles= target.dict.keys().map(func(x):return map.get_tile(x))
+		var collisions = find_collisions(target.dict.keys())
 		
-		var on_terrain_grimoires=[]
+
+		for collision in collisions:
+			var terrain_stats = map.terrains[map.get_terrain(collision[1])]
+			var unit = collision[0]
+			var damage = calc_damage(spell,terrain_stats)
+			
+			var on_terrain_grimoires=[]
+			if spell.terrain_mod:
+				on_terrain_grimoires = unit.terrain_trigger(get_modded_terrain(terrain_stats,spell.terrain_mod),terrain_stats['alias'])
+			
+			for grimoire in on_terrain_grimoires:
+				if unit.xy == collision[1].xy:
+					var index = unit.inventory.find(grimoire)
+					unit.inventory[index]=null
+					#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
+					cast(unit,grimoire.spell,
+					cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
+					
+				elif unit.xy in target.dict.keys():
+					collisions.append(unit,map.get_tile(unit.xy))
+			
+			var on_dmg_grimoires = unit.damage_trigger(damage)
+		
+			for grimoire in on_dmg_grimoires:
+				if unit.xy == collision[1].xy:
+					var index = unit.inventory.find(grimoire)
+					unit.inventory[index]=null
+					#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
+					cast(unit,grimoire.spell,
+					cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
+					
+				elif unit.xy in target.dict.keys():
+					collisions.append(unit,map.get_tile(unit.xy))
+					
+			#after on_dmg_grimoires are resolved
+			if unit.xy == collision[1].xy:
+				unit.modified_stats['health'] -= damage
+				if unit.alias == 'Player':
+					hud.stats_display([['health',unit.modified_stats['health']]])
+				
+		#modify terrain
 		if spell.terrain_mod:
-			on_terrain_grimoires = unit.terrain_trigger(get_modded_terrain(terrain_stats,spell.terrain_mod),terrain_stats['alias'])
-		
-		for grimoire in on_terrain_grimoires:
-			if unit.xy == collision[1].xy:
-				var index = unit.inventory.find(grimoire)
-				unit.inventory[index]=null
-				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-				cast(unit,grimoire.spell,
-				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
-				
-			elif unit.xy in target.dict.keys():
-				collisions.append(unit,map.get_tile(unit.xy))
-		
-		var on_dmg_grimoires = unit.damage_trigger(damage)
-	
-		for grimoire in on_dmg_grimoires:
-			if unit.xy == collision[1].xy:
-				var index = unit.inventory.find(grimoire)
-				unit.inventory[index]=null
-				#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-				cast(unit,grimoire.spell,
-				cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
-				
-			elif unit.xy in target.dict.keys():
-				collisions.append(unit,map.get_tile(unit.xy))
-				
-		#after on_dmg_grimoires are resolved
-		if unit.xy == collision[1].xy:
-			unit.modified_stats['health'] -= damage
-			if unit.alias == 'Player':
-				hud.stats_display([['health',unit.modified_stats['health']]])
-			
-	#modify terrain
-	if spell.terrain_mod:
-		for tile in tiles:
-			tile.update_terrain(get_modded_terrain(map.terrains[map.get_terrain(tile)],spell.terrain_mod),map.turn)
-			map.update_vision(player.visible_tiles)
-			player.display_vision([])
-			
-	#other modifiers
-	for mod in spell.modifiers:
-		match mod[0]:
-			"move":
-				if caster in player.allies:
-					map.display_grid(map.gen_vision_grid(caster),'fog')
-
-				caster.xy = cursor_pos
-				caster.position = map.map_to_local(cursor_pos)
-				
-				player.gen_visible_tiles()
+			for tile in tiles:
+				tile.update_terrain(get_modded_terrain(map.terrains[map.get_terrain(tile)],spell.terrain_mod),map.turn)
 				map.update_vision(player.visible_tiles)
 				player.display_vision([])
-
-
-			_:
-				print(mod)
-	history.append([caster.alias,spell.alias,cursor_pos])
-	if depth == 0:
-		log_action(history)
-	map.clear_grid(cast_grid,'cast')
-	map.clear_grid(cast_range_grid,'cast_range')
 				
+		#other modifiers
+		for mod in spell.modifiers:
+			match mod[0]:
+				"move":
+					if caster in player.allies:
+						map.display_grid(map.gen_vision_grid(caster),'fog')
+
+					caster.xy = cursor_pos
+					caster.position = map.map_to_local(cursor_pos)
+					
+					player.gen_visible_tiles()
+					map.update_vision(player.visible_tiles)
+					player.display_vision([])
+
+
+				_:
+					print(mod)
+		history.append([caster.alias,spell.alias,cursor_pos])
+		if depth == 0:
+			log_action(history)
+		map.clear_grid(cast_grid,'cast')
+		map.clear_grid(cast_range_grid,'cast_range')
+					
 	
 	
 func windup():

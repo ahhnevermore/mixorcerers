@@ -70,6 +70,8 @@ func load_game()->void:
 		hgame = game_scene.instantiate()
 		hgame.turn.connect(hgame.get_node("Map")._on_game_turn)
 		hgame.turn.connect(hgame.get_node("HUD")._on_game_turn)
+		
+		hgame.get_node("HUD").end_turn.connect(jmp_on_end_turn)
 		hgame.setup("p1" if players.size()==0 or multiplayer.get_unique_id() == players[0]['id'] else "p2")
 		add_child(hgame)
 		
@@ -177,9 +179,22 @@ func _discover_local_servers_setup()->void:
 		else:	
 			discover_local_servers()
 			is_local = true
-		
 
+@rpc("call_local","authority",'reliable')
+func _start_local_game():
+	if players.size()>=2:
+		unload_scene(hlocal_multiplayer,true)	
+		load_game()		
 
+func lm_windup()->void:
+	udp_server_socket = null
+	udp_client_socket = null
+	multiplayer.multiplayer_peer = null
+	players.clear()
+	is_local= false
+
+#General multiplayer
+#------------
 func _start_client(arg):
 	if not multiplayer.multiplayer_peer:
 		var peer = ENetMultiplayerPeer.new()
@@ -189,30 +204,22 @@ func _start_client(arg):
 		multiplayer.multiplayer_peer = peer
 		print("local client created")
 
-@rpc("call_local","authority",'reliable')
-func _start_local_game():
-	if players.size()>=2:
-		unload_scene(hlocal_multiplayer,true)	
-		load_game()
+
 #This approach will have to work
 #Client connected and register player work in an odd way. First every peer gets a signal of the new peer id. 
 #each peer then sends its own info and calls register player on the new peer n times. 
 #every client registers itself with itself on connecting first
 
-
-#func _on_client_connected(id:int)->void:
-	#_register_player.rpc_id(id, {'name':'Client'})
-#
 @rpc("any_peer", "reliable")
 func rem_register_player(new_player_info):
 	players.append(new_player_info)
 	for player in players:
-		sync_data.rpc(players,"players")
+		rem_sync_data.rpc(players,"players")
 	if is_local:
 		hlocal_multiplayer.display_players(players)
 	
 @rpc("any_peer","reliable","call_remote")
-func sync_data(data,meta):
+func rem_sync_data(data,meta):
 	match meta:
 		"players":
 			players = data
@@ -253,11 +260,9 @@ func get_client_info():
 	else:
 		return {'player_name':'Client','id':multiplayer.get_unique_id()}
 
+func jmp_on_end_turn():
+	rem_sync_data.rpc(hgame.serialize_turn(),"turn")
+	hgame.turn.emit(hgame.get_node("Map").turn +1, not hgame.is_myturn)
+	print(hgame.serialize_turn())
 
-func lm_windup()->void:
-	udp_server_socket = null
-	udp_client_socket = null
-	multiplayer.multiplayer_peer = null
-	players.clear()
-	is_local= false
 	
