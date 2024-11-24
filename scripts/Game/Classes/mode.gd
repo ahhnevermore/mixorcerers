@@ -2,7 +2,7 @@ class_name Mode
 extends Node
 
 var alias:String
-var game
+var game:Game
 var map
 var cursor
 var hud

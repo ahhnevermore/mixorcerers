@@ -26,7 +26,7 @@ func _process(_delta:float)->void:
 		
 		_on_cursor_changed()
 		
-	if Input.is_action_just_pressed("select_confirm") and cast_grid and props.size()>1:
+	if Input.is_action_just_pressed("select_confirm") and cast_grid and props[1] is Spell:
 		cast(props[0],props[1],cursor.cursor_tile,0,[])
 		game._on_cursor_changed()
 		var index:int = props[0].inventory.find(props[1])
@@ -70,7 +70,12 @@ func _on_cursor_changed()->void:
 			map.display_grid(cast_grid,"cast")
 				
 		
-func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->void:
+func cast(caster:Unit,castable,cursor_pos:Vector2i,depth:int,history:Array)->void:
+	var spell:Spell
+	if castable is Spell:
+		spell = castable
+	elif castable is Grimoire:
+		spell = castable.spell
 	var cast_range_check = MapGrid.new(map.field_of_prop(map.local_to_map(caster.position),
 		"cast_range_cost",spell.cast_range,[],0,false))
 	if cursor_pos in cast_range_check.dict:
@@ -93,7 +98,7 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->
 					var index = unit.inventory.find(grimoire)
 					unit.inventory[index]=null
 					#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-					cast(unit,grimoire.spell,
+					cast(unit,grimoire,
 					cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
 					
 				elif unit.xy in target.dict.keys():
@@ -106,7 +111,7 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->
 					var index = unit.inventory.find(grimoire)
 					unit.inventory[index]=null
 					#starts infinite loop if casted on the same location with dmg grimoire on same location if its not first removed
-					cast(unit,grimoire.spell,
+					cast(unit,grimoire,
 					cursor.calc_relative_cursor(unit.xy,grimoire.precast_position) if grimoire.precast_position else unit.xy,depth+1,history)
 					
 				elif unit.xy in target.dict.keys():
@@ -142,7 +147,7 @@ func cast(caster:Unit,spell:Spell,cursor_pos:Vector2i,depth:int,history:Array)->
 
 				_:
 					print(mod)
-		history.append([caster.alias,spell.alias,cursor_pos])
+		history.append([caster,castable,cursor_pos,depth])
 		if depth == 0:
 			log_action(history)
 		map.clear_grid(cast_grid,'cast')
@@ -170,9 +175,11 @@ func _on_button_message(val):
 	props.append(val)
 	update = true
 
-func log_action(arr:Array)->void:
-	arr.reverse()
-	game.turn_history.append_array(arr)
+func log_action(xs:Array)->void:
+	xs.reverse()
+	for x in xs:
+		game.commit_action(x[0],"cast",x[1],x[2],true if x[3]==0 else false)
+		
 
 func calc_damage(spell,terrain_stats):
 	var damage

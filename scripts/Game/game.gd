@@ -56,17 +56,18 @@ func _process(_delta):
 #move		create		precast		cast	remove
 #precast actions of an object delete the previous precast action to that object
 #top level action field 
-# id	Caster	action-desc		object		top-level
+# id	Caster	action-desc		object		cursor_pos		top-level
 #CAUTION cycling spell could lead to overballooning turn history
-func commit_action(caster,desc,obj,top_level:=true):
+func commit_action(caster,desc,obj,cursor_pos = false,top_level:=true):
 	if desc == "precast":
 		var line_to_del = turn_history.filter(func (x): return (x[2] == 'precast' and x[3] == obj)  )
-		var rm_idx = line_to_del[0][0]
-		turn_history.remove_at(rm_idx)
-		for i in range(rm_idx,turn_history.size()):
-			turn_history[i][0] = i
+		if line_to_del:
+			var rm_idx = line_to_del[0][0]
+			turn_history.remove_at(rm_idx)
+			for i in range(rm_idx,turn_history.size()):
+				turn_history[i][0] = i
 			
-	turn_history.append([turn_history.size(),caster.alias,desc,obj,top_level])
+	turn_history.append([turn_history.size(),caster.alias,desc,obj,cursor_pos,top_level])
 
 func get_spell_repetitions(spell_config,mixer):
 	var count:=0
@@ -96,7 +97,7 @@ func serialize_turn():
 	return {
 		"turn": $Map.turn,
 #		"actions": turn_history,
-		"debug": turn_history.map(func (x): return [x[0],x[1],x[2],x[3].alias,x[3]])
+		"debug": turn_history.map(func (x): return [x[0],x[1],x[2],x[3].alias if x[3] else x[4],x[3]])
 	}
 	
 

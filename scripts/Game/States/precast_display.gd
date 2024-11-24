@@ -23,6 +23,7 @@ func _process(_delta):
 							'type':precast_position_type,
 							'origin':map.local_to_map(props[0].position) ,
 							'position': cursor.cursor_tile}
+			game.commit_action(props[0],"precast",props[1])
 			map.clear_grid(cast_grid,'cast')
 			map.clear_grid(cast_range_grid,"cast_range")
 			windup()
