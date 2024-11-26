@@ -87,13 +87,26 @@ func get_spell_repetitions(spell_config,mixer):
 					):
 						count+=1
 	return count
-					
-				
-		
-		
-	
-		
+
 func serialize_turn():
+	#preprocessing - remove items that just got created and removed
+	var xs = turn_history.duplicate()
+	xs.reverse()
+	var obj_map := {}
+	for i in range(xs.size()):
+		if xs[i][2] == "remove":
+			obj_map[xs[i][3]] = [i]
+		else:
+			if obj_map.has(xs[i][3]):
+				obj_map[xs[i][3]].append(i)
+	
+	for value in obj_map.values()	:
+		if value.size()>1:
+			for i in value:
+				xs[i][3].queue_free()
+				xs[i] = null
+	xs = xs.filter(func (x): return x!=null)
+	
 	return {
 		"turn": $Map.turn,
 #		"actions": turn_history,

@@ -38,7 +38,7 @@ var repeat_cost:Dictionary
 var grimoire_cost:Dictionary
 var real_cost:Dictionary
 
-
+var remote_id
 enum cast_shapes{
 	STRAIGHT_LINE,
 	CIRCLE,
@@ -51,7 +51,7 @@ enum DMG_Distribution{
 	SHOTGUN
 	
 }#different ways to distribute damage across the cast grid
-func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary)->void:
+func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary,arg_rid:=-1)->void:
 	alias= config['alias']
 	if config['sprite']:
 		sprite  = load(config['sprite'])
@@ -83,6 +83,7 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary)->void
 	grimoire_cost=config['grimoire_cost'].duplicate()
 	real_cost = arg_real_cost.duplicate()
 	
+	remote_id = arg_rid
 	var res =[]
 	for mod in modifiers:
 		if mod is String:
@@ -110,4 +111,3 @@ func _init(config:Dictionary,arg_modifiers:Array,arg_real_cost:Dictionary)->void
 			res.append(mod)
 	modifiers= res.duplicate(true)
 	
-

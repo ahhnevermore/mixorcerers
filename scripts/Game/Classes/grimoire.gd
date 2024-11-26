@@ -8,6 +8,7 @@ var type:Grimoire_Type
 var value
 var precast_cursor
 var precast_position
+var remote_id
 enum Grimoire_Type{
 	NONE,
 	ON_DMG,
@@ -24,8 +25,13 @@ func _ready():
 func _process(_delta):
 	pass
 
-func _init(arg_spell:Spell,arg_type:Grimoire_Type,arg_value):
+func _init(arg_spell:Spell,arg_type:Grimoire_Type,arg_value,arg_rid:=-1):
 	spell =arg_spell
 	type=arg_type
 	value =arg_value
 	alias = spell.alias + "*"
+	remote_id = arg_rid
+
+func windup():
+	spell.queue_free()
+	queue_free()
