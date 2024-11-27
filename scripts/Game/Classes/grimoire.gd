@@ -6,8 +6,8 @@ var alias
 var spell:Spell
 var type:Grimoire_Type
 var value
-var precast_cursor
 var precast_position
+var id
 var remote_id
 enum Grimoire_Type{
 	NONE,
@@ -30,8 +30,8 @@ func _init(arg_spell:Spell,arg_type:Grimoire_Type,arg_value,arg_rid:=-1):
 	type=arg_type
 	value =arg_value
 	alias = spell.alias + "*"
+	id= Game.get_id()
 	remote_id = arg_rid
-
 func windup():
 	spell.queue_free()
 	queue_free()

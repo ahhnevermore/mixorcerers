@@ -15,9 +15,15 @@ var enemy
 
 var is_myturn
 
+static var id_gen = -1
 signal turn
 #signal damage_trigger
 #signal terrain_trigger
+
+static func get_id():
+	id_gen +=1
+	return id_gen
+	
 func setup(arg_player):
 	
 	player = arg_player
@@ -58,6 +64,8 @@ func _process(_delta):
 #top level action field 
 # id	Caster	action-desc		object		cursor_pos		top-level
 #CAUTION cycling spell could lead to overballooning turn history
+#CAUTION currently precasting in the same turn as creating the grimoire doesnt actually do all that much,because the object
+#is serialized at the end of the turn. I could change this but I'm not actually sure its even necessary
 func commit_action(caster,desc,obj,cursor_pos = false,top_level:=true):
 	if desc == "precast":
 		var line_to_del = turn_history.filter(func (x): return (x[2] == 'precast' and x[3] == obj)  )
@@ -88,29 +96,54 @@ func get_spell_repetitions(spell_config,mixer):
 						count+=1
 	return count
 
+
 func serialize_turn():
 	#preprocessing - remove items that just got created and removed
+	#remove non top level actions
 	var xs = turn_history.duplicate()
 	xs.reverse()
 	var obj_map := {}
 	for i in range(xs.size()):
+		if not xs[i][-1]:
+			if xs[i][3] is Grimoire:
+				xs[i][3].windup()
+			else:
+				xs[i][3].queue_free()
+			xs[i] = null
+			continue
 		if xs[i][2] == "remove":
 			obj_map[xs[i][3]] = [i]
 		else:
 			if obj_map.has(xs[i][3]):
 				obj_map[xs[i][3]].append(i)
+			
 	
 	for value in obj_map.values()	:
 		if value.size()>1:
 			for i in value:
-				xs[i][3].queue_free()
+				if xs[i][3] is Grimoire:
+					xs[i][3].windup()
+				else:
+					xs[i][3].queue_free()
 				xs[i] = null
 	xs = xs.filter(func (x): return x!=null)
-	
+	xs.reverse()
+	#processing - rectify ids,replace objects with dictionaries
+	for i in range(xs.size()):
+		xs[i][0] = i
+		var y = xs[i][3]
+		if y is Spell:
+			y = {'alias': y.alias,'modifiers':y.modifiers,'id':y.id}
+		elif y is Grimoire:
+			y= {'spell_alias':y.spell.alias,'spell_modifiers':y.spell.modifiers,
+			'type':y.type,'value':y.value,'precast_position':y.precast_position,'id':y.id,}
+		xs[i][3] = y
+		
+		
 	return {
 		"turn": $Map.turn,
 #		"actions": turn_history,
-		"debug": turn_history.map(func (x): return [x[0],x[1],x[2],x[3].alias if x[3] else x[4],x[3]])
+		"debug": xs
 	}
 	
 
