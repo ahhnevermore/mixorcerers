@@ -12,8 +12,8 @@ var listeners:Array
 
 var player#p1,p2
 var enemy
-
 var is_myturn
+var enemy_unit_map ={}
 
 static var id_gen = -1
 signal turn
@@ -38,6 +38,7 @@ func setup(arg_player):
 func _ready():
 	mix_display_scene = load("res://scenes/Game/States/mix_display.tscn")
 	precast_display_scene=load("res://scenes/Game/States/precast_display.tscn")
+	turn.connect(_on_game_turn)
 	
 	turn.emit(0,is_myturn)
 	$Map.gen_map()
@@ -46,6 +47,7 @@ func _ready():
 	#$Player1.display_move_grid()
 	_on_cursor_changed()
 	
+	enemy_unit_map["Player"]= $Enemy
 #	print(IP.get_local_interfaces())
 #	var nums = [1,2,3,4]
 #	for num in nums:
@@ -145,8 +147,33 @@ func serialize_turn():
 #		"actions": turn_history,
 		"debug": xs
 	}
-	
 
+func exec_enemy_turn(xs:Dictionary):
+	for x in xs:
+		match x[2]:
+			"create":
+				pass
+static func orbs_operation(dict1,operation,dict2):
+	match operation:
+		"add":
+			for elem in dict2:
+				dict1[elem]+= dict2[elem]
+		"sub":
+			for elem in dict2:
+				dict1[elem]-= dict2[elem]
+				if dict1[elem] < 0:
+					dict1[elem]+=dict2[elem]
+					return false
+		"lt":
+			var res=0
+			for elem in dict2:
+				if elem != 'magycke' and dict1[elem] < dict2[elem]:
+					res+=1
+			return res
+	return true
+
+func _on_game_turn(_turn_no,arg_ismyturn):
+	is_myturn = arg_ismyturn
 #TODO
 #camera zoom in and out
 #add hotkeys

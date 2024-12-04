@@ -42,14 +42,14 @@ func _process(_delta):
 		real_cost['magycke'] = 0
 		for i in magycke_stack:
 			real_cost['magycke']+=1
-		orbs_operation(real_cost,"add",additional_costs,)
-		if orbs_operation(internal_orbs,"sub",additional_costs,):
+		Game.orbs_operation(real_cost,"add",additional_costs,)
+		if Game.orbs_operation(internal_orbs,"sub",additional_costs,):
 		
 			var mixture = Spell.new(spell_config,modifiers,real_cost)
 			if grimoire_type != Grimoire.Grimoire_Type.NONE:
 				mixture = Grimoire.new(mixture,grimoire_type,grimoire_value)
 			
-			add_item(props[0].inventory,mixture,internal_orbs)
+			props[0].add_item(props[0].inventory,mixture,internal_orbs)
 			orbs_display(internal_orbs)
 			hud.clear_inventory_display()
 			hud.inventory_display_uninteractive(props[0].inventory)
@@ -79,55 +79,7 @@ func _process(_delta):
 		else:
 			self.windup()
 
-func add_item(inventory:Array,item,orbs):
-	if item is Spell:
-		if inventory[0]:
-			var unviable:=false
-			if inventory[1]:
-				var outgoing_spell:Spell = inventory[1]
-				if outgoing_spell.alias == item.alias and orbs_operation(outgoing_spell.real_cost,"lt",item.real_cost):
-					orbs_operation(orbs,"add",item.real_cost,)
-					item = outgoing_spell
-					unviable = true
-				else:
-					orbs_operation(orbs,"add",outgoing_spell.real_cost,)
-					game.commit_action(mixer,"remove",outgoing_spell)
 
-			inventory[1] = inventory[0]
-			inventory[0] = item
-			if not unviable:
-				game.commit_action(mixer,"create",item)
-		else:
-			inventory[0]= item
-			game.commit_action(mixer,"create",item)
-	else:
-		var replace_index = false
-		var placed = false
-		for i in range(2,8):
-			if not inventory[i]:
-				inventory[i] = item
-				placed = true
-				game.commit_action(mixer,"create",item)
-				break
-			elif inventory[i] is Grimoire and not replace_index:
-				replace_index = i
-		if not placed:
-			if replace_index:
-				var outgoing_item = inventory[replace_index]
-				if outgoing_item.alias == item.alias and orbs_operation(outgoing_item.spell.real_cost,"lt",item.spell.real_cost):
-					orbs_operation(orbs,"add",item.spell.real_cost,)
-					item = outgoing_item
-				else:
-					orbs_operation(orbs,"add",outgoing_item.spell.real_cost,)
-					game.commit_action(mixer,"remove",outgoing_item)
-					game.commit_action(mixer,"create",item)
-					
-				inventory[replace_index] = item
-			else:
-				game.commit_action(mixer,"remove",inventory[2])
-				inventory[2] = item
-				game.commit_action(mixer,"create",item)
-	
 func setup(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
 	#orb bar
@@ -296,7 +248,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value=false
 			if spell_config and grimoire_cost_added:
 				grimoire_cost_added=false
-				orbs_operation(additional_costs,"sub",spell_config['grimoire_cost'])
+				Game.orbs_operation(additional_costs,"sub",spell_config['grimoire_cost'])
 				additional_costs_display()
 				
 		Grimoire.Grimoire_Type.ON_DMG:
@@ -307,7 +259,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value = 100
 			if spell_config and not grimoire_cost_added:
 				grimoire_cost_added=true
-				orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
+				Game.orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
 				additional_costs_display()
 		Grimoire.Grimoire_Type.ON_TERRAIN_CHANGE:
 			$CanvasLayer/Grimoire_Val.hide()
@@ -315,7 +267,7 @@ func default_grimoire_value(type:Grimoire.Grimoire_Type):
 			grimoire_value = map.mod_to_terrain.values()[0]
 			if spell_config and not grimoire_cost_added:
 				grimoire_cost_added=true
-				orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
+				Game.orbs_operation(additional_costs,"add",spell_config['grimoire_cost'])
 				additional_costs_display()
 
 
@@ -331,22 +283,3 @@ func additional_costs_display()->void:
 				"     Earth: " + str(additional_costs['earth']) +
 				"     Air: " + str(additional_costs['air'])
 				)
-
-func orbs_operation(dict1,operation,dict2):
-	match operation:
-		"add":
-			for elem in dict2:
-				dict1[elem]+= dict2[elem]
-		"sub":
-			for elem in dict2:
-				dict1[elem]-= dict2[elem]
-				if dict1[elem] < 0:
-					dict1[elem]+=dict2[elem]
-					return false
-		"lt":
-			var res=0
-			for elem in dict2:
-				if elem != 'magycke' and dict1[elem] < dict2[elem]:
-					res+=1
-			return res
-	return true

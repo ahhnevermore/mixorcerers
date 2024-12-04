@@ -12,7 +12,8 @@ func _process(_delta):
 		update= false
 		hud.internal_stats = props[0].modified_stats.duplicate()
 		hud.stats_display([])
-		hud.command_display(props[0].commands,self)
+		if game.is_myturn:
+			hud.command_display(props[0].commands,self)
 		hud.inventory_display_uninteractive(props[0].inventory)
 	if Input.is_action_just_pressed("select_confirm") and game.mode[-1]==self:
 		game.add_child(SelectMode.new(game,map,cursor,hud,[]))

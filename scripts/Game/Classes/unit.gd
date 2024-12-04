@@ -15,7 +15,62 @@ var inventory=[
 func _ready():
 	game=get_parent()
 	map=get_parent().get_node("Map")
-	
+
+func add_item(xs:Array,item,orbs,should_log:=true):
+	var action=[]
+	if item is Spell:
+		if xs[0]:
+			if xs[1]:
+				var outgoing_spell:Spell = xs[1]
+				if outgoing_spell.alias == item.alias and Game.orbs_operation(outgoing_spell.real_cost,"lt",item.real_cost):
+					Game.orbs_operation(orbs,"add",item.real_cost,)
+					xs[1] = xs[0]
+					xs[0] = outgoing_spell
+				else:
+					Game.orbs_operation(orbs,"add",outgoing_spell.real_cost,)
+					xs[1] =xs[0]
+					xs[0]=item
+					action.append(['create',item])
+					action.append(["remove",outgoing_spell])
+			else:
+				xs[1] = xs[0]
+				xs[0] = item
+				action.append(['create',item]) 
+		else:
+			xs[0]= item
+			action.append(["create",item])
+	else:
+		var replace_index = false
+		var placed = false
+		for i in range(2,8):
+			if not xs[i]:
+				xs[i] = item
+				placed = true
+				action.append(["create",item])
+				break
+			elif xs[i] is Grimoire and not replace_index:
+				replace_index = i
+		if not placed:
+			if replace_index:
+				var outgoing_item = xs[replace_index]
+				if outgoing_item.alias == item.alias and Game.orbs_operation(outgoing_item.spell.real_cost,"lt",item.spell.real_cost):
+					Game.orbs_operation(orbs,"add",item.spell.real_cost,)
+					xs[replace_index] = outgoing_item
+				else:
+					Game.orbs_operation(orbs,"add",outgoing_item.spell.real_cost,)
+					xs[replace_index] = item
+					action.append(["create",item])
+					action.append(["remove",outgoing_item])
+				
+			else:
+				var outgoing_item = xs[2]
+				xs[2] = item
+				action.append(["create",item])
+				action.append( ["remove",outgoing_item])
+	if should_log:
+		for x in action:
+			game.commit_action(self,x[0],x[1])
+
 func damage_trigger(damage)->Array:
 	var on_dmg_grimoires=[]
 	var health_remaining_percentage = (1 - (damage/ modified_stats['health'])) * 100

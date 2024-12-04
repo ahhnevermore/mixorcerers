@@ -225,6 +225,8 @@ func rem_sync_data(data,meta):
 			players = data
 			if is_local:
 				hlocal_multiplayer.display_players(players)
+		"turn":
+			hgame.exec_enemy_turn(data)
 func _on_peer_connected(_id):
 	pass
 			
@@ -262,7 +264,11 @@ func get_client_info():
 
 func jmp_on_end_turn():
 	rem_sync_data.rpc(hgame.serialize_turn(),"turn")
-	hgame.turn.emit(hgame.get_node("Map").turn +1, not hgame.is_myturn)
 	print(hgame.serialize_turn())
+	hgame.turn.emit(hgame.get_node("Map").turn +1, not hgame.is_myturn)
+	var xs = hgame.mode.duplicate()
+	xs.reverse()
+	for x in xs:
+		x.windup()
 
 	

@@ -40,9 +40,10 @@ var internal_stats={}
 func stats_display(stats_list:Array):
 	for stat in stats_list:
 		internal_stats[stat[0]] = stat[1]
-	$Div/Stats.text=("  Move: " + str(internal_stats['move'])+"\n"
-				+"Vision: " + str(internal_stats['vision'])+"\n"
-				+"Health: " + str(internal_stats['health'])+"/"+str(internal_stats['max_health'])+"\n"
+	$Div/Stats.text=(
+		"  Move: " + str(internal_stats['move'])+"\n"
+		+"Vision: " + str(internal_stats['vision'])+"\n"
+		+"Health: " + str(internal_stats['health'])+"/"+str(internal_stats['max_health'])+"\n"
 	)
 	
 func inventory_display_uninteractive(list:Array)->void:
