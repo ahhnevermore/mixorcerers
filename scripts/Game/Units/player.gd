@@ -14,7 +14,7 @@ var visible_tiles
 
 func _ready():
 	super._ready()
-	xy = map.map_file[game.player+"_start_position"]
+	xy = map.map_file[game.player_label+"_start_position"]
 	position= map.map_to_local(xy)
 	allies.push_back(self)
 	initial_stats = {'move':5,

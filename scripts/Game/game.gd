@@ -10,8 +10,8 @@ var precast_display_scene:PackedScene
 var turn_history:Array
 var listeners:Array
 
-var player#p1,p2
-var enemy
+var player_label#p1,p2
+var enemy_label
 var is_myturn
 var enemy_unit_map ={}
 
@@ -26,12 +26,12 @@ static func get_id():
 	
 func setup(arg_player):
 	
-	player = arg_player
-	if player == 'p1':
-		enemy ='p2'
+	player_label = arg_player
+	if player_label == 'p1':
+		enemy_label ='p2'
 		is_myturn = true
 	else:
-		enemy='p1'	
+		enemy_label='p1'	
 		is_myturn = false
 		
 
@@ -149,10 +149,44 @@ func serialize_turn():
 	}
 
 func exec_enemy_turn(xs:Dictionary):
-	for x in xs:
+	for x in xs['debug']:
 		match x[2]:
 			"create":
-				pass
+				var mixture
+				if x[3].has('modifiers'):
+					mixture = Spell.new(spells[x[3]['alias']],x[3]['modifiers'],{},x[3]['id'],true)
+				if x[3].has('spell_alias'):
+					mixture = Grimoire.new(Spell.new(spells[x[3]['spell_alias']],x[3]['spell_modifiers'],{},-1,true),
+					x[3]['type'],x[3]['value'],x[3]['id']
+					)
+					mixture.precast_position = x[3]['precast_position']
+				enemy_unit_map[x[1]].add_item(enemy_unit_map[x[1]].inventory,mixture,{})
+			"move":
+				enemy_unit_map[x[1]].xy = x[4]
+				enemy_unit_map[x[1]].position = $Map.map_to_local(x[4])	
+			"precast":
+				#INFO this code purposefully duplicates the array but not the underlying objects to modify them
+				var ys = enemy_unit_map[x[1]].inventory.filter(func (y):
+					if y is Grimoire:
+						if y.remote_id == x[3]['id']:
+							return true
+					return false)
+				assert(ys.size()==1)
+				ys[0].precast_position = x[3]['precast_position']
+			"remove":
+				assert(
+				enemy_unit_map[x[1]].inventory
+				.filter(func (y): return y.remote_id == x[3]['id'])
+				.size()==0)
+			"cast":
+				var castguffin = CastMode.new(self,$Map,$Cursor,$HUD,[],true)
+				castguffin.cast(enemy_unit_map[x[1]],x[3],x[4],0,[])
+				castguffin.windup()
+			
+		$Map.update_vision($Player.visible_tiles)
+		$Player.display_vision([])
+		#TODO reset turn for player
+	
 static func orbs_operation(dict1,operation,dict2):
 	match operation:
 		"add":

@@ -11,7 +11,7 @@ signal cursor_changed
 func _ready():
 	#centre on map cursor tile
 	map=get_parent().get_node("Map")
-	cursor_tile= map.map_file[get_parent().player+"_start_position"]
+	cursor_tile= map.map_file[get_parent().player_label+"_start_position"]
 	position= map.map_to_local(cursor_tile)
 	
 	$RepeatDelay.start()

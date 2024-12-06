@@ -138,7 +138,7 @@ func _start_local_server(arg_server_params:Dictionary):
 		players.append(get_client_info())
 		hlocal_multiplayer.only_show_lmnodes(["playerlist","back","startgame"])
 		hlocal_multiplayer.display_players(players) 
-		print("local server created")
+		#print("local server created")
 		discovery_ping()
 		is_local = true
 
@@ -202,7 +202,7 @@ func _start_client(arg):
 		if err:
 			return err
 		multiplayer.multiplayer_peer = peer
-		print("local client created")
+		#print("local client created")
 
 
 #This approach will have to work
@@ -213,8 +213,7 @@ func _start_client(arg):
 @rpc("any_peer", "reliable")
 func rem_register_player(new_player_info):
 	players.append(new_player_info)
-	for player in players:
-		rem_sync_data.rpc(players,"players")
+	rem_sync_data.rpc(players,"players")
 	if is_local:
 		hlocal_multiplayer.display_players(players)
 	
@@ -227,6 +226,8 @@ func rem_sync_data(data,meta):
 				hlocal_multiplayer.display_players(players)
 		"turn":
 			hgame.exec_enemy_turn(data)
+			hgame.turn.emit(hgame.get_node("Map").turn +1, not hgame.is_myturn)
+			
 func _on_peer_connected(_id):
 	pass
 			
@@ -254,7 +255,7 @@ func _on_server_connected_ok():
 	if is_local:
 		hlocal_multiplayer.only_show_lmnodes(["playerlist","back"])
 		hlocal_multiplayer.display_players(players) 
-	print("client connected")
+	#print("client connected")
 
 func get_client_info():
 	if multiplayer.is_server():

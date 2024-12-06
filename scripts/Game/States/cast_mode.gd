@@ -51,13 +51,14 @@ func _process(_delta:float)->void:
 		windup()
 			
 	
-func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array)->void:
-	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props)
-	if not props[0].inventory.filter(func(x:Variant)->bool: return x != null):
-			windup()
+func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array,arg_remote)->void:
+	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props,arg_remote)
 	alias = 'cast'
-	hud.clear_inventory_display()
-	hud.inventory_display(props[0].inventory,self)
+	if not remote:
+		if not props[0].inventory.filter(func(x:Variant)->bool: return x != null):
+			windup()
+		hud.clear_inventory_display()
+		hud.inventory_display(props[0].inventory,self)
 	update=false
 	cursor.cursor_changed.connect(_on_cursor_changed)
 	player = game.get_node("Player")
@@ -160,8 +161,9 @@ func windup():
 		map.clear_grid(cast_grid,'cast')
 	if cast_range_grid:
 		map.clear_grid(cast_range_grid,"cast_range")
-	hud.clear_inventory_display()
-	hud.inventory_display_uninteractive(props[0].inventory)
+	if not remote:
+		hud.clear_inventory_display()
+		hud.inventory_display_uninteractive(props[0].inventory)
 	super.windup()
 
 func _on_button_message(val):
