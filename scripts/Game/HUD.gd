@@ -75,6 +75,7 @@ func clear_stats_display()->void:
 
 func _on_endturn_pressed():
 	if is_myturn:
+		$Div/EndTurn.release_focus()
 		end_turn.emit()
 
 func _on_endturn_mouse_entered():
@@ -97,7 +98,8 @@ func turn_timer(arg):
 	if arg:
 		turn_time = str(arg)
 		endturn_display()
-		get_tree().create_timer(1.).timeout.connect(turn_timer.bind(arg-1))
+		if is_myturn:
+			get_tree().create_timer(1.).timeout.connect(turn_timer.bind(arg-1))
 	else:
 		turn_time = "TIMES UP!"
 		endturn_display()

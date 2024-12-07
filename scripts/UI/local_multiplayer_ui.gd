@@ -40,7 +40,7 @@ func _back_lmmain_mainmenu():
 
 
 func _on_findserver_pressed():
-	#hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
+	hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
 	
 	hlm_nodes["back"].pressed.disconnect(_back_lmmain_mainmenu)
 	hlm_nodes["back"].pressed.connect(_back_joincreate_lmmain)
@@ -53,7 +53,7 @@ func _on_findserver_pressed():
 	lm_find_server.emit()
 	
 func _createserver_screen():
-	#hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
+	hlm_nodes["findserver"].pressed.disconnect(_on_findserver_pressed)
 	
 	hlm_nodes["createserver"].pressed.disconnect(_createserver_screen)
 	hlm_nodes["createserver"].pressed.connect(_on_createserver_pressed)
@@ -73,7 +73,7 @@ func _back_joincreate_lmmain():
 	hlm_nodes["createserver"].pressed.disconnect(_on_createserver_pressed)
 	hlm_nodes["createserver"].pressed.connect(_createserver_screen)
 	
-	#hlm_nodes["findserver"].pressed.connect(_on_findserver_pressed)
+	hlm_nodes["findserver"].pressed.connect(_on_findserver_pressed)
 	
 	only_show_lmnodes(["back","findserver","createserver"])
 	lm_exit.emit("windup")

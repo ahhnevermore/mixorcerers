@@ -51,7 +51,7 @@ func _process(_delta:float)->void:
 		windup()
 			
 	
-func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array,arg_remote)->void:
+func _init(arg_game:Game,arg_map:Map,arg_cursor:Cursor,arg_hud:HUD,arg_props:Array,arg_remote:=false)->void:
 	super(arg_game,arg_map,arg_cursor,arg_hud,arg_props,arg_remote)
 	alias = 'cast'
 	if not remote:
@@ -121,7 +121,7 @@ func cast(caster:Unit,castable,cursor_pos:Vector2i,depth:int,history:Array)->voi
 			#after on_dmg_grimoires are resolved
 			if unit.xy == collision[1].xy:
 				unit.modified_stats['health'] -= damage
-				if unit.alias == 'Player':
+				if not remote and unit.alias == 'Player':
 					hud.stats_display([['health',unit.modified_stats['health']]])
 				
 		#modify terrain
@@ -149,11 +149,12 @@ func cast(caster:Unit,castable,cursor_pos:Vector2i,depth:int,history:Array)->voi
 				_:
 					print(mod)
 		history.append([caster,castable,cursor_pos,depth])
-		if depth == 0:
-			log_action(history)
-		map.clear_grid(cast_grid,'cast')
-		map.clear_grid(cast_range_grid,'cast_range')
-					
+		if not remote:
+			if depth == 0:
+				log_action(history)
+			map.clear_grid(cast_grid,'cast')
+			map.clear_grid(cast_range_grid,'cast_range')
+						
 	
 	
 func windup():
@@ -178,9 +179,9 @@ func _on_button_message(val):
 	update = true
 
 func log_action(xs:Array)->void:
-	xs.reverse()
-	for x in xs:
-		game.commit_action(x[0],"cast",x[1],x[2],true if x[3]==0 else false)
+		xs.reverse()
+		for x in xs:
+			game.commit_action(x[0],"cast",x[1],x[2],true if x[3]==0 else false)
 		
 
 func calc_damage(spell,terrain_stats):

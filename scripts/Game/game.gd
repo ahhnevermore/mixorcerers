@@ -7,9 +7,10 @@ var mode :Array =[]
 var mix_display_scene:PackedScene
 var precast_display_scene:PackedScene
 
+var match_history:=[]
 var turn_history:Array
-var listeners:Array
 
+var listeners:Array
 var player_label#p1,p2
 var enemy_label
 var is_myturn
@@ -160,7 +161,7 @@ func exec_enemy_turn(xs:Dictionary):
 					x[3]['type'],x[3]['value'],x[3]['id']
 					)
 					mixture.precast_position = x[3]['precast_position']
-				enemy_unit_map[x[1]].add_item(enemy_unit_map[x[1]].inventory,mixture,{})
+				enemy_unit_map[x[1]].add_item(enemy_unit_map[x[1]].inventory,mixture,{},false)
 			"move":
 				enemy_unit_map[x[1]].xy = x[4]
 				enemy_unit_map[x[1]].position = $Map.map_to_local(x[4])	
@@ -176,11 +177,21 @@ func exec_enemy_turn(xs:Dictionary):
 			"remove":
 				assert(
 				enemy_unit_map[x[1]].inventory
-				.filter(func (y): return y.remote_id == x[3]['id'])
+				.filter(func (y): 
+					if y:
+						if y.remote_id == x[3]['id']:
+							return true
+					return false)
 				.size()==0)
 			"cast":
+				var ys = enemy_unit_map[x[1]].inventory.filter(func (y):
+					if y:
+						if y.remote_id == x[3]['id']:
+							return true
+					return false)
+				assert(ys.size()==1)
 				var castguffin = CastMode.new(self,$Map,$Cursor,$HUD,[],true)
-				castguffin.cast(enemy_unit_map[x[1]],x[3],x[4],0,[])
+				castguffin.cast(enemy_unit_map[x[1]],ys[0],x[4],0,[])
 				castguffin.windup()
 			
 		$Map.update_vision($Player.visible_tiles)
@@ -204,10 +215,17 @@ static func orbs_operation(dict1,operation,dict2):
 				if elem != 'magycke' and dict1[elem] < dict2[elem]:
 					res+=1
 			return res
+		"stats":
+			for elem in dict2:
+				if elem not in ["move","vision"]:
+					dict1[elem] = dict2[elem]
 	return true
 
 func _on_game_turn(_turn_no,arg_ismyturn):
 	is_myturn = arg_ismyturn
+	for ally in $Player.allies:
+		orbs_operation(ally.initial_stats,"stats",ally.modified_stats)
+		ally.modified_stats = ally.initial_stats.duplicate()
 #TODO
 #camera zoom in and out
 #add hotkeys

@@ -264,8 +264,11 @@ func get_client_info():
 		return {'player_name':'Client','id':multiplayer.get_unique_id()}
 
 func jmp_on_end_turn():
-	rem_sync_data.rpc(hgame.serialize_turn(),"turn")
-	print(hgame.serialize_turn())
+	var this_turn = hgame.serialize_turn()
+	rem_sync_data.rpc(this_turn,"turn")
+	hgame.match_history.append(this_turn)
+	print(this_turn)
+	hgame.turn_history.clear()
 	hgame.turn.emit(hgame.get_node("Map").turn +1, not hgame.is_myturn)
 	var xs = hgame.mode.duplicate()
 	xs.reverse()

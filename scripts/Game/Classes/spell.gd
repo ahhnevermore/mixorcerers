@@ -40,6 +40,7 @@ var real_cost:Dictionary
 
 var id
 var remote_id
+
 enum cast_shapes{
 	STRAIGHT_LINE,
 	CIRCLE,

@@ -21,7 +21,6 @@ var repeat_cost_added =false
 #aliased variable
 var mixer
 func _ready():
-	pass # Replace with function body.
 	mixer = props[0]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

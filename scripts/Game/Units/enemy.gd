@@ -10,12 +10,15 @@ func _ready():
 	super._ready()
 	xy = map.map_file[game.enemy_label +"_start_position"]
 	position= map.map_to_local(xy)
-	inventory =[Spell.new(game.spells["fireball"],[],{}),Spell.new(game.spells["fireball"],[],{}),
-	Grimoire.new(Spell.new(game.spells["fireball"],[],{}),Grimoire.Grimoire_Type.ON_DMG,100),null,null,null,null,null]
-	inventory[2].precast_position = {
-							'type':Grimoire.Precast_Position_Type.RELATIVE,
-							'origin':Vector2i(2,7) ,
-							'position': Vector2i(4,8)}
+	inventory =[null,null,null,null,
+				null,null,null,null
+	#Spell.new(game.spells["fireball"],[],{}),Spell.new(game.spells["fireball"],[],{}),
+	#Grimoire.new(Spell.new(game.spells["fireball"],[],{}),Grimoire.Grimoire_Type.ON_DMG,100),null,null,null,null,null
+	]
+	#inventory[2].precast_position = {
+							#'type':Grimoire.Precast_Position_Type.RELATIVE,
+							#'origin':Vector2i(2,7) ,
+							#'position': Vector2i(4,8)}
 	game.listeners.append(self)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
